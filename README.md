@@ -240,13 +240,13 @@ Email `nicola.perantoni@gmail.com` · Instagram `@nicolaperantoni` (`https://ins
 
 ## SEO — stato attuale
 
-Dominio definitivo: **`nicolaperantoni.com`**.
+Dominio definitivo: **`nicolaperantoni.com`** (servito su `www.nicolaperantoni.com`: su Vercel l'apex fa redirect 308 a `www`, quindi tutti gli URL assoluti/canonici usano la forma con `www` per farla coincidere con l'URL realmente servito).
 
 Già nel design e implementato in `src/layouts/BaseLayout.astro`: `<title>`, `description`, `author`, `robots`, `theme-color: #afafaf`, Open Graph (`type`, `locale it_IT`, `site_name`, `title`, `description`, `image`, `image:alt`), Twitter card `summary_large_image`, JSON-LD `ProfessionalService` (sede Verona, email, `sameAs` Instagram, `makesOffer` con i cinque servizi), `alt` su tutte le foto (`Fotografia sportiva di Nicola Perantoni — <progetto>`).
 
 Completato in fase di sviluppo:
-1. URL **assoluti** (`https://nicolaperantoni.com/...`) per `og:image`, `twitter:image` e l'`image` del JSON-LD.
-2. `og:url` e `<link rel="canonical">` puntano a `https://nicolaperantoni.com/`.
+1. URL **assoluti** (`https://www.nicolaperantoni.com/...`) per `og:image`, `twitter:image` e l'`image` del JSON-LD.
+2. `og:url` e `<link rel="canonical">` puntano a `https://www.nicolaperantoni.com/`.
 3. Immagine di preview social dedicata, **JPG 1200×630** (`public/og-image.jpg`), generata da `scripts/generate-og-image.mjs` (foto di copertina + overlay con nome e claim) — le foto del flusso restano verticali e in WebP, non adatte a un crop 1200×630.
 4. `lang="it"` sull'elemento `<html>`, `sitemap.xml`/`sitemap-index.xml` generata a build tramite `@astrojs/sitemap` (richiede `site` in `astro.config.mjs`), `public/robots.txt`, favicon (`public/favicon.svg` + `favicon.ico` + `apple-touch-icon.png`, generati da `scripts/generate-icons.mjs`).
 
