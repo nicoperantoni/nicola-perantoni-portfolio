@@ -1,0 +1,1098 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<title>Nicola Perantoni — Fotografo sportivo, Verona</title>
+<meta name="description" content="Fotografo sportivo con base a Verona. Gare ed eventi, ritiri e training camp, campagne e editoriali per brand, ritratti d'atleta e video. Disponibile in Italia e all'estero.">
+<meta name="author" content="Nicola Perantoni">
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#afafaf">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="it_IT">
+<meta property="og:site_name" content="Nicola Perantoni">
+<meta property="og:title" content="Nicola Perantoni — Fotografo sportivo, Verona">
+<meta property="og:description" content="Seguo squadre, atleti e federazioni durante tutta la stagione: dal ritiro estivo alla volata finale. Editoriali e campagne per brand, in studio e sul campo.">
+<meta property="og:image" content="uploads/ph-x-cervelo-1.webp">
+<meta property="og:image:alt" content="Bici da corsa Cérvelo appoggiata a una parete di roccia">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Nicola Perantoni — Fotografo sportivo, Verona">
+<meta name="twitter:description" content="Fotografia sportiva: gare, ritiri, editoriali e campagne per brand. Verona, Italia.">
+<meta name="twitter:image" content="uploads/ph-x-cervelo-1.webp">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"ProfessionalService","name":"Nicola Perantoni","description":"Fotografia sportiva: gare ed eventi, ritiri e training camp, campagne e editoriali per brand, ritratti d'atleta e video.","email":"nicola.perantoni@gmail.com","image":"uploads/ph-x-cervelo-1.webp","areaServed":"IT","address":{"@type":"PostalAddress","addressLocality":"Verona","addressCountry":"IT"},"sameAs":["https://instagram.com/nicolaperantoni"],"founder":{"@type":"Person","name":"Nicola Perantoni","jobTitle":"Fotografo sportivo"},"makesOffer":[{"@type":"Offer","itemOffered":{"@type":"Service","name":"Gare ed eventi"}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Ritiri e training camp"}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Campagne e editoriali"}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Ritratti d'atleta"}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Video"}}]}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@300;400;500;600&amp;family=IBM+Plex+Mono:wght@400;500&amp;family=Instrument+Serif:ital@0;1&amp;display=swap" rel="stylesheet">
+<style>
+  html { height:auto; scroll-behavior:smooth; }
+  body { margin:0; padding:0; background:rgb(175,175,175); }
+  body::-webkit-scrollbar { width:0; height:0; }
+  * { box-sizing:border-box; }
+  a { color:inherit; text-decoration:none; }
+  a:hover { color:#ffffff; }
+  @keyframes ledFlicker { 0%, 44%, 52%, 78%, 100% { opacity:1; } 46%, 50% { opacity:0.35; } 80% { opacity:0.6; } }
+  @keyframes ledBoot { 0%,45% { opacity:1; } 46%,100% { opacity:0.18; } }
+  @keyframes riseIn { from { opacity:0; transform:translateY(18px); } to { opacity:1; transform:translateY(0); } }
+  @keyframes glyphSpin { to { transform:rotate(360deg); } }
+  @keyframes revealUp { from { opacity:0; transform:translateY(24px); } to { opacity:1; transform:translateY(0); } }
+  @keyframes veilOut { to { opacity:0; visibility:hidden; } }
+  @keyframes contourWipe { 0% { opacity:0; -webkit-mask-size:100% 9px; mask-size:100% 9px; transform:rotateX(10deg) rotateY(-5deg) translateZ(-120px) scale(1.05); } 30% { opacity:1; } 100% { opacity:1; -webkit-mask-size:100% 320%; mask-size:100% 320%; transform:rotateX(0deg) rotateY(0deg) translateZ(0) scale(1); } }
+  .flow { perspective:1600px; perspective-origin:50% 40%; }
+  .shot { transform:none; }
+  @keyframes textTilt { from { transform:rotateX(9deg) translateZ(-90px); } to { transform:rotateX(0deg) translateZ(0); } }
+  .shot:has([data-lines-src]) { transform-style:preserve-3d; }
+  .shot[data-seen="1"]:has([data-lines-src]) { animation:textTilt 1s cubic-bezier(.2,.7,.2,1) both; }
+  [data-seen="1"] { animation:revealUp .85s cubic-bezier(.2,.7,.2,1) both; }
+  .shot[data-seen="1"] { animation:none; }
+  .shot[data-reveal] img { -webkit-mask-image:linear-gradient(to bottom, #000 0 46%, transparent 46%); mask-image:linear-gradient(to bottom, #000 0 46%, transparent 46%); -webkit-mask-repeat:repeat; mask-repeat:repeat; -webkit-mask-size:100% 320%; mask-size:100% 320%; }
+  .shot[data-reveal]:not([data-seen]) img { opacity:0; }
+  .shot[data-seen="1"] img { animation:contourWipe 1.15s cubic-bezier(.2,.7,.2,1) both; transform-origin:50% 60%; }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior:auto; }
+    *, *::before, *::after { animation-duration:.001ms !important; animation-delay:0ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important; }
+    .shot[data-reveal] img, .shot[data-seen="1"] img { -webkit-mask-image:none !important; mask-image:none !important; animation:none !important; opacity:1 !important; transform:none !important; }
+    .shot[data-reveal]:not([data-seen]) img { opacity:1 !important; }
+    .shot, .shot[data-seen="1"]:has([data-lines-src]) { transform:none !important; transition:none !important; animation:none !important; }
+    [data-seen="1"] { animation:none !important; }
+  }
+</style>
+</helmet>
+<sc-if value="{{ veil }}" hint-placeholder-val="{{ true }}">
+  <div style="position:fixed; inset:0; z-index:99; display:flex; align-items:center; justify-content:center; background:#000000; animation:{{ veilAnim }};">
+    <div style="position:relative; width:150px; height:150px; display:flex; align-items:center; justify-content:center;">
+      <svg viewBox="0 0 150 150" style="position:absolute; inset:0; width:100%; height:100%; transform:rotate(-90deg);">
+        <circle cx="75" cy="75" r="70" fill="none" stroke="rgba(255,255,255,0.16)" stroke-width="1.5"></circle>
+        <circle cx="75" cy="75" r="70" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" style="stroke-dasharray:439.8; stroke-dashoffset:{{ progOffset }}; transition:stroke-dashoffset .4s ease;"></circle>
+      </svg>
+      <span style="font-size:72px; line-height:1; color:#ffffff; opacity:0.9; animation:glyphSpin 1.6s linear infinite;">✣</span>
+    </div>
+  </div>
+</sc-if>
+<div ref="{{ rootRef }}" style="position:relative; width:100%; min-height:100dvh; overflow:hidden; background:rgb(175,175,175); color:#101114; font-family:'Archivo', Helvetica, Arial, sans-serif;">
+
+  <div style="position:fixed; inset:0; background:rgb(175,175,175); z-index:0;"></div>
+
+  <div ref="{{ copyRef }}" style="position:fixed; top:0; left:0; z-index:200; padding:8px 12px; border-radius:999px; background:rgba(16,17,20,0.9); border:1px solid rgba(16,17,20,0.22); backdrop-filter:blur(8px); font-family:'IBM Plex Mono', monospace; font-size:11px; letter-spacing:0.12em; color:#ffffff; pointer-events:none; opacity:0; transform:translate(-50%,-140%); transition:opacity .25s ease;">© Nicola Perantoni</div>
+
+  <div style="position:relative; min-height:100dvh; height:auto; z-index:3;">
+
+    <div ref="{{ heroRef }}" style="position:relative; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; gap:clamp(10px, 1.6vw, 20px); perspective:1200px; padding:0; will-change:transform;">
+      <h1 style="margin:0; width:100%; height:auto; display:grid; grid-template-rows:auto 1fr auto; justify-items:stretch; align-items:center; gap:clamp(12px, 2vh, 28px); font-weight:300; font-size:clamp(3rem, 13vw, 12rem); line-height:0.92; letter-spacing:-0.045em; animation:riseIn 1.1s cubic-bezier(.22,.7,.2,1) both;">
+        <span ref="{{ heroImgRef }}" style="grid-row:1 / 4; grid-column:1; will-change:transform; justify-self:stretch; align-self:stretch; display:block; position:relative; z-index:0; width:100%; min-height:0; margin:0;">
+          <span style="position:relative; z-index:1; display:block; overflow:hidden;">
+            <span style="position:relative; display:flex; flex-direction:column; align-items:center; justify-content:flex-start; gap:clamp(22px, 4vh, 56px); padding:clamp(20px, 3vw, 44px); text-align:center; background:#000000; overflow:hidden; letter-spacing:normal;">
+              <span style="position:absolute; top:0; left:0; right:0; height:min(78%, 1000px); z-index:0; display:block; overflow:hidden; pointer-events:none; -webkit-mask-image:linear-gradient(to bottom, #000 0%, #000 58%, rgba(0,0,0,0.88) 72%, rgba(0,0,0,0.62) 82%, rgba(0,0,0,0.34) 90%, rgba(0,0,0,0.14) 96%, transparent 100%); mask-image:linear-gradient(to bottom, #000 0%, #000 58%, rgba(0,0,0,0.88) 72%, rgba(0,0,0,0.62) 82%, rgba(0,0,0,0.34) 90%, rgba(0,0,0,0.14) 96%, transparent 100%);">
+                <canvas ref="{{ topoRef }}" style="display:block; width:100%; height:100%;"></canvas>
+                <canvas ref="{{ topoMarkRef }}" style="position:absolute; inset:0; display:block; width:100%; height:100%;"></canvas>
+              </span>
+
+              <span style="position:relative; z-index:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:clamp(20px, 3vh, 40px); flex:0 0 auto; min-height:66dvh; padding-top:clamp(120px, 22vh, 300px); padding-bottom:clamp(70px, 11vh, 160px);">
+              <span style="position:relative; display:block; font-family:'Archivo', Helvetica, sans-serif; font-weight:300; font-size:clamp(2.2rem, 7.6vw, 7rem); line-height:1.14; letter-spacing:-0.035em; color:#ffffff;"><strong style="font-weight:600;"><span style="position:relative; display:inline-block; overflow:hidden; vertical-align:bottom; height:1.14em; min-width:7.4ch; text-align:center;"><span ref="{{ wordRef }}" style="display:inline-block; will-change:transform, opacity;">Corro</span></span></strong><br><em style="font-family:'Instrument Serif', Georgia, serif; font-style:italic; font-weight:400;">quindi</em><br><strong style="font-weight:600;">fotografo</strong></span>
+              <span style="position:relative; display:grid; grid-template-columns:auto auto 8.6em; align-items:center; justify-content:center; left:0; column-gap:10px; row-gap:8px; margin-top:clamp(10px, 1.8vh, 26px); font-family:'IBM Plex Mono', monospace; font-weight:400; font-size:clamp(10px, 1vw, 12px); letter-spacing:0.18em; text-transform:uppercase; color:rgba(255,255,255,0.62);">
+                <span style="width:6px; height:6px; border-radius:50%; background:{{ led1c }}; box-shadow:0 0 8px {{ led1g }}; animation:{{ led1a }};"></span><span style="text-align:left;">GPS Signal:</span><span style="text-align:left; white-space:pre; overflow:hidden;">{{ st1 }}</span>
+                <span style="width:6px; height:6px; border-radius:50%; background:{{ led2c }}; box-shadow:0 0 8px {{ led2g }}; animation:{{ led2a }};"></span><span style="text-align:left;">Device:</span><span style="text-align:left; white-space:pre; overflow:hidden;">{{ st2 }}</span>
+                <span style="width:6px; height:6px; border-radius:50%; background:{{ led3c }}; box-shadow:0 0 8px {{ led3g }}; animation:{{ led3a }};"></span><span style="text-align:left;">Athlete:</span><span style="text-align:left; white-space:pre; overflow:hidden;">{{ st3 }}</span>
+              </span>
+              </span>
+
+              <span style="display:flex; flex-direction:column; gap:clamp(16px, 2.4vh, 26px); width:100%; max-width:1000px; margin:0 auto; text-align:center; padding-top:clamp(30px, 7vh, 110px); padding-bottom:clamp(40px, 7vh, 96px); font-family:'Archivo', Helvetica, sans-serif; font-weight:300; font-size:clamp(1.05rem, 1.6vw, 1.6rem); line-height:1.45; letter-spacing:-0.01em; color:rgba(255,255,255,0.66); text-wrap:pretty;">
+                <span>Mi occupo di fotografia sportiva. Sono di Verona, ma mi sposto ovunque.</span>
+                <span>Seguo squadre, atleti e federazioni durante tutta la stagione: dal ritiro estivo alla volata finale. Realizzo editoriali e campagne per brand, in studio e sul campo.</span>
+                <span>Cerco il gesto vero, l'istante prima del risultato. Su qualsiasi terreno.</span>
+              </span>
+              </span>
+            </span>
+          </span>
+        
+      </h1>
+    </div>
+
+  </div>
+
+  <section id="work" style="position:relative; z-index:2; display:flex; flex-direction:column; gap:clamp(14px, 2vh, 24px); padding:clamp(18px, 3vh, 34px) 0 clamp(40px, 7vh, 90px); margin-top:clamp(10px, 1.4vh, 18px);">
+    <div class="flow" style="display:grid; grid-template-columns:repeat(12, 1fr); gap:clamp(16px, 2.4vw, 36px); padding:clamp(6px, 1vh, 12px) calc(clamp(18px, 5vw, 64px) + 44px) clamp(10px, 1.6vh, 20px);">
+      <sc-for list="{{ flow }}" as="f" hint-placeholder-count="8">
+        <div class="shot" data-reveal="wipe" data-title="{{ f.label }}" style="position:relative; overflow:hidden; border-radius:clamp(8px, 1vw, 14px);">
+          <sc-if value="{{ f.isImage }}" hint-placeholder-val="{{ true }}">
+            <img data-src="{{ f.src }}" alt="{{ f.alt }}" decoding="async" draggable="false" style="display:block; width:100%; height:100%; object-fit:cover; background:rgba(16,17,20,0.08); cursor:pointer;">
+          </sc-if>
+          <sc-if value="{{ f.isText }}" hint-placeholder-val="{{ false }}">
+            <span data-lines-src="1" style="display:block; height:100%; padding:clamp(4px, 0.8vw, 12px) clamp(6px, 1.4vw, 22px) 0 0; max-width:26ch; font-family:'Archivo', Helvetica, sans-serif; font-weight:300; font-size:clamp(1.6rem, 2.7vw, 2.9rem); line-height:1.2; letter-spacing:-0.02em; color:rgba(16,17,20,0.82); text-wrap:pretty;">{{ f.body }}</span>
+          </sc-if>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <section id="studio" style="position:relative; z-index:2; display:flex; flex-direction:column; gap:clamp(30px, 5vh, 64px); padding:clamp(56px, 9vh, 120px) calc(clamp(18px, 5vw, 64px) + 44px) clamp(40px, 7vh, 90px);">
+    <div data-reveal="up" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(320px, 1fr)); gap:clamp(24px, 4vw, 72px); align-items:start;">
+      <h2 style="margin:0; font-weight:300; font-size:clamp(1.9rem, 4.2vw, 3.6rem); line-height:1.02; letter-spacing:-0.04em; text-wrap:balance;">Sono un fotografo <em style="font-family: &quot;Instrument Serif&quot;, Georgia, serif; font-style: italic; font-weight: 400;">sportivo</em>, ma anche un atleta.</h2>
+      <div style="display:flex; flex-direction:column; gap:clamp(14px, 2vh, 22px); max-width:56ch; font-weight:300; font-size:clamp(1rem, 1.25vw, 1.2rem); line-height:1.55; color:rgba(16,17,20,0.68); text-wrap:pretty;">
+        <p style="margin:0;">Conosco lo sport perché lo vivo in prima persona ed è questo che mi permette di lavorare a stretto contatto con atleti e brand.</p>
+        <p style="margin:0;">Lavoro da Verona su tutta Italia e all'estero, con squadre, federazioni e brand tecnici — tra gli altri PH Apparel, Cérvelo e Zullo Bike.</p>
+      </div>
+    </div>
+
+    <div data-reveal="up" style="display:grid; grid-template-columns:minmax(0, 1fr); gap:clamp(20px, 2.6vw, 40px); align-items:stretch; margin-top:clamp(4px, 1vh, 16px);">
+      <div style="display:flex; flex-direction:column; gap:clamp(10px, 1.4vh, 16px); padding:clamp(20px, 2.2vw, 32px); border-radius:clamp(8px, 1vw, 14px); background:rgba(16,17,20,0.07);">
+      <span style="font-family:'IBM Plex Mono', monospace; font-size:clamp(9px, 1.05vw, 11px); letter-spacing:0.16em; text-transform:uppercase; color:rgba(16,17,20,0.55); margin-bottom:clamp(6px, 1.2vh, 14px);">Servizi</span>
+      <sc-for list="{{ services }}" as="s" hint-placeholder-count="4">
+        <div data-reveal="up" style="display:grid; grid-template-columns:auto 1fr; gap:clamp(10px, 1.2vw, 18px); align-items:baseline;">
+          <span style="font-family:'IBM Plex Mono', monospace; font-size:11px; letter-spacing:0.16em; color:rgba(16,17,20,0.45);">{{ s.n }}</span>
+          <h3 style="margin:0; font-weight:300; font-size:clamp(1.3rem, 2.2vw, 2rem); line-height:1.1; letter-spacing:-0.03em; text-wrap:balance;">{{ s.title }}</h3>
+        </div>
+      </sc-for>
+      </div>
+    </div>
+
+  </section>
+
+  <section id="contatti" style="position:relative; z-index:2; min-height:72dvh; display:flex; flex-direction:column; justify-content:center; gap:clamp(24px, 4vh, 48px); padding:clamp(56px, 9vh, 110px) calc(clamp(18px, 5vw, 64px) + 44px);">
+    <h2 style="margin:0 auto; max-width:20ch; text-align:center; font-weight:300; font-size:clamp(2.2rem, 6vw, 5.4rem); line-height:0.98; letter-spacing:-0.04em; text-wrap:balance;">Racconto <em style="font-family:'Instrument Serif', Georgia, serif; font-style:italic; font-weight:400; font-size:1em;">storie</em> di brand, gare, <em style="font-family:'Instrument Serif', Georgia, serif; font-style:italic; font-weight:400; font-size:1em;">squadre <span style="font-family:'Archivo', Helvetica, sans-serif; font-style:normal; font-weight:300;">e</span> atleti.</em></h2>
+    <div style="display:flex; flex-wrap:wrap; justify-content:center; gap:clamp(20px, 3vw, 56px) clamp(32px, 6vw, 96px); margin-top:clamp(24px, 5vh, 64px); align-items:start; justify-items:center; text-align:center; font-family:'IBM Plex Mono', monospace; font-size:clamp(11px, 1.2vw, 14px); letter-spacing:0.06em;">
+      <div style="display:flex; flex-direction:column; gap:8px;">
+        <span style="font-size:10px; letter-spacing:0.2em; text-transform:uppercase; color:rgba(16,17,20,0.5);">Email</span>
+        <a href="mailto:nicola.perantoni@gmail.com" style="color:rgba(16,17,20,0.92);" style-hover="color:#000000;">nicola.perantoni@gmail.com</a>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:8px;">
+        <span style="font-size:10px; letter-spacing:0.2em; text-transform:uppercase; color:rgba(16,17,20,0.5);">Instagram</span>
+        <a href="https://instagram.com/nicolaperantoni" target="_blank" rel="noopener noreferrer" style="color:rgba(16,17,20,0.92);" style-hover="color:#000000;">@nicolaperantoni ↗</a>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:8px;">
+        <span style="font-size:10px; letter-spacing:0.2em; text-transform:uppercase; color:rgba(16,17,20,0.5);">Sede</span>
+        <span style="color:rgba(16,17,20,0.92);">Italia — Disponibile ovunque</span>
+      </div>
+    </div>
+  </section>
+
+  <footer style="position:relative; z-index:2; display:flex; justify-content:center; text-align:center; align-items:center; gap:16px; flex-wrap:wrap; padding:clamp(24px, 4vh, 48px) clamp(18px, 3.4vw, 40px); font-family:'IBM Plex Mono', monospace; font-size:clamp(10px, 1.15vw, 13px); letter-spacing:0.08em; color:rgba(16,17,20,0.6);">
+    <span>© 2026 Nicola Perantoni</span>
+  </footer>
+</div>
+
+  <div onClick="{{ lbClose }}" style="position:fixed; inset:0; z-index:140; display:{{ lbDisplay }}; align-items:center; justify-content:center; padding:clamp(16px, 4vh, 56px) clamp(16px, 5vw, 96px); background:rgba(12,12,14,0.95); backdrop-filter:blur(6px); opacity:{{ lbOpacity }}; transition:opacity .32s ease; cursor:zoom-out;">
+    <img ref="{{ lbImgRef }}" alt="" style="max-width:100%; max-height:100%; width:auto; height:auto; object-fit:contain; display:block; border-radius:clamp(4px, 0.6vw, 8px); box-shadow:0 30px 90px rgba(0,0,0,0.55);">
+    <button onClick="{{ lbPrev }}" aria-label="Foto precedente" style="position:absolute; left:clamp(10px, 2vw, 30px); top:50%; transform:translateY(-50%); width:52px; height:52px; display:flex; align-items:center; justify-content:center; border:1px solid rgba(255,255,255,0.22); border-radius:50%; background:rgba(255,255,255,0.06); color:rgba(255,255,255,0.86); font-family:'IBM Plex Mono', monospace; font-size:16px; cursor:pointer; transition:background .25s ease, border-color .25s ease;" style-hover="background:rgba(255,255,255,0.16); border-color:rgba(255,255,255,0.5);">←</button>
+    <button onClick="{{ lbNext }}" aria-label="Foto successiva" style="position:absolute; right:clamp(10px, 2vw, 30px); top:50%; transform:translateY(-50%); width:52px; height:52px; display:flex; align-items:center; justify-content:center; border:1px solid rgba(255,255,255,0.22); border-radius:50%; background:rgba(255,255,255,0.06); color:rgba(255,255,255,0.86); font-family:'IBM Plex Mono', monospace; font-size:16px; cursor:pointer; transition:background .25s ease, border-color .25s ease;" style-hover="background:rgba(255,255,255,0.16); border-color:rgba(255,255,255,0.5);">→</button>
+    <button onClick="{{ lbClose }}" aria-label="Chiudi" style="position:absolute; top:clamp(12px, 2.4vh, 28px); right:clamp(12px, 2vw, 30px); width:44px; height:44px; display:flex; align-items:center; justify-content:center; border:1px solid rgba(255,255,255,0.22); border-radius:50%; background:rgba(255,255,255,0.06); color:rgba(255,255,255,0.86); font-family:'IBM Plex Mono', monospace; font-size:15px; cursor:pointer; transition:background .25s ease, border-color .25s ease;" style-hover="background:rgba(255,255,255,0.16); border-color:rgba(255,255,255,0.5);">✕</button>
+    <span style="position:absolute; left:50%; bottom:clamp(12px, 2.4vh, 26px); transform:translateX(-50%); font-family:'IBM Plex Mono', monospace; font-size:11px; letter-spacing:0.18em; text-transform:uppercase; color:rgba(255,255,255,0.6);">{{ lbCount }}</span>
+  </div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;accent&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#c8b892&quot;,&quot;options&quot;:[&quot;#c8b892&quot;,&quot;#5ee08a&quot;,&quot;#e8912f&quot;,&quot;#9fb8c8&quot;],&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Mappa&quot;},&quot;markers&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:10,&quot;min&quot;:0,&quot;max&quot;:16,&quot;step&quot;:1,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Mappa&quot;},&quot;showElevation&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Mappa&quot;}}">
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.words = ['Corro', 'Pedalo', 'Cammino', 'Viaggio'];
+    this.wordI = 0;
+    this.state = Object.assign({}, this.state, { lbList: [], lbIdx: 0, lbOpen: false, lbShown: false });
+    this.wordRef = React.createRef();
+    this.lbImgRef = React.createRef();
+    this.heroRef = React.createRef();
+    this.rootRef = React.createRef();
+    this.heroImgRef = React.createRef();
+    this.topoRef = React.createRef();
+    this.topoMarkRef = React.createRef();
+    this.copyRef = React.createRef();
+    this.topoPaths = [];
+    this.topoMarks = [];
+    this.reduced = typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  }
+
+  /* ---------- dati ---------- */
+
+  groups() {
+    return [
+      { label: 'PH Apparel X Cérvelo', srcs: [1, 2, 3, 4].map((n) => 'uploads/ph-x-cervelo-' + n + '.webp') },
+      { label: 'Zullo Bike', srcs: [1, 6, 3, 4].map((n) => 'uploads/zullo-' + n + '.webp') },
+      { label: 'Ristora', srcs: [1, 2, 6, 4].map((n) => 'uploads/ristora-' + n + '.webp') },
+      { label: 'PH Apparel Spring Camp', srcs: [3, 9, 8, 12].map((n) => 'uploads/ph-training-camp-' + n + '.webp') }
+    ];
+  }
+
+  buildFlow() {
+    const g = this.groups();
+    const flow = [];
+    for (let r = 0; r < 5; r++) g.forEach((p) => { if (p.srcs[r]) flow.push({ src: p.srcs[r], label: p.label, alt: 'Fotografia sportiva di Nicola Perantoni — ' + p.label, isImage: true }); });
+    const notes = [
+      'Amo il movimento, l\u2019adrenalina, la tranquillit\u00e0 e il silenzio che anticipano la performance, il sogno del record personale, la forza, la mentalit\u00e0 e la grinta necessarie per raggiungere il proprio obiettivo. Qualsiasi esso sia.',
+      'Mi nutro di tutto ci\u00f2 che pu\u00f2 stimolare la mia creativit\u00e0: arte, musica, libri, cinema e design.',
+      'Cerco il silenzio, la natura, il tempo passato con il proprio s\u00e9.',
+      'Coltivo la contaminazione tra persone, discipline e arti.',
+      'La fotografia \u00e8 la mia cura.'
+    ];
+    const imgs = flow.length;
+    // l'ultima nota non deve chiudere il flusso: resta almeno una foto sotto
+    [3, 7, 11, 13, Math.max(14, imgs - 2)].forEach((at, i) => flow.splice(Math.min(at + i, flow.length - 1), 0, { isText: true, body: notes[i], label: '' }));
+    return flow;
+  }
+
+  /* ---------- colore accento ---------- */
+
+  accHex() { return this.props.accent || '#c8b892'; }
+  accA(a) {
+    const h = this.accHex().replace('#', '');
+    const n = parseInt(h.length === 3 ? h.split('').map((c) => c + c).join('') : h, 16);
+    return 'rgba(' + ((n >> 16) & 255) + ',' + ((n >> 8) & 255) + ',' + (n & 255) + ',' + a + ')';
+  }
+
+  /* ---------- reveal / righe ---------- */
+
+  initReveal() {
+    const run = () => {
+      const els = document.querySelectorAll('[data-reveal]');
+      if (!els.length) return setTimeout(run, 200);
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach((en) => {
+          if (!en.isIntersecting) return;
+          io.unobserve(en.target);
+          en.target.setAttribute('data-seen', '1');
+          en.target.querySelectorAll('[data-lines-src] > span > span').forEach((inn) => { inn.style.transform = 'translateY(0)'; });
+        });
+      }, { threshold: 0.1, rootMargin: '0px 0px -6% 0px' });
+      const scan = () => {
+        document.querySelectorAll('[data-lines-src]:not([data-lines])').forEach((el) => this.splitLines(el));
+        document.querySelectorAll('[data-reveal]:not([data-seen])').forEach((el) => io.observe(el));
+      };
+      scan();
+      this._revealIO = io;
+      this._revealScan = setInterval(scan, 600);
+    };
+    run();
+  }
+
+  splitLines(el) {
+    if (el._srcText === undefined) el._srcText = el.textContent;
+    const words = (el._srcText || '').trim().split(/\s+/).filter(Boolean);
+    if (!words.length || el.clientWidth < 80) return;
+    el.textContent = '';
+    const probes = words.map((w) => {
+      const sp = document.createElement('span');
+      sp.textContent = w;
+      el.appendChild(sp);
+      el.appendChild(document.createTextNode(' '));
+      return sp;
+    });
+    const lines = [];
+    let cur = null, top = null;
+    probes.forEach((sp) => {
+      const t = Math.round(sp.offsetTop);
+      if (top === null || Math.abs(t - top) > 3) { cur = []; lines.push(cur); top = t; }
+      cur.push(sp.textContent);
+    });
+    el.textContent = '';
+    const seen = el.closest('[data-seen="1"]') || this.reduced;
+    lines.forEach((ws, i) => {
+      const outer = document.createElement('span');
+      outer.style.cssText = 'display:block; overflow:hidden;';
+      const inner = document.createElement('span');
+      inner.style.cssText = 'display:block; transform:translateY(' + (seen ? '0' : '108%') + ');'
+        + (this.reduced ? '' : ' transition:transform .82s cubic-bezier(.2,.7,.2,1); transition-delay:' + (i * 0.09).toFixed(2) + 's;');
+      inner.textContent = ws.join(' ');
+      outer.appendChild(inner);
+      el.appendChild(outer);
+    });
+    el.dataset.lines = '1';
+    el._lineW = el.clientWidth;
+    if (!el._ro && window.ResizeObserver) {
+      el._ro = new ResizeObserver(() => {
+        clearTimeout(el._roT);
+        el._roT = setTimeout(() => {
+          if (Math.abs(el.clientWidth - (el._lineW || 0)) > 4) { delete el.dataset.lines; this.splitLines(el); }
+        }, 120);
+      });
+      el._ro.observe(el);
+    }
+  }
+
+  /* ---------- caricamento foto ---------- */
+
+  preloadPhotos() {
+    const srcs = this.buildFlow().filter((f) => f.isImage).map((f) => f.src);
+    const total = srcs.length || 1;
+    let loaded = 0, left = srcs.length;
+    const done = () => {
+      loaded++;
+      this.setState({ prog: loaded / total });
+      if (--left <= 0) this.hideVeil();
+    };
+    srcs.forEach((s) => { const im = new Image(); im.onload = done; im.onerror = done; im.src = s; });
+    this._veilStart = Date.now();
+    this._veilTimer = setTimeout(() => this.hideVeil(true), 12000);
+    if (!srcs.length) this.hideVeil(true);
+  }
+
+  hideVeil(force) {
+    if (this._veilGone) return;
+    const elapsed = Date.now() - (this._veilStart || 0);
+    if (!force && elapsed < 1000) {
+      clearTimeout(this._minTimer);
+      this._minTimer = setTimeout(() => this.hideVeil(), 1000 - elapsed);
+      return;
+    }
+    this._veilGone = true;
+    clearTimeout(this._veilTimer);
+    this.setState({ veilFading: true });
+    setTimeout(() => this.setState({ veilDone: true }), 700);
+  }
+
+  /* ---------- render ---------- */
+
+  renderVals() {
+    const st = this.state || {};
+    const services = [
+      { n: '01', title: 'Gare ed Eventi' },
+      { n: '02', title: 'Training Camp' },
+      { n: '03', title: 'Campagne ed editoriali' },
+      { n: '04', title: 'Ritratti' },
+      { n: '05', title: 'Video' }
+    ];
+    const lbList = st.lbList || [];
+    const lbIdx = st.lbIdx || 0;
+    return {
+      flow: this.buildFlow(),
+      services: services,
+      veil: !st.veilDone,
+      veilAnim: st.veilFading ? 'veilOut .55s ease forwards' : 'none',
+      progOffset: 439.8 * (1 - Math.min(1, st.prog || 0)),
+      st1: st.st1 || 'Searching', st2: st.st2 || 'Turning on', st3: st.st3 || 'Warming up',
+      led1c: st.ok1 ? '#5ee08a' : '#e8912f',
+      led1g: st.ok1 ? 'rgba(94,224,138,0.55)' : 'rgba(232,145,47,0.6)',
+      led1a: st.ok1 ? 'ledFlicker 2.7s steps(1, end) infinite 0.7s' : 'ledBoot 0.62s steps(1, end) infinite',
+      led2c: st.ok2 ? '#5ee08a' : '#e8912f',
+      led2g: st.ok2 ? 'rgba(94,224,138,0.55)' : 'rgba(232,145,47,0.6)',
+      led2a: st.ok2 ? 'ledFlicker 2.3s steps(1, end) infinite 0.3s' : 'ledBoot 0.78s steps(1, end) infinite',
+      led3c: st.ok3 ? '#5ee08a' : '#e8912f',
+      led3g: st.ok3 ? 'rgba(94,224,138,0.55)' : 'rgba(232,145,47,0.6)',
+      led3a: st.ok3 ? 'ledFlicker 2.9s steps(1, end) infinite 0.9s' : 'ledBoot 0.7s steps(1, end) infinite',
+      lbDisplay: st.lbOpen ? 'flex' : 'none',
+      lbOpacity: st.lbShown ? 1 : 0,
+      lbImgRef: this.lbImgRef,
+      lbCount: lbList.length ? String(lbIdx + 1).padStart(2, '0') + ' / ' + String(lbList.length).padStart(2, '0') : '',
+      lbClose: (e) => { if (e) e.stopPropagation(); this.closeLb(); },
+      lbPrev: (e) => { if (e) e.stopPropagation(); this.stepLb(-1); },
+      lbNext: (e) => { if (e) e.stopPropagation(); this.stepLb(1); },
+      wordRef: this.wordRef, topoRef: this.topoRef, topoMarkRef: this.topoMarkRef,
+      heroImgRef: this.heroImgRef, heroRef: this.heroRef, rootRef: this.rootRef, copyRef: this.copyRef
+    };
+  }
+
+  /* ---------- lightbox ---------- */
+
+  syncLbImg() {
+    const el = this.lbImgRef && this.lbImgRef.current;
+    if (!el) return;
+    const s = this.state || {};
+    const src = (s.lbList || [])[s.lbIdx || 0];
+    if (s.lbOpen && src) { if (el.getAttribute('src') !== src) el.setAttribute('src', src); }
+    else el.removeAttribute('src');
+  }
+
+  openLb(list, idx) {
+    if (!list || !list.length) return;
+    document.body.style.overflow = 'hidden';
+    this.setState({ lbList: list, lbIdx: idx, lbOpen: true, lbShown: false }, () => this.syncLbImg());
+    requestAnimationFrame(() => requestAnimationFrame(() => this.setState({ lbShown: true })));
+  }
+
+  closeLb() {
+    if (!this.state || !this.state.lbOpen) return;
+    document.body.style.overflow = '';
+    this.setState({ lbShown: false });
+    clearTimeout(this._lbT);
+    this._lbT = setTimeout(() => this.setState({ lbOpen: false }, () => this.syncLbImg()), 320);
+  }
+
+  stepLb(d) {
+    this.setState((s) => {
+      const n = (s.lbList || []).length;
+      if (!n) return null;
+      return { lbIdx: (s.lbIdx + d + n) % n };
+    }, () => this.syncLbImg());
+  }
+
+  /* ---------- boot status ---------- */
+
+  bootStatus() {
+    if (this.reduced) {
+      this._bootT1 = setTimeout(() => this.setState({ st1: 'Active', ok1: true, st2: 'Enabled', ok2: true, st3: 'Ready', ok3: true }), 1200);
+      return;
+    }
+    const CH = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    const swap = (key, from, to, done) => {
+      const n = Math.max(from.length, to.length);
+      const t0 = performance.now(), DUR = 760;
+      const step = (now) => {
+        const t = now - t0;
+        let out = '';
+        for (let i = 0; i < n; i++) {
+          const p = t - (i / n) * (DUR - 260);
+          const c = to[i] || '';
+          if (p < 0) out += from[i] || ' ';
+          else if (p < 260) out += (c === ' ' ? ' ' : CH[(Math.floor(p / 40) + i * 3) % CH.length]);
+          else out += c;
+        }
+        this.setState({ [key]: out.replace(/\s+$/, '') });
+        if (t < DUR) requestAnimationFrame(step);
+        else { this.setState({ [key]: to }); if (done) done(); }
+      };
+      requestAnimationFrame(step);
+    };
+    this._bootT1 = setTimeout(() => {
+      swap('st1', 'Searching', 'Active', () => this.setState({ ok1: true }));
+      this._bootT2 = setTimeout(() => {
+        swap('st2', 'Turning on', 'Enabled', () => this.setState({ ok2: true }));
+        this._bootT3 = setTimeout(() => {
+          swap('st3', 'Warming up', 'Ready', () => this.setState({ ok3: true }));
+        }, 1100);
+      }, 1100);
+    }, 4400);
+  }
+
+  /* ---------- ciclo di vita ---------- */
+
+  componentDidMount() {
+    this.bootStatus();
+    this.onKey = (e) => {
+      if (!this.state || !this.state.lbOpen) return;
+      if (e.key === 'Escape') this.closeLb();
+      else if (e.key === 'ArrowRight') this.stepLb(1);
+      else if (e.key === 'ArrowLeft') this.stepLb(-1);
+    };
+    window.addEventListener('keydown', this.onKey);
+    this.preloadPhotos();
+    this.initReveal();
+    this.drawTopo();
+    this.cycleWord();
+    this.initFlow();
+    this.onCtx = (e) => {
+      const path = e.composedPath ? e.composedPath() : [e.target];
+      if (!path.some((n) => n && n.tagName === 'IMG')) return;
+      e.preventDefault();
+      const el = this.copyRef.current;
+      if (!el) return;
+      el.style.left = e.clientX + 'px';
+      el.style.top = e.clientY + 'px';
+      el.style.opacity = '1';
+      clearTimeout(this.ctxT);
+      this.ctxT = setTimeout(() => { el.style.opacity = '0'; }, 1600);
+    };
+    document.addEventListener('contextmenu', this.onCtx);
+    this.onResize = () => { if (this.renderTopo) this.renderTopo(); };
+    window.addEventListener('resize', this.onResize);
+    this.loop = this.loop.bind(this);
+    this.raf = requestAnimationFrame(this.loop);
+  }
+
+  componentDidUpdate(prev) {
+    if (this.renderTopo && (prev.accent !== this.props.accent || prev.markers !== this.props.markers || prev.showElevation !== this.props.showElevation)) this.renderTopo();
+  }
+
+  componentWillUnmount() {
+    document.body.style.overflow = '';
+    cancelAnimationFrame(this.raf);
+    clearTimeout(this._veilTimer); clearTimeout(this._minTimer); clearTimeout(this._lbT);
+    clearTimeout(this._bootT1); clearTimeout(this._bootT2); clearTimeout(this._bootT3); clearTimeout(this.ctxT);
+    document.removeEventListener('contextmenu', this.onCtx);
+    clearInterval(this._revealScan); clearInterval(this._flowHydrate);
+    if (this._revealIO) this._revealIO.disconnect();
+    window.removeEventListener('resize', this.onResize);
+    window.removeEventListener('keydown', this.onKey);
+  }
+
+  cycleWord() {
+    const el = this.wordRef.current;
+    if (!el) return;
+    if (this.reduced) return;
+    el.getAnimations().forEach((an) => an.cancel());
+    const an = el.animate([
+      { transform: 'translateY(-100%)', opacity: 0, offset: 0 },
+      { transform: 'translateY(0)', opacity: 1, offset: 0.16, easing: 'cubic-bezier(.3,.75,.25,1)' },
+      { transform: 'translateY(0)', opacity: 1, offset: 0.84 },
+      { transform: 'translateY(100%)', opacity: 0, offset: 1 }
+    ], { duration: 1900, easing: 'linear' });
+    an.onfinish = () => {
+      this.wordI = (this.wordI + 1) % this.words.length;
+      el.textContent = this.words[this.wordI];
+      this.cycleWord();
+    };
+  }
+
+  /* ---------- griglia foto ---------- */
+
+  initFlow() {
+    const run = () => {
+      const rail = document.querySelector('.flow');
+      if (!rail) return setTimeout(run, 200);
+      if (rail.dataset.init) return;
+      rail.dataset.init = '1';
+
+      const hydrate = () => {
+        let pending = 0;
+        rail.querySelectorAll('img[data-src]').forEach((img) => {
+          const src = img.getAttribute('data-src');
+          if (!src || src.indexOf('{{') !== -1) { pending++; return; }
+          if (img.getAttribute('src') !== src) img.setAttribute('src', src);
+        });
+        if (!pending) { clearInterval(this._flowHydrate); this._flowHydrate = null; }
+      };
+      hydrate();
+      this._flowHydrate = setInterval(hydrate, 700);
+
+      const layout = () => {
+        let shots = Array.from(rail.querySelectorAll('.shot'));
+        if (!shots.length) return;
+        const cs0 = getComputedStyle(rail);
+        // larghezza utile: clientWidth include il padding del contenitore
+        const w = rail.clientWidth - parseFloat(cs0.paddingLeft || 0) - parseFloat(cs0.paddingRight || 0);
+        const cols = w >= 1000 ? 12 : (w >= 620 ? 6 : 1);
+        // masonry su griglia: ordine riga per riga
+        const nCols = cols === 12 ? 3 : cols === 6 ? 2 : 1;
+        const gap = parseFloat(getComputedStyle(rail).columnGap) || 24;
+        const unit = 8;
+        rail.style.display = 'grid';
+        rail.style.gridTemplateColumns = 'repeat(' + nCols + ', 1fr)';
+        rail.style.gridAutoRows = unit + 'px';
+        rail.style.gridAutoFlow = 'row dense';
+        rail.style.rowGap = '0px';
+        rail.style.columnGap = gap + 'px';
+        const colW = (w - gap * (nCols - 1)) / nCols;
+        const ratios = [1.25];
+        let pi = 0, ti = 0;
+        shots.forEach((el) => {
+          const txt = el.querySelector('[data-lines-src]');
+          // note consecutive mai nella stessa colonna: una foto fa sempre da stacco
+          if (txt && nCols > 1) el.dataset.txtCol = String((ti++ % nCols) + 1);
+          else delete el.dataset.txtCol;
+          el.style.breakInside = '';
+          el.style.marginBottom = '0';
+          el.style.width = '100%';
+          el.style.gridColumn = el.dataset.txtCol ? el.dataset.txtCol + ' / span 1' : 'span 1';
+          el.style.gridRowEnd = 'span 1000';
+          el.style.alignSelf = 'start';
+          if (txt) {
+            el.style.height = 'auto';
+            el.style.minHeight = '0';
+            el.style.display = 'block';
+          } else {
+            el.style.height = Math.round(colW * ratios[pi++ % ratios.length]) + 'px';
+            el.style.display = 'block';
+          }
+        });
+        shots.forEach((el) => {
+          const inner = el.firstElementChild;
+          const h = el.style.height && el.style.height !== 'auto'
+            ? parseFloat(el.style.height)
+            : Math.max(el.scrollHeight, inner ? inner.getBoundingClientRect().height : 0, parseFloat(el.style.minHeight) || 0);
+          el.style.gridRowEnd = 'span ' + Math.max(1, Math.ceil((h + gap) / unit));
+        });
+      };
+
+      rail.addEventListener('click', (e) => {
+        const img = e.target.closest && e.target.closest('img');
+        if (!img) return;
+        const list = Array.from(rail.querySelectorAll('img')).map((n) => n.getAttribute('src') || n.getAttribute('data-src')).filter(Boolean);
+        const src = img.getAttribute('src') || img.getAttribute('data-src');
+        this.openLb(list, Math.max(0, list.indexOf(src)));
+      });
+      layout();
+      [300, 900, 2000].forEach((t) => setTimeout(layout, t));
+      // ogni foto che finisce di caricare aggiorna le proporzioni della riga
+      rail.addEventListener('load', () => {
+        clearTimeout(this._layT);
+        this._layT = setTimeout(layout, 60);
+      }, true);
+      window.addEventListener('resize', layout);
+    };
+    run();
+  }
+
+  /* ---------- mappa topografica ---------- */
+
+  drawTopo() {
+    const cv = this.topoRef.current;
+    if (!cv) return;
+    const render = () => {
+      const w = cv.clientWidth, h = cv.clientHeight;
+      if (!w || !h) return;
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      cv.width = Math.round(w * dpr); cv.height = Math.round(h * dpr);
+      const ctx = cv.getContext('2d');
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.clearRect(0, 0, w, h);
+
+      const rnd = (() => { let s = 20240917; return () => { s = (s * 1664525 + 1013904223) % 4294967296; return s / 4294967296; }; })();
+      const P = new Float32Array(4096);
+      for (let i = 0; i < 4096; i++) P[i] = rnd();
+      const sm = (t) => t * t * (3 - 2 * t);
+      const vn = (x, y, f) => {
+        const xi = Math.floor(x * f), yi = Math.floor(y * f);
+        const xf = x * f - xi, yf = y * f - yi;
+        const at = (p, q) => P[((((p % 64) + 64) % 64) * 64 + (((q % 64) + 64) % 64)) % 4096];
+        const u = sm(xf), v = sm(yf);
+        const A = at(xi, yi), B = at(xi + 1, yi), C = at(xi, yi + 1), D = at(xi + 1, yi + 1);
+        const t1 = A + (B - A) * u, t2 = C + (D - C) * u;
+        return t1 + (t2 - t1) * v;
+      };
+      const field = (x, y) => vn(x, y, 2.2) * 0.68 + vn(x, y, 4.6) * 0.24 + vn(x, y, 9.5) * 0.08;
+
+      const cols = 210, rows = Math.max(40, Math.round(cols * (h / w)));
+      const gw = w / cols, gh = h / rows;
+      const G = [];
+      for (let j = 0; j <= rows; j++) { const row = new Float32Array(cols + 1); for (let i = 0; i <= cols; i++) row[i] = field(i / cols * 2.1, j / rows * 2.1 * (h / w) * 2.2); G.push(row); }
+
+      const key = (p) => Math.round(p[0] * 2) + ':' + Math.round(p[1] * 2);
+      const stitch = (segs) => {
+        const map = new Map();
+        segs.forEach((s, i) => { [0, 1].forEach((e) => { const k = key(s[e]); if (!map.has(k)) map.set(k, []); map.get(k).push(i); }); });
+        const used = new Array(segs.length).fill(false);
+        const out = [];
+        for (let i = 0; i < segs.length; i++) {
+          if (used[i]) continue;
+          used[i] = true;
+          const line = [segs[i][0], segs[i][1]];
+          for (let end = 0; end < 2; end++) {
+            for (;;) {
+              const tip = end === 0 ? line[line.length - 1] : line[0];
+              const cand = (map.get(key(tip)) || []).find((j) => !used[j]);
+              if (cand === undefined) break;
+              used[cand] = true;
+              const s = segs[cand];
+              const next = key(s[0]) === key(tip) ? s[1] : s[0];
+              if (end === 0) line.push(next); else line.unshift(next);
+            }
+          }
+          if (line.length > 3) out.push(line);
+        }
+        return out;
+      };
+      const smooth = (p, passes, spacing) => {
+        const closed = Math.hypot(p[0][0] - p[p.length - 1][0], p[0][1] - p[p.length - 1][1]) < 2;
+        let q = p;
+        for (let pass = 0; pass < passes; pass++) {
+          const r = [];
+          for (let i = 0; i < q.length; i++) {
+            const A = q[i === 0 ? (closed ? q.length - 2 : 0) : i - 1];
+            const B = q[i];
+            const C = q[i === q.length - 1 ? (closed ? 1 : q.length - 1) : i + 1];
+            r.push([(A[0] + 2 * B[0] + C[0]) / 4, (A[1] + 2 * B[1] + C[1]) / 4]);
+          }
+          if (closed) { r[r.length - 1] = r[0].slice(); }
+          q = r;
+        }
+        let total = 0;
+        for (let i = 1; i < q.length; i++) total += Math.hypot(q[i][0] - q[i - 1][0], q[i][1] - q[i - 1][1]);
+        if (total < 1) return q;
+        const n = Math.max(16, Math.round(total / spacing));
+        const out = [];
+        let seg = 0, acc = 0;
+        for (let i = 0; i < n; i++) {
+          const target = (total * i) / (n - 1);
+          while (seg < q.length - 2) {
+            const d = Math.hypot(q[seg + 1][0] - q[seg][0], q[seg + 1][1] - q[seg][1]);
+            if (acc + d >= target) break;
+            acc += d; seg++;
+          }
+          const d = Math.hypot(q[seg + 1][0] - q[seg][0], q[seg + 1][1] - q[seg][1]) || 1;
+          const k = Math.min(1, Math.max(0, (target - acc) / d));
+          out.push([q[seg][0] + (q[seg + 1][0] - q[seg][0]) * k, q[seg][1] + (q[seg + 1][1] - q[seg][1]) * k]);
+        }
+        return out;
+      };
+
+      let lo = 1, hi = 0;
+      for (const r of G) for (const v of r) { if (v < lo) lo = v; if (v > hi) hi = v; }
+      const step = (hi - lo) / 18;
+      const ip = (p, q, t) => (t - p) / (q - p || 1e-6);
+      const marks = [];
+      const elevLabels = [];
+      const levelData = [];
+
+      for (let k = 1; k < 18; k++) {
+        const lv = lo + step * (k + 0.137);
+        const isIdx = k % 5 === 0;
+        const segs = [];
+        for (let j = 0; j < rows; j++) {
+          for (let i = 0; i < cols; i++) {
+            const tl = G[j][i], tr = G[j][i + 1], br = G[j + 1][i + 1], bl = G[j + 1][i];
+            const x0 = i * gw, y0 = j * gh, x1 = x0 + gw, y1 = y0 + gh;
+            const T = (tl < lv) !== (tr < lv) ? [x0 + gw * ip(tl, tr, lv), y0] : null;
+            const R = (tr < lv) !== (br < lv) ? [x1, y0 + gh * ip(tr, br, lv)] : null;
+            const B = (br < lv) !== (bl < lv) ? [x0 + gw * ip(bl, br, lv), y1] : null;
+            const L = (bl < lv) !== (tl < lv) ? [x0, y0 + gh * ip(tl, bl, lv)] : null;
+            const n = (T ? 1 : 0) + (R ? 1 : 0) + (B ? 1 : 0) + (L ? 1 : 0);
+            if (n === 2) { const p = [T, R, B, L].filter(Boolean); segs.push([p[0], p[1]]); }
+            else if (n === 4) {
+              const center = (tl + tr + br + bl) / 4;
+              if ((center < lv) === (tl < lv)) { segs.push([T, R]); segs.push([B, L]); }
+              else { segs.push([T, L]); segs.push([R, B]); }
+            }
+          }
+        }
+        const lines = stitch(segs).filter((p) => p.length > 6).map((p) => smooth(p, 5, 6));
+        ctx.beginPath();
+        lines.forEach((p) => { ctx.moveTo(p[0][0], p[0][1]); for (let i = 1; i < p.length; i++) ctx.lineTo(p[i][0], p[i][1]); });
+        ctx.lineWidth = isIdx ? 1.5 : 0.8;
+        ctx.strokeStyle = isIdx ? 'rgba(255,255,255,0.22)' : 'rgba(255,255,255,0.1)';
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+        ctx.stroke();
+        if (isIdx) lines.forEach((p) => { if (p.length > 40) marks.push(p); });
+        levelData.push({ lines: lines, idx: isIdx, k: k, lv: lv });
+      }
+
+      if (this.props.showElevation !== false) {
+        levelData.sort((a, b) => (b.idx ? 1 : 0) - (a.idx ? 1 : 0)).forEach((lv) => {
+          const isIdx = lv.idx;
+          const elev = Math.round((320 + ((lv.lv - lo) / (hi - lo || 1)) * 340) / 20) * 20;
+          lv.lines.forEach((p) => {
+            if (p.length < 95) return;
+            const i0 = Math.round(p.length * ((0.16 + 0.19 * (lv.k % 5)) % 0.92));
+            const a = p[Math.max(0, i0 - 3)], b = p[Math.min(p.length - 1, i0 + 3)];
+            const pt = p[i0];
+            if (!a || !b || !pt) return;
+            if (pt[0] < 40 || pt[0] > w - 40 || pt[1] < 24 || pt[1] > h - 24) return;
+            const near = elevLabels.some((q) => {
+              const d = Math.hypot(q.pt[0] - pt[0], q.pt[1] - pt[1]);
+              return q.txt === String(elev) ? d < 260 : d < 110;
+            });
+            if (near) return;
+            let ang = Math.atan2(b[1] - a[1], b[0] - a[0]);
+            if (ang > Math.PI / 2) ang -= Math.PI;
+            if (ang < -Math.PI / 2) ang += Math.PI;
+            elevLabels.push({ pt: pt, ang: ang, txt: String(elev), idx: isIdx });
+          });
+        });
+        ctx.save();
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        elevLabels.forEach((l) => {
+          ctx.font = (l.idx ? '400 10px ' : '400 9px ') + 'ui-monospace, SFMono-Regular, Menlo, monospace';
+          const tw = ctx.measureText(l.txt).width;
+          ctx.save();
+          ctx.translate(l.pt[0], l.pt[1]);
+          ctx.rotate(l.ang);
+          ctx.globalCompositeOperation = 'destination-out';
+          ctx.fillStyle = '#000';
+          ctx.fillRect(-tw / 2 - 4, -7, tw + 8, 14);
+          ctx.globalCompositeOperation = 'source-over';
+          ctx.fillStyle = l.idx ? 'rgba(255,255,255,0.26)' : 'rgba(255,255,255,0.14)';
+          ctx.fillText(l.txt, 0, 0.5);
+          ctx.restore();
+        });
+        ctx.restore();
+      }
+
+      this.topoPaths = marks.sort((a, b) => b.length - a.length).slice(0, 8).map((p) => smooth(p, 0, 2.2));
+      const paths = this.topoPaths;
+      const N = Math.max(0, Math.round(this.props.markers ?? 10)), L = paths.length;
+      this.topoMarks = (L && N) ? Array.from({ length: N }, (_, i) => {
+        const pi = i % L;
+        const occ = Math.floor(i / L);
+        const perPath = Math.ceil((N - pi) / L);
+        return {
+          path: paths[pi],
+          t: ((occ + 0.5 * (pi % 2)) / perPath) % 1,
+          sp: 7 + (i % 3) * 1.6,
+          dir: i % 3 === 1 ? -1 : 1,
+          r: 3.4 + (i % 2) * 0.5
+        };
+      }) : [];
+
+      // due pallini extra ancorati in alto a sinistra
+      if (L && N) {
+        const tl = [];
+        paths.forEach((p) => {
+          let best = -1, bestD = Infinity;
+          for (let i = 0; i < p.length; i++) {
+            const dx = p[i][0] / w, dy = p[i][1] / h;
+            if (dx > 0.5 || dy > 0.42) continue;
+            const d = dx * dx + dy * dy;
+            if (d < bestD) { bestD = d; best = i; }
+          }
+          if (best >= 0) tl.push({ p, t: best / (p.length - 1), d: bestD });
+        });
+        const added = [];
+        tl.sort((a, b) => a.d - b.d).forEach((c) => {
+          if (added.length >= 2) return;
+          const clash = this.topoMarks.concat(added).some((m) => m.path === c.p && Math.abs(m.t - c.t) < 0.1);
+          if (clash) return;
+          added.push({ path: c.p, t: c.t, sp: 6.6, dir: 1, r: 3.6 });
+        });
+        added.forEach((m) => this.topoMarks.push(m));
+      }
+      // stesso tracciato: stessa velocità, t equidistanti -> non si raggiungono mai
+      {
+        const groups = new Map();
+        this.topoMarks.forEach((m) => { const g = groups.get(m.path) || []; g.push(m); groups.set(m.path, g); });
+        groups.forEach((g) => {
+          if (g.length < 2) return;
+          const sp = g[0].sp, dir = g[0].dir, base = g[0].t;
+          g.forEach((m, i) => { m.sp = sp; m.dir = dir; m.t = (base + i / g.length) % 1; });
+        });
+      }
+      // spaziatura minima globale: nessun pallino a meno di 90px da un altro
+      {
+        const at = (m) => m.path[Math.min(m.path.length - 1, Math.round(m.t * (m.path.length - 1)))];
+        const placed = [];
+        this.topoMarks = this.topoMarks.filter((m) => {
+          const free = () => { const p = at(m); return !placed.some((q) => Math.hypot(q[0] - p[0], q[1] - p[1]) < 90); };
+          for (let k = 0; k < 9 && !free(); k++) m.t = (m.t + 0.11) % 1;
+          if (!free()) return false;
+          placed.push(at(m));
+          return true;
+        });
+      }
+    };
+    this.renderTopo = render;
+    requestAnimationFrame(render);
+  }
+
+  drawTopoMarks(now) {
+    const cv = this.topoMarkRef.current;
+    if (!cv || !this.topoMarks.length) return false;
+    const w = cv.clientWidth, h = cv.clientHeight;
+    if (!w || !h) return false;
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    if (cv.width !== Math.round(w * dpr)) { cv.width = Math.round(w * dpr); cv.height = Math.round(h * dpr); }
+    const ctx = cv.getContext('2d');
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, w, h);
+    const dt = (this.reduced || !this.lastMark) ? 0 : Math.min((now - this.lastMark) / 1000, 0.05);
+    this.lastMark = now;
+    const fill = this.accHex();
+    this.topoMarks.forEach((m) => {
+      const p = m.path, n = p.length;
+      m.t += (m.sp * dt * (m.dir || 1)) / 420;
+      if (m.t >= 1) m.t -= 1;
+      if (m.t < 0) m.t += 1;
+      const closed = Math.hypot(p[0][0] - p[n - 1][0], p[0][1] - p[n - 1][1]) < 3;
+      const idxf = ((m.t % 1) + 1) % 1 * (n - 1);
+      const i0 = Math.floor(idxf), i1 = Math.min(i0 + 1, n - 1), kk = idxf - i0;
+      const pos = [p[i0][0] + (p[i1][0] - p[i0][0]) * kk, p[i0][1] + (p[i1][1] - p[i0][1]) * kk];
+      const wrap = (i) => closed ? ((i % (n - 1)) + (n - 1)) % (n - 1) : Math.min(n - 1, Math.max(0, i));
+      const A = p[wrap(i0 - 1)], B = p[wrap(i0 + 2)];
+      m.ang = Math.atan2(B[1] - A[1], B[0] - A[0]);
+      m.pos = pos;
+      ctx.beginPath();
+      ctx.arc(pos[0], pos[1], m.r, 0, Math.PI * 2);
+      ctx.fillStyle = fill;
+      ctx.fill();
+      if (!this.reduced) this.drawGps(ctx, m, pos, now);
+    });
+    if (!this.reduced) this.drawLinks(ctx, now);
+    return true;
+  }
+
+  drawLinks(ctx, now) {
+    const lit = (m) => m.gps && (m.gps.phase === 'in' || m.gps.phase === 'hold');
+    const marks = this.topoMarks.filter((m) => m.pos && lit(m));
+    if (!this.links) { this.links = []; this.nextLink = now + 700; }
+    const IN = 900, HOLD = 3200, OUT = 700, FAIL_LIFE = 3400;
+    if (now > this.nextLink && this.links.length < 4) {
+      const busy = new Set();
+      this.links.forEach((l) => { busy.add(l.a); busy.add(l.b); });
+      const free = marks.filter((m) => !busy.has(m));
+      let made = false;
+      if (this.nextFail === undefined) this.nextFail = now + 9000 + Math.random() * 9000;
+      if (now > this.nextFail && !this.links.some((l) => l.fail) && free.length >= 2) {
+        const cands = [];
+        for (let i = 0; i < free.length; i++) {
+          for (let j = i + 1; j < free.length; j++) {
+            const d = Math.hypot(free[i].pos[0] - free[j].pos[0], free[i].pos[1] - free[j].pos[1]);
+            if (d > 200 && d < 460) cands.push([free[i], free[j]]);
+          }
+        }
+        if (cands.length) {
+          const pair = cands[Math.floor(Math.random() * cands.length)];
+          pair.forEach((m) => { m.gps.phase = 'hold'; m.gps.at = now; });
+          this.links.push({ a: pair[0], b: pair[1], at: now, fail: true });
+          this.nextFail = now + 22000 + Math.random() * 16000;
+          made = true;
+        }
+      }
+      if (!made && free.length >= 2) {
+        const pairs = [];
+        for (let i = 0; i < free.length; i++) {
+          for (let j = i + 1; j < free.length; j++) {
+            const d = Math.hypot(free[i].pos[0] - free[j].pos[0], free[i].pos[1] - free[j].pos[1]);
+            if (d > 120 && d < 520) pairs.push([free[i], free[j]]);
+          }
+        }
+        if (pairs.length) {
+          const p = pairs[Math.floor(Math.random() * pairs.length)];
+          p.forEach((m) => { m.gps.phase = 'hold'; m.gps.at = now; });
+          this.links.push({ a: p[0], b: p[1], at: now });
+        }
+      }
+      this.nextLink = now + 350 + Math.random() * 900;
+    }
+    ctx.save();
+    ctx.lineWidth = 1;
+    this.links = this.links.filter((l) => {
+      if (l.fail) {
+        l.a.gps.phase = 'hold'; l.a.gps.at = now;
+        l.b.gps.phase = 'hold'; l.b.gps.at = now;
+        if (!l.end && now - l.at > IN + FAIL_LIFE) l.end = now;
+      } else {
+        const minLife = IN + 1500;
+        if (!l.end && ((now - l.at > minLife && (!lit(l.a) || !lit(l.b))) || now - l.at > IN + HOLD)) l.end = now;
+      }
+      if (l.end && now > l.end + OUT) {
+        if (l.fail) { l.a.gps.phase = 'out'; l.a.gps.at = now; l.b.gps.phase = 'out'; l.b.gps.at = now; }
+        return false;
+      }
+      const ease = (x) => 1 - Math.pow(1 - Math.max(0, Math.min(1, x)), 3);
+      const p1 = ease((now - l.at) / IN);
+      const p0 = l.end ? ease((now - l.end) / OUT) : 0;
+      const A = l.a.pos, B = l.b.pos;
+      const x = (p) => A[0] + (B[0] - A[0]) * p, y = (p) => A[1] + (B[1] - A[1]) * p;
+      const flick = 0.30 + Math.random() * 0.22 + (Math.random() < 0.05 ? -0.24 : 0);
+      const red = l.fail && now - l.at > IN * 0.9;
+      const fade = l.end ? Math.max(0, 1 - (now - l.end) / OUT) : 1;
+      ctx.strokeStyle = red
+        ? 'rgba(214,67,47,' + Math.max(0.12, (0.55 + Math.random() * 0.3) * fade).toFixed(3) + ')'
+        : this.accA(Math.max(0.06, flick).toFixed(3));
+      ctx.setLineDash(Math.random() < 0.12 ? [Math.random() * 30 + 8, Math.random() * 14 + 4] : []);
+      ctx.lineDashOffset = Math.random() * 20;
+      ctx.beginPath();
+      ctx.moveTo(x(p0), y(p0));
+      ctx.lineTo(x(p1), y(p1));
+      ctx.stroke();
+      ctx.setLineDash([]);
+      if (red) this.drawFailText(ctx, l, now - l.at - IN * 0.9, fade);
+      return true;
+    });
+    ctx.restore();
+  }
+
+  drawFailText(ctx, l, t, fade) {
+    const CH = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ#/*';
+    const txt = 'CONNECTION FAILED';
+    const n = txt.length;
+    let out = '';
+    for (let i = 0; i < n; i++) {
+      const c = txt[i];
+      if (c === ' ') { out += ' '; continue; }
+      const p = t - (i / n) * 380;
+      out += p < 0 ? ' ' : (p < 200 ? CH[(Math.floor(p / 35) + i * 3) % CH.length] : c);
+    }
+    const A = l.a.pos, B = l.b.pos;
+    const ring = (p, r) => { ctx.beginPath(); ctx.arc(p[0], p[1], r + 3.5, 0, Math.PI * 2); ctx.strokeStyle = 'rgba(214,67,47,' + (0.5 * fade).toFixed(3) + ')'; ctx.lineWidth = 1; ctx.stroke(); };
+    ctx.save();
+    ring(B, l.b.r || 3.4);
+    ring(A, l.a.r || 3.4);
+    let ang = Math.atan2(B[1] - A[1], B[0] - A[0]);
+    if (ang > Math.PI / 2) ang -= Math.PI;
+    if (ang < -Math.PI / 2) ang += Math.PI;
+    ctx.font = '600 11px ui-monospace, SFMono-Regular, Menlo, monospace';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    const blink = Math.random() < 0.07 ? 0.25 : 1;
+    const tw = ctx.measureText(out).width;
+    ctx.translate((A[0] + B[0]) / 2, (A[1] + B[1]) / 2);
+    ctx.rotate(ang);
+    ctx.globalCompositeOperation = 'destination-out';
+    ctx.fillStyle = '#000';
+    ctx.fillRect(-tw / 2 - 6, -7, tw + 12, 14);
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.fillStyle = 'rgba(214,67,47,' + (0.9 * fade * blink).toFixed(3) + ')';
+    ctx.fillText(out, 0, 0);
+    ctx.restore();
+  }
+
+  gpsText() {
+    const pad = (v, n) => String(v).padStart(n, '0');
+    const dms = (max) => pad(Math.floor(Math.random() * max), 2) + '°' + pad(Math.floor(Math.random() * 60), 2) + "'" + pad(Math.floor(Math.random() * 60), 2) + '"';
+    return dms(90) + (Math.random() < 0.5 ? 'N' : 'S') + ' ' + dms(180) + (Math.random() < 0.5 ? 'E' : 'W');
+  }
+
+  label(ctx, txt, m, pos) {
+    ctx.save();
+    ctx.font = '500 11px ui-monospace, SFMono-Regular, Menlo, monospace';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'alphabetic';
+    ctx.fillStyle = this.accA(0.55);
+    const cw = ctx.canvas.clientWidth || 1;
+    const tw = ctx.measureText(txt).width;
+    ctx.fillText(txt, Math.max(tw / 2 + 8, Math.min(pos[0], cw - tw / 2 - 8)), Math.max(18, pos[1] - m.r - 9));
+    ctx.restore();
+  }
+
+  drawActivity(ctx, m, pos, now, central) {
+    const ACTS = ['Threshold Effort', 'Hill Repeats', 'Zone 4', 'Negative Split', 'Long Ride', 'Recovery Spin', 'Cooling Down', 'Off Season', 'Running', 'Climbing', 'Descending', 'Track Session', 'Time Trial', 'Open Water Swim', 'Trail Session', 'Team Camp'];
+    const CH = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    if (!m.act) m.act = { txt: '', phase: 'wait', at: now + Math.random() * 1200 };
+    const a = m.act;
+    const IN = 800, OUT = 620;
+    if (a.phase === 'wait') {
+      if (now < a.at || central) return;
+      const used = this.topoMarks.filter((o) => o !== m && o.act && o.act.txt && o.pos && m.pos && Math.hypot(o.pos[0] - m.pos[0], o.pos[1] - m.pos[1]) < 520).map((o) => o.act.txt);
+      const pool = ACTS.map((x) => x.toUpperCase()).filter((x) => used.indexOf(x) < 0);
+      const src = pool.length ? pool : ACTS.map((x) => x.toUpperCase());
+      a.txt = src[Math.floor(Math.random() * src.length)];
+      a.phase = 'in'; a.at = now;
+    }
+    const el = now - a.at;
+    if (a.phase === 'in' && el > IN) { a.phase = 'hold'; a.at = now; }
+    else if (a.phase === 'out' && el > OUT) { a.phase = 'wait'; a.at = now + 400; return; }
+    const t = now - a.at;
+    const n = a.txt.length;
+    let out = '';
+    for (let i = 0; i < n; i++) {
+      const c = a.txt[i];
+      if (c === ' ') { out += ' '; continue; }
+      if (a.phase === 'hold') { out += c; continue; }
+      const start = a.phase === 'in' ? (i / n) * (IN - 240) : ((n - 1 - i) / n) * (OUT - 160);
+      const p = t - start;
+      if (a.phase === 'in') out += p < 0 ? ' ' : (p < 240 ? CH[(Math.floor(p / 40) + i * 3) % CH.length] : c);
+      else out += p < 0 ? c : (p < 160 ? CH[(Math.floor(p / 35) + i * 5) % CH.length] : ' ');
+    }
+    this.label(ctx, out, m, pos);
+  }
+
+  drawGps(ctx, m, pos, now) {
+    const CH = '0123456789°\'"NSEW';
+    if (!m.gps) m.gps = { txt: '', phase: 'wait', at: now + 1500 + Math.random() * 14000 };
+    const g = m.gps;
+    const IN = 900, HOLD = 4400, OUT = 700;
+    const cv = ctx.canvas, cw = cv.clientWidth || 1, chh = cv.clientHeight || 1;
+    const central = Math.abs(pos[0] / cw - 0.5) < 0.3 && pos[1] / chh > 0.42;
+    if (g.phase === 'wait') {
+      if (now < g.at || central) { this.drawActivity(ctx, m, pos, now, central); return; }
+      g.txt = this.gpsText(); g.phase = 'in'; g.at = now;
+    }
+    const el = now - g.at;
+    if (g.phase === 'in' && el > IN) { g.phase = 'hold'; g.at = now; }
+    else if (g.phase === 'hold' && el > HOLD) { g.phase = 'out'; g.at = now; }
+    else if (g.phase === 'out' && el > OUT) { g.phase = 'wait'; g.at = now + 6000 + Math.random() * 18000; m.act = null; return; }
+    const t = now - g.at;
+    const n = g.txt.length;
+    let out = '';
+    for (let i = 0; i < n; i++) {
+      const c = g.txt[i];
+      if (g.phase === 'hold') { out += c; continue; }
+      const start = g.phase === 'in' ? (i / n) * (IN - 260) : ((n - 1 - i) / n) * (OUT - 180);
+      const p = t - start;
+      if (g.phase === 'in') out += p < 0 ? ' ' : (p < 260 ? CH[(Math.floor(p / 40) + i * 3) % CH.length] : c);
+      else out += p < 0 ? c : (p < 180 ? CH[(Math.floor(p / 35) + i * 5) % CH.length] : ' ');
+    }
+    this.label(ctx, out, m, pos);
+  }
+
+  loop(now) {
+    const drawn = this.drawTopoMarks(now);
+    // con prefers-reduced-motion la mappa è statica: un solo frame
+    if (this.reduced && drawn) return;
+    this.raf = requestAnimationFrame(this.loop);
+  }
+}
+</script>
+</body>
+</html>

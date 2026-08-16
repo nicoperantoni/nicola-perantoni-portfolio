@@ -1,0 +1,119 @@
+---
+import { Picture } from 'astro:assets';
+import type { FlowItem } from '../data/content';
+
+interface Props {
+  flow: FlowItem[];
+}
+
+const { flow } = Astro.props;
+
+const EAGER_IMAGE_COUNT = 4;
+const PHOTO_WIDTHS = [420, 640, 900, 1200];
+const PHOTO_SIZES = '(min-width: 1000px) 28vw, (min-width: 620px) 43vw, 88vw';
+
+let imageIndex = -1;
+---
+
+<section id="work" class="work">
+  <div class="flow" id="flow">
+    {
+      flow.map((item) => {
+        if (item.kind === 'image') {
+          imageIndex++;
+          const eager = imageIndex < EAGER_IMAGE_COUNT;
+          return (
+            <div class="shot" data-reveal="wipe">
+              <Picture
+                src={item.image}
+                alt={item.alt}
+                widths={PHOTO_WIDTHS}
+                sizes={PHOTO_SIZES}
+                formats={['avif', 'webp']}
+                fallbackFormat="webp"
+                loading={eager ? 'eager' : 'lazy'}
+                fetchpriority={eager ? 'high' : 'auto'}
+                decoding="async"
+                draggable="false"
+              />
+            </div>
+          );
+        }
+        return (
+          <div class="shot" data-reveal="wipe">
+            <span data-lines-src="1" class="shot__text">
+              {item.body}
+            </span>
+          </div>
+        );
+      })
+    }
+  </div>
+</section>
+
+<style>
+  .work {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(14px, 2vh, 24px);
+    padding: clamp(18px, 3vh, 34px) 0 clamp(40px, 7vh, 90px);
+    margin-top: clamp(10px, 1.4vh, 18px);
+  }
+
+  .flow {
+    perspective: 1600px;
+    perspective-origin: 50% 40%;
+    padding: clamp(6px, 1vh, 12px) var(--space-section-x) clamp(10px, 1.6vh, 20px);
+  }
+
+  .shot {
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--radius-md);
+    align-self: start;
+  }
+
+  .shot :global(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    background: rgba(16, 17, 20, 0.08);
+    cursor: pointer;
+  }
+
+  .shot :global(picture) {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .shot__text {
+    display: block;
+    height: 100%;
+    padding: clamp(4px, 0.8vw, 12px) clamp(6px, 1.4vw, 22px) 0 0;
+    max-width: 26ch;
+    font-family: var(--font-archivo);
+    font-weight: 300;
+    font-size: clamp(1.6rem, 2.7vw, 2.9rem);
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    color: rgba(16, 17, 20, 0.82);
+    text-wrap: pretty;
+  }
+</style>
+
+<script>
+  import { initFlowLayout } from '../lib/flow-layout';
+
+  const container = document.getElementById('flow');
+  if (container) {
+    initFlowLayout(container, {
+      onPhotoClick: (src, list) => {
+        window.dispatchEvent(new CustomEvent('lightbox:open', { detail: { src, list } }));
+      },
+    });
+  }
+</script>

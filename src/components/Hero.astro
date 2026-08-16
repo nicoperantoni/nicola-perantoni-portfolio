@@ -1,0 +1,289 @@
+---
+// Parametri del modulo mappa topografica — vedi README → "Topo Map Module — API".
+interface Props {
+  accent?: string;
+  markers?: number;
+  showElevation?: boolean;
+}
+
+const { accent = '#c8b892', markers = 10, showElevation = true } = Astro.props;
+
+const words = ['Corro', 'Pedalo', 'Cammino', 'Viaggio'];
+
+const introParagraphs = [
+  'Mi occupo di fotografia sportiva. Sono di Verona, ma mi sposto ovunque.',
+  'Seguo squadre, atleti e federazioni durante tutta la stagione: dal ritiro estivo alla volata finale. Realizzo editoriali e campagne per brand, in studio e sul campo.',
+  "Cerco il gesto vero, l'istante prima del risultato. Su qualsiasi terreno.",
+];
+
+// bootMs: durata del lampeggio a passi (ledBoot) prima dell'attivazione — vedi README "Blocco stato".
+const statusRows = [
+  { id: 'gps', label: 'GPS Signal:', from: 'Searching', to: 'Active', bootMs: 0.62 },
+  { id: 'device', label: 'Device:', from: 'Turning on', to: 'Enabled', bootMs: 0.78 },
+  { id: 'athlete', label: 'Athlete:', from: 'Warming up', to: 'Ready', bootMs: 0.7 },
+];
+---
+
+<section class="hero">
+  <div class="hero__panel">
+    <div class="hero__map" aria-hidden="true">
+      <canvas id="topo-static" class="hero__canvas"></canvas>
+      <canvas id="topo-marks" class="hero__canvas hero__canvas--marks"></canvas>
+    </div>
+
+    <div class="hero__content">
+      <h1 class="hero__headline">
+        <strong class="hero__word-wrap"
+          ><span class="hero__word-window"><span id="hero-word" class="hero__word">{words[0]}</span></span></strong
+        ><br />
+        <em class="hero__serif">quindi</em><br />
+        <strong class="hero__bold">fotografo</strong>
+      </h1>
+
+      <div class="hero__status">
+        {
+          statusRows.map((row) => (
+            <Fragment>
+              <span
+                id={`led-${row.id}`}
+                class="hero__led is-boot"
+                style={`animation: ledBoot ${row.bootMs}s steps(1, end) infinite;`}
+              />
+              <span class="hero__status-label">{row.label}</span>
+              <span id={`val-${row.id}`} class="hero__status-value">
+                {row.from}
+              </span>
+            </Fragment>
+          ))
+        }
+      </div>
+
+      <div class="hero__intro">
+        {introParagraphs.map((p) => <span>{p}</span>)}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    min-height: 100dvh;
+    display: flex;
+    align-items: stretch;
+  }
+
+  .hero__panel {
+    position: relative;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: clamp(22px, 4vh, 56px);
+    padding: clamp(20px, 3vw, 44px);
+    text-align: center;
+    background: #000000;
+    overflow: hidden;
+  }
+
+  .hero__map {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: min(78%, 1000px);
+    z-index: 0;
+    display: block;
+    overflow: hidden;
+    pointer-events: none;
+    mask-image: linear-gradient(
+      to bottom,
+      #000 0%,
+      #000 58%,
+      rgba(0, 0, 0, 0.88) 72%,
+      rgba(0, 0, 0, 0.62) 82%,
+      rgba(0, 0, 0, 0.34) 90%,
+      rgba(0, 0, 0, 0.14) 96%,
+      transparent 100%
+    );
+    -webkit-mask-image: linear-gradient(
+      to bottom,
+      #000 0%,
+      #000 58%,
+      rgba(0, 0, 0, 0.88) 72%,
+      rgba(0, 0, 0, 0.62) 82%,
+      rgba(0, 0, 0, 0.34) 90%,
+      rgba(0, 0, 0, 0.14) 96%,
+      transparent 100%
+    );
+  }
+
+  .hero__canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .hero__canvas--marks {
+    position: absolute;
+    inset: 0;
+  }
+
+  .hero__content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(20px, 3vh, 40px);
+    flex: 0 0 auto;
+    min-height: 66dvh;
+    padding-top: clamp(120px, 22vh, 300px);
+    padding-bottom: clamp(70px, 11vh, 160px);
+    width: 100%;
+    animation: riseIn 1.1s cubic-bezier(0.22, 0.7, 0.2, 1) both;
+  }
+
+  .hero__headline {
+    margin: 0;
+    font-family: var(--font-archivo);
+    font-weight: 300;
+    font-size: clamp(2.2rem, 7.6vw, 7rem);
+    line-height: 1.14;
+    letter-spacing: -0.035em;
+    color: var(--color-on-dark);
+  }
+
+  .hero__word-wrap {
+    font-weight: 600;
+  }
+
+  .hero__word-window {
+    position: relative;
+    display: inline-block;
+    overflow: hidden;
+    vertical-align: bottom;
+    height: 1.14em;
+    min-width: 7.4ch;
+    text-align: center;
+  }
+
+  .hero__word {
+    display: inline-block;
+    will-change: transform, opacity;
+  }
+
+  .hero__serif {
+    font-family: var(--font-serif-italic);
+    font-style: italic;
+    font-weight: 400;
+  }
+
+  .hero__bold {
+    font-weight: 600;
+  }
+
+  .hero__status {
+    display: grid;
+    grid-template-columns: auto auto 8.6em;
+    align-items: center;
+    justify-content: center;
+    column-gap: 10px;
+    row-gap: 8px;
+    font-family: var(--font-mono);
+    font-weight: 400;
+    font-size: clamp(10px, 1vw, 12px);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-on-dark-tertiary);
+  }
+
+  .hero__status-label,
+  .hero__status-value {
+    text-align: left;
+  }
+
+  .hero__status-value {
+    white-space: pre;
+    overflow: hidden;
+  }
+
+  .hero__led {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+  }
+
+  .hero__led.is-boot {
+    background: var(--color-led-boot);
+    box-shadow: 0 0 8px var(--color-led-boot-glow);
+  }
+
+  .hero__led.is-ok {
+    background: var(--color-led-ok);
+    box-shadow: 0 0 8px var(--color-led-ok-glow);
+  }
+
+  .hero__intro {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(16px, 2.4vh, 26px);
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+    text-align: center;
+    padding-top: clamp(30px, 7vh, 110px);
+    padding-bottom: clamp(40px, 7vh, 96px);
+    font-family: var(--font-archivo);
+    font-weight: 300;
+    font-size: clamp(1.05rem, 1.6vw, 1.6rem);
+    line-height: 1.45;
+    letter-spacing: -0.01em;
+    color: var(--color-on-dark-secondary);
+    text-wrap: pretty;
+  }
+</style>
+
+<script is:inline define:vars={{ accent, markers, showElevation, words }}>
+  // define:vars è inline-only (niente import bundlati, niente TypeScript):
+  // passa solo i dati al modulo processato da Vite nel secondo <script>.
+  window.__heroConfig = { accent, markers, showElevation, words };
+</script>
+
+<script>
+  import { createTopoMap } from '../lib/topo-map';
+  import { startWordCycle } from '../lib/word-cycle';
+  import { runBootSequence } from '../lib/boot-status';
+
+  const { accent, markers, showElevation, words } = (window as any).__heroConfig as {
+    accent: string;
+    markers: number;
+    showElevation: boolean;
+    words: string[];
+  };
+
+  const staticCanvas = document.getElementById('topo-static') as HTMLCanvasElement | null;
+  const marksCanvas = document.getElementById('topo-marks') as HTMLCanvasElement | null;
+  if (staticCanvas && marksCanvas) {
+    createTopoMap(staticCanvas, marksCanvas, { accent, markers, showElevation });
+  }
+
+  const wordEl = document.getElementById('hero-word');
+  if (wordEl) startWordCycle(wordEl, words);
+
+  const rows = [
+    { id: 'gps', from: 'Searching', to: 'Active' },
+    { id: 'device', from: 'Turning on', to: 'Enabled' },
+    { id: 'athlete', from: 'Warming up', to: 'Ready' },
+  ]
+    .map((r) => {
+      const ledEl = document.getElementById(`led-${r.id}`);
+      const textEl = document.getElementById(`val-${r.id}`);
+      return ledEl && textEl ? { ledEl, textEl, from: r.from, to: r.to } : null;
+    })
+    .filter((r): r is NonNullable<typeof r> => r !== null);
+
+  runBootSequence(rows);
+</script>

@@ -1,0 +1,122 @@
+---
+---
+
+<div class="lightbox" id="lightbox">
+  <img id="lightbox-image" class="lightbox__image" alt="" />
+  <button id="lightbox-prev" class="lightbox__btn lightbox__btn--prev" aria-label="Foto precedente" type="button">←</button>
+  <button id="lightbox-next" class="lightbox__btn lightbox__btn--next" aria-label="Foto successiva" type="button">→</button>
+  <button id="lightbox-close" class="lightbox__btn lightbox__btn--close" aria-label="Chiudi" type="button">✕</button>
+  <span id="lightbox-counter" class="lightbox__counter"></span>
+</div>
+
+<style>
+  .lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: 140;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: clamp(16px, 4vh, 56px) clamp(16px, 5vw, 96px);
+    background: var(--color-lightbox-bg);
+    backdrop-filter: blur(6px);
+    opacity: 0;
+    transition: opacity 0.32s ease;
+    cursor: zoom-out;
+  }
+
+  .lightbox.is-open {
+    display: flex;
+  }
+
+  .lightbox.is-shown {
+    opacity: 1;
+  }
+
+  .lightbox__image {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    display: block;
+    border-radius: var(--radius-sm);
+    box-shadow: 0 30px 90px rgba(0, 0, 0, 0.55);
+  }
+
+  .lightbox__btn {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.06);
+    color: rgba(255, 255, 255, 0.86);
+    font-family: var(--font-mono);
+    cursor: pointer;
+    transition: background 0.25s ease, border-color 0.25s ease;
+  }
+
+  .lightbox__btn:hover {
+    background: rgba(255, 255, 255, 0.16);
+    border-color: rgba(255, 255, 255, 0.5);
+  }
+
+  .lightbox__btn--prev,
+  .lightbox__btn--next {
+    top: 50%;
+    transform: translateY(-50%);
+    width: 52px;
+    height: 52px;
+    font-size: 16px;
+  }
+
+  .lightbox__btn--prev {
+    left: clamp(10px, 2vw, 30px);
+  }
+
+  .lightbox__btn--next {
+    right: clamp(10px, 2vw, 30px);
+  }
+
+  .lightbox__btn--close {
+    top: clamp(12px, 2.4vh, 28px);
+    right: clamp(12px, 2vw, 30px);
+    width: 44px;
+    height: 44px;
+    font-size: 15px;
+  }
+
+  .lightbox__counter {
+    position: absolute;
+    left: 50%;
+    bottom: clamp(12px, 2.4vh, 26px);
+    transform: translateX(-50%);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.6);
+  }
+</style>
+
+<script>
+  import { initLightbox } from '../lib/lightbox';
+
+  const overlay = document.getElementById('lightbox');
+  const image = document.getElementById('lightbox-image') as HTMLImageElement | null;
+  const prevButton = document.getElementById('lightbox-prev');
+  const nextButton = document.getElementById('lightbox-next');
+  const closeButton = document.getElementById('lightbox-close');
+  const counter = document.getElementById('lightbox-counter');
+
+  if (overlay && image && prevButton && nextButton && closeButton && counter) {
+    const controller = initLightbox({ overlay, image, prevButton, nextButton, closeButton, counter });
+
+    window.addEventListener('lightbox:open', ((e: CustomEvent<{ src: string; list: string[] }>) => {
+      const { src, list } = e.detail;
+      controller.open(list, Math.max(0, list.indexOf(src)));
+    }) as EventListener);
+  }
+</script>

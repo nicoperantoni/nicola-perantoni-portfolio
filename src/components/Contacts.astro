@@ -1,0 +1,96 @@
+---
+---
+
+<section id="contatti" class="contacts">
+  <h2 class="contacts__title">
+    Racconto <em>storie</em> di brand, gare, <em>squadre <span class="contacts__and">e</span> atleti.</em>
+  </h2>
+
+  <div class="contacts__row">
+    <div class="contacts__block">
+      <span class="contacts__label">Email</span>
+      <a href="mailto:nicola.perantoni@gmail.com" class="contacts__value">nicola.perantoni@gmail.com</a>
+    </div>
+    <div class="contacts__block">
+      <span class="contacts__label">Instagram</span>
+      <a href="https://instagram.com/nicolaperantoni" target="_blank" rel="noopener noreferrer" class="contacts__value"
+        >@nicolaperantoni ↗</a
+      >
+    </div>
+    <div class="contacts__block">
+      <span class="contacts__label">Sede</span>
+      <span class="contacts__value contacts__value--static">Italia — Disponibile ovunque</span>
+    </div>
+  </div>
+</section>
+
+<style>
+  .contacts {
+    position: relative;
+    z-index: 2;
+    min-height: 72dvh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: clamp(24px, 4vh, 48px);
+    padding: clamp(56px, 9vh, 110px) var(--space-section-x);
+  }
+
+  .contacts__title {
+    margin: 0 auto;
+    max-width: 20ch;
+    text-align: center;
+    font-weight: 300;
+    font-size: clamp(2.2rem, 6vw, 5.4rem);
+    line-height: 0.98;
+    letter-spacing: -0.04em;
+    text-wrap: balance;
+  }
+
+  .contacts__title em {
+    font-family: var(--font-serif-italic);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 1em;
+  }
+
+  .contacts__and {
+    font-family: var(--font-archivo);
+    font-style: normal;
+    font-weight: 300;
+  }
+
+  .contacts__row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: clamp(20px, 3vw, 56px) clamp(32px, 6vw, 96px);
+    margin-top: clamp(24px, 5vh, 64px);
+    align-items: start;
+    text-align: center;
+    font-family: var(--font-mono);
+    font-size: clamp(11px, 1.2vw, 14px);
+    letter-spacing: 0.06em;
+  }
+
+  .contacts__block {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .contacts__label {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(16, 17, 20, 0.5);
+  }
+
+  .contacts__value {
+    color: rgba(16, 17, 20, 0.92);
+  }
+
+  a.contacts__value:hover {
+    color: #000000;
+  }
+</style>

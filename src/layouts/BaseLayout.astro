@@ -1,0 +1,83 @@
+---
+import '../styles/global.css';
+
+const siteUrl = 'https://nicolaperantoni.com';
+const title = 'Nicola Perantoni — Fotografo sportivo, Verona';
+const description =
+  "Fotografo sportivo con base a Verona. Gare ed eventi, ritiri e training camp, campagne e editoriali per brand, ritratti d'atleta e video. Disponibile in Italia e all'estero.";
+const ogDescription =
+  'Seguo squadre, atleti e federazioni durante tutta la stagione: dal ritiro estivo alla volata finale. Editoriali e campagne per brand, in studio e sul campo.';
+const twitterDescription = 'Fotografia sportiva: gare, ritiri, editoriali e campagne per brand. Verona, Italia.';
+const ogImage = `${siteUrl}/og-image.jpg`;
+const ogImageAlt = 'Nicola Perantoni — fotografo sportivo, Verona';
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'ProfessionalService',
+  name: 'Nicola Perantoni',
+  description:
+    "Fotografia sportiva: gare ed eventi, ritiri e training camp, campagne e editoriali per brand, ritratti d'atleta e video.",
+  email: 'nicola.perantoni@gmail.com',
+  image: ogImage,
+  url: siteUrl,
+  areaServed: 'IT',
+  address: { '@type': 'PostalAddress', addressLocality: 'Verona', addressCountry: 'IT' },
+  sameAs: ['https://instagram.com/nicolaperantoni'],
+  founder: { '@type': 'Person', name: 'Nicola Perantoni', jobTitle: 'Fotografo sportivo' },
+  makesOffer: [
+    { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Gare ed eventi' } },
+    { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Ritiri e training camp' } },
+    { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Campagne e editoriali' } },
+    { '@type': 'Offer', itemOffered: { '@type': 'Service', name: "Ritratti d'atleta" } },
+    { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Video' } },
+  ],
+};
+---
+
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="author" content="Nicola Perantoni" />
+    <meta name="robots" content="index, follow" />
+    <meta name="theme-color" content="#afafaf" />
+    <link rel="canonical" href={siteUrl + '/'} />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="it_IT" />
+    <meta property="og:site_name" content="Nicola Perantoni" />
+    <meta property="og:url" content={siteUrl + '/'} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={ogDescription} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:alt" content={ogImageAlt} />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={twitterDescription} />
+    <meta name="twitter:image" content={ogImage} />
+    <meta name="twitter:image:alt" content={ogImageAlt} />
+
+    <script type="application/ld+json" is:inline set:html={JSON.stringify(jsonLd)} />
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Archivo:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

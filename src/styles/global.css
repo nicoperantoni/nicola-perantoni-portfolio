@@ -1,0 +1,201 @@
+/* Design tokens — vedi README "Design Tokens" per i valori di riferimento. */
+:root {
+  --color-bg: rgb(175, 175, 175);
+  --color-text: #101114;
+  --color-text-secondary: rgba(16, 17, 20, 0.68);
+  --color-text-tertiary: rgba(16, 17, 20, 0.55);
+  --color-text-quaternary: rgba(16, 17, 20, 0.45);
+  --color-card: rgba(16, 17, 20, 0.07);
+
+  --color-panel: #000000;
+  --color-lightbox-bg: rgba(12, 12, 14, 0.95);
+  --color-on-dark: #ffffff;
+  --color-on-dark-secondary: rgba(255, 255, 255, 0.66);
+  --color-on-dark-tertiary: rgba(255, 255, 255, 0.62);
+
+  --color-accent: #c8b892;
+  --color-led-ok: #5ee08a;
+  --color-led-ok-glow: rgba(94, 224, 138, 0.55);
+  --color-led-boot: #e8912f;
+  --color-led-boot-glow: rgba(232, 145, 47, 0.6);
+  --color-error: #d6432f;
+
+  --font-archivo: 'Archivo', Helvetica, Arial, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-serif-italic: 'Instrument Serif', Georgia, serif;
+
+  --ease-signature: cubic-bezier(0.2, 0.7, 0.2, 1);
+
+  --space-section-y: clamp(56px, 9vh, 120px);
+  --space-section-x: calc(clamp(18px, 5vw, 64px) + 44px);
+  --radius-md: clamp(8px, 1vw, 14px);
+  --radius-sm: clamp(4px, 0.6vw, 8px);
+}
+
+html {
+  height: auto;
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-archivo);
+  font-weight: 300;
+}
+
+body::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img {
+  max-width: 100%;
+}
+
+/* ---------- keyframes ---------- */
+
+@keyframes ledFlicker {
+  0%, 44%, 52%, 78%, 100% { opacity: 1; }
+  46%, 50% { opacity: 0.35; }
+  80% { opacity: 0.6; }
+}
+
+@keyframes ledBoot {
+  0%, 45% { opacity: 1; }
+  46%, 100% { opacity: 0.18; }
+}
+
+@keyframes riseIn {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes glyphSpin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes revealUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes veilOut {
+  to { opacity: 0; visibility: hidden; }
+}
+
+@keyframes contourWipe {
+  0% {
+    opacity: 0;
+    mask-size: 100% 9px;
+    -webkit-mask-size: 100% 9px;
+    transform: rotateX(10deg) rotateY(-5deg) translateZ(-120px) scale(1.05);
+  }
+  30% { opacity: 1; }
+  100% {
+    opacity: 1;
+    mask-size: 100% 320%;
+    -webkit-mask-size: 100% 320%;
+    transform: rotateX(0deg) rotateY(0deg) translateZ(0) scale(1);
+  }
+}
+
+@keyframes textTilt {
+  from { transform: rotateX(9deg) translateZ(-90px); }
+  to { transform: rotateX(0deg) translateZ(0); }
+}
+
+/* ---------- reveal allo scroll ---------- */
+
+[data-seen='1'] {
+  animation: revealUp 0.85s var(--ease-signature) both;
+}
+
+.shot {
+  transform: none;
+}
+
+.shot:has([data-lines-src]) {
+  transform-style: preserve-3d;
+}
+
+.shot[data-seen='1']:has([data-lines-src]) {
+  animation: textTilt 1s var(--ease-signature) both;
+}
+
+.shot[data-seen='1'] {
+  animation: none;
+}
+
+.shot[data-reveal] img {
+  mask-image: linear-gradient(to bottom, #000 0 46%, transparent 46%);
+  -webkit-mask-image: linear-gradient(to bottom, #000 0 46%, transparent 46%);
+  mask-repeat: repeat;
+  -webkit-mask-repeat: repeat;
+  mask-size: 100% 320%;
+  -webkit-mask-size: 100% 320%;
+}
+
+.shot[data-reveal]:not([data-seen]) img {
+  opacity: 0;
+}
+
+.shot[data-seen='1'] img {
+  animation: contourWipe 1.15s var(--ease-signature) both;
+  transform-origin: 50% 60%;
+}
+
+/* ---------- prefers-reduced-motion ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-delay: 0ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+
+  .shot[data-reveal] img,
+  .shot[data-seen='1'] img {
+    mask-image: none !important;
+    -webkit-mask-image: none !important;
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .shot[data-reveal]:not([data-seen]) img {
+    opacity: 1 !important;
+  }
+
+  .shot,
+  .shot[data-seen='1']:has([data-lines-src]) {
+    transform: none !important;
+    transition: none !important;
+    animation: none !important;
+  }
+
+  [data-seen='1'] {
+    animation: none !important;
+  }
+
+  [data-lines-src] > span > span {
+    transform: translateY(0) !important;
+    transition: none !important;
+  }
+}
