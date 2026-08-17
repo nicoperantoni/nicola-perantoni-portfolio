@@ -12,13 +12,14 @@
     "icons": "node scripts/generate-icons.mjs"
   },
   "dependencies": {
-    "astro": "^7.2.2",
-    "@astrojs/sitemap": "^3.7.3"
+    "@astrojs/sitemap": "^3.7.3",
+    "@vercel/analytics": "^2.0.1",
+    "astro": "^7.2.2"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.10",
-    "sharp": "^0.35.3",
     "png-to-ico": "^3.0.2",
+    "sharp": "^0.35.3",
     "typescript": "^5.7.3"
   },
   "allowScripts": {

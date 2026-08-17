@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import Analytics from '@vercel/analytics/astro';
 
 const siteUrl = 'https://www.nicolaperantoni.com';
 const title = 'Nicola Perantoni — Fotografo sportivo, Verona';
@@ -79,5 +80,6 @@ const jsonLd = {
   </head>
   <body>
     <slot />
+    <Analytics />
   </body>
 </html>
