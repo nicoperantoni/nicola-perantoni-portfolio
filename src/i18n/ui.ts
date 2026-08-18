@@ -32,7 +32,7 @@ export const ui = {
       paragraphs: [
         'Sono un fotografo di sport con base a Verona.',
         "Realizzo reportage, editoriali e campagne, in studio o all'aperto. Still-life e video.",
-        'Le mie immagini raccontano una storia: cerco sempre di superare il limite, come un atleta.',
+        'Le mie immagini raccontano una storia. Grazie a essa cerco sempre di superare il limite, come un atleta.',
       ],
     },
     work: {
