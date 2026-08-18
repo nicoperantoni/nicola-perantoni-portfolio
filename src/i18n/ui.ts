@@ -45,9 +45,9 @@ export const ui = {
     studio: {
       servicesLabel: 'Servizi',
       services: [
-        { n: '01', title: 'Gare ed Eventi' },
-        { n: '02', title: 'Training Camp' },
-        { n: '03', title: 'Campagne ed editoriali' },
+        { n: '01', title: 'Reportage di gare ed eventi' },
+        { n: '02', title: 'Campagne ed editoriali' },
+        { n: '03', title: 'Fotografia still-life' },
         { n: '04', title: 'Ritratti' },
         { n: '05', title: 'Video' },
       ],
@@ -104,9 +104,9 @@ export const ui = {
     studio: {
       servicesLabel: 'Services',
       services: [
-        { n: '01', title: 'Races & Events' },
-        { n: '02', title: 'Training Camps' },
-        { n: '03', title: 'Campaigns & Editorials' },
+        { n: '01', title: 'Race & event coverage' },
+        { n: '02', title: 'Campaigns & editorials' },
+        { n: '03', title: 'Still-life photography' },
         { n: '04', title: 'Portraits' },
         { n: '05', title: 'Video' },
       ],
