@@ -28,10 +28,11 @@ export const ui = {
       words: ['Corro', 'Pedalo', 'Cammino', 'Viaggio'],
       then: 'quindi',
       role: 'fotografo',
+      tagline: 'Creo ergo sum',
       paragraphs: [
         'Sono un fotografo di sport con base a Verona.',
         "Realizzo reportage, editoriali e campagne, in studio o all'aperto. Still-life e video.",
-        'Le mie immagini raccontano una storia: cerco sempre di andare oltre, come un atleta che insegue il proprio limite.',
+        'Le mie immagini raccontano una storia: cerco sempre di superare il limite, come un atleta.',
       ],
     },
     work: {
@@ -87,6 +88,7 @@ export const ui = {
       words: ['Run', 'Ride', 'Walk', 'Travel'],
       then: 'then',
       role: 'shoot',
+      tagline: 'Creo ergo sum',
       paragraphs: [
         "I'm a sports photographer based in Verona.",
         'I shoot reportage, editorials and campaigns, in studio or outdoors. Still life and video.',

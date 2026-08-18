@@ -12,7 +12,7 @@ interface Props {
 
 const { lang, accent = '#c8b892', markers = 10, showElevation = true } = Astro.props;
 const t = useTranslations(lang);
-const { words, then, role, paragraphs: introParagraphs } = t.hero;
+const { words, then, role, tagline, paragraphs: introParagraphs } = t.hero;
 ---
 
 <section class="hero">
@@ -30,6 +30,8 @@ const { words, then, role, paragraphs: introParagraphs } = t.hero;
         <em class="hero__serif">{then}</em><br />
         <strong class="hero__bold">{role}</strong>
       </h1>
+
+      <p class="hero__tagline">{tagline}</p>
 
       <div class="hero__intro">
         {introParagraphs.map((p) => <span>{p}</span>)}
@@ -190,6 +192,16 @@ const { words, then, role, paragraphs: introParagraphs } = t.hero;
 
   .hero__bold {
     font-weight: 600;
+  }
+
+  .hero__tagline {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-weight: 400;
+    font-size: clamp(10px, 1vw, 12px);
+    letter-spacing: 0.26em;
+    text-transform: uppercase;
+    color: var(--color-on-dark-tertiary);
   }
 
   .hero__intro {
