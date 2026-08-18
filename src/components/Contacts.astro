@@ -1,25 +1,44 @@
 ---
+import { useTranslations } from '../i18n/utils';
+import type { Locale } from '../i18n/ui';
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
 ---
 
 <section id="contatti" class="contacts">
   <h2 class="contacts__title">
-    Racconto <em>storie</em> di brand, gare, <em>squadre <span class="contacts__and">e</span> atleti.</em>
+    {
+      lang === 'it' ? (
+        <Fragment>
+          Racconto <em>storie</em> di brand, gare, <em>squadre <span class="contacts__and">e</span> atleti.</em>
+        </Fragment>
+      ) : (
+        <Fragment>
+          I tell <em>stories</em> of brands, races, <em>teams <span class="contacts__and">and</span> athletes.</em>
+        </Fragment>
+      )
+    }
   </h2>
 
   <div class="contacts__row">
     <div class="contacts__block">
-      <span class="contacts__label">Email</span>
+      <span class="contacts__label">{t.contacts.emailLabel}</span>
       <a href="mailto:nicola.perantoni@gmail.com" class="contacts__value">nicola.perantoni@gmail.com</a>
     </div>
     <div class="contacts__block">
-      <span class="contacts__label">Instagram</span>
+      <span class="contacts__label">{t.contacts.instagramLabel}</span>
       <a href="https://instagram.com/nicolaperantoni" target="_blank" rel="noopener noreferrer" class="contacts__value"
         >@nicolaperantoni ↗</a
       >
     </div>
     <div class="contacts__block">
-      <span class="contacts__label">Sede</span>
-      <span class="contacts__value contacts__value--static">Italia — Disponibile ovunque</span>
+      <span class="contacts__label">{t.contacts.locationLabel}</span>
+      <span class="contacts__value contacts__value--static">{t.contacts.locationValue}</span>
     </div>
   </div>
 </section>
@@ -28,7 +47,7 @@
   .contacts {
     position: relative;
     z-index: 2;
-    min-height: 72dvh;
+    min-height: 48dvh;
     display: flex;
     flex-direction: column;
     justify-content: center;

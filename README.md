@@ -25,12 +25,12 @@ Sito statico, zero backend, zero framework UI — solo quanto serve:
 
 ## Funzionalità
 
-- **Mappa topografica animata** — value noise deterministico, marching squares per le curve di livello, marker GPS che percorrono le curve, etichette con coordinate/attività in scramble, linee di telemetria tra marker (incluso uno stato periodico "CONNECTION FAILED")
+- **Mappa topografica animata** — value noise deterministico, marching squares per le curve di livello, marker GPS che percorrono le curve, etichette con coordinate/attività in scramble, linee di telemetria tra marker
 - **Flusso fotografico masonry** — 3/2/1 colonne responsive, note del manifesto interlacciate, reveal allo scroll con "contour wipe" sulle foto e righe di testo che salgono riga per riga
 - **Lightbox** con navigazione da tastiera e contatore
-- **Boot sequence** dei tre indicatori di stato (GPS/Device/Athlete) con effetto scramble
 - **`prefers-reduced-motion`** rispettato ovunque: mappa a singolo frame, niente wipe/scramble/parallasse
-- **SEO completa**: meta assoluti, Open Graph, Twitter card, JSON-LD `ProfessionalService`, sitemap, robots.txt, favicon, preview social dedicata
+- **Italiano / Inglese** — routing i18n nativo di Astro (`/` italiano, `/en/` inglese), hreflang e sitemap multilingua, switcher fisso in alto a destra
+- **SEO completa**: meta assoluti, Open Graph, Twitter card, JSON-LD `ProfessionalService`, sitemap con hreflang, robots.txt, favicon, preview social dedicata
 
 ## Sviluppo
 
@@ -55,23 +55,28 @@ npm run og-image  # preview social 1200×630
 
 ```
 src/
-├── components/       # un componente Astro per sezione (Hero, Work, Studio, Contacts, Footer, Veil, Lightbox)
+├── components/       # un componente Astro per sezione (Hero, Work, Studio, Contacts, Footer, Veil, Lightbox, LangSwitch)
 ├── layouts/
-│   └── BaseLayout.astro   # <head>, meta SEO, JSON-LD
+│   ├── BaseLayout.astro   # <head>, meta SEO, JSON-LD, hreflang (per lingua)
+│   └── Home.astro          # corpo della home, condiviso tra le due pagine di lingua
 ├── lib/               # logica client-side, vanilla TS, framework-agnostic
 │   ├── topo-map.ts        # mappa topografica — vedi sotto
 │   ├── reveal.ts           # IntersectionObserver + split delle righe di testo
 │   ├── flow-layout.ts      # masonry responsive
 │   ├── lightbox.ts
-│   ├── boot-status.ts      # scramble degli indicatori di stato
 │   ├── word-cycle.ts       # parola rotante dell'hero (Web Animations API)
 │   └── veil.ts              # overlay di caricamento + preload foto
+├── i18n/
+│   ├── ui.ts           # dizionario di tutti i testi, per lingua (it/en)
+│   └── utils.ts        # useTranslations(lang), alternatePath(lang)
 ├── data/
-│   └── content.ts     # progetti, note manifesto, servizi, algoritmo del flusso
+│   └── content.ts     # progetti, algoritmo del flusso (testi letti da i18n/ui.ts)
 ├── styles/
 │   └── global.css     # design token, keyframes, prefers-reduced-motion
 └── pages/
-    └── index.astro
+    ├── index.astro     # "/" — italiano (lingua di default)
+    └── en/
+        └── index.astro # "/en/" — inglese
 ```
 
 ## Design token
@@ -91,9 +96,6 @@ src/
 | Testo su nero | `#ffffff` |
 | Testo su nero (secondario) | `rgba(255, 255, 255, 0.66)` |
 | **Accento** (mappa, marker, link) | `#c8b892` |
-| LED attivo | `#5ee08a` |
-| LED boot | `#e8912f` |
-| Errore / connection failed | `#d6432f` |
 
 Alternative per l'accento della mappa (prop `accent` del modulo): `#5ee08a` · `#e8912f` · `#9fb8c8`.
 

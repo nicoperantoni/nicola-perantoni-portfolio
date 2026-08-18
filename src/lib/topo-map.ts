@@ -6,7 +6,7 @@
  *  - curve di livello via marching squares, con quote opzionali,
  *  - marker GPS che si muovono lungo le curve indice,
  *  - etichette (coordinate GPS o attività) e linee di collegamento fra
- *    marker, incluso lo stato periodico "CONNECTION FAILED".
+ *    marker.
  *
  * Parametri (vedi anche README → "Topo Map Module — API"):
  *  - accent (string, colore CSS): marker, etichette e linee. Default '#c8b892'.
@@ -52,7 +52,6 @@ interface Link {
   a: Mark;
   b: Mark;
   at: number;
-  fail?: boolean;
   end?: number;
 }
 
@@ -80,13 +79,12 @@ const GRID_COLS = 210;
 const ACTIVITIES = [
   'THRESHOLD EFFORT', 'HILL REPEATS', 'ZONE 4', 'NEGATIVE SPLIT', 'LONG RIDE',
   'RECOVERY SPIN', 'COOLING DOWN', 'OFF SEASON', 'RUNNING', 'CLIMBING',
-  'DESCENDING', 'TRACK SESSION', 'TIME TRIAL', 'OPEN WATER SWIM',
+  'DESCENDING', 'TRACK SESSION', 'TIME TRIAL',
   'TRAIL SESSION', 'TEAM CAMP',
 ];
 
 const SCRAMBLE_CH = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
 const GPS_CH = '0123456789°\'"NSEW';
-const FAIL_CH = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ#/*';
 
 function smoothstep(t: number): number {
   return t * t * (3 - 2 * t);
@@ -214,7 +212,6 @@ export function createTopoMap(
   let topoMarks: Mark[] = [];
   let links: Link[] = [];
   let nextLink = 0;
-  let nextFail: number | undefined;
   let lastMark: number | undefined;
   let raf = 0;
   let resizeRaf = 0;
@@ -491,74 +488,16 @@ export function createTopoMap(
     drawLabel(ctx, out, m, pos);
   }
 
-  function drawFailText(ctx: CanvasRenderingContext2D, l: Link, t: number, fade: number) {
-    const txt = 'CONNECTION FAILED';
-    const n = txt.length;
-    let out = '';
-    for (let i = 0; i < n; i++) {
-      const c = txt[i];
-      if (c === ' ') { out += ' '; continue; }
-      const p = t - (i / n) * 380;
-      out += p < 0 ? ' ' : p < 200 ? FAIL_CH[(Math.floor(p / 35) + i * 3) % FAIL_CH.length] : c;
-    }
-    const A = l.a.pos!, B = l.b.pos!;
-    const ring = (p: Point, r: number) => {
-      ctx.beginPath();
-      ctx.arc(p[0], p[1], r + 3.5, 0, Math.PI * 2);
-      ctx.strokeStyle = `rgba(214,67,47,${(0.5 * fade).toFixed(3)})`;
-      ctx.lineWidth = 1;
-      ctx.stroke();
-    };
-    ctx.save();
-    ring(B, l.b.r || 3.4);
-    ring(A, l.a.r || 3.4);
-    let ang = Math.atan2(B[1] - A[1], B[0] - A[0]);
-    if (ang > Math.PI / 2) ang -= Math.PI;
-    if (ang < -Math.PI / 2) ang += Math.PI;
-    ctx.font = '600 11px ui-monospace, SFMono-Regular, Menlo, monospace';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    const blink = Math.random() < 0.07 ? 0.25 : 1;
-    const tw = ctx.measureText(out).width;
-    ctx.translate((A[0] + B[0]) / 2, (A[1] + B[1]) / 2);
-    ctx.rotate(ang);
-    ctx.globalCompositeOperation = 'destination-out';
-    ctx.fillStyle = '#000';
-    ctx.fillRect(-tw / 2 - 6, -7, tw + 12, 14);
-    ctx.globalCompositeOperation = 'source-over';
-    ctx.fillStyle = `rgba(214,67,47,${(0.9 * fade * blink).toFixed(3)})`;
-    ctx.fillText(out, 0, 0);
-    ctx.restore();
-  }
-
   function drawLinks(ctx: CanvasRenderingContext2D, now: number) {
     const lit = (m: Mark) => !!m.gps && (m.gps.phase === 'in' || m.gps.phase === 'hold');
     const marks = topoMarks.filter((m) => m.pos && lit(m));
     if (!nextLink) nextLink = now + 700;
-    const IN = 900, HOLD = 3200, OUT = 700, FAIL_LIFE = 3400;
+    const IN = 900, HOLD = 3200, OUT = 700;
     if (now > nextLink && links.length < 4) {
       const busy = new Set<Mark>();
       links.forEach((l) => { busy.add(l.a); busy.add(l.b); });
       const free = marks.filter((m) => !busy.has(m));
-      let made = false;
-      if (nextFail === undefined) nextFail = now + 9000 + Math.random() * 9000;
-      if (now > nextFail && !links.some((l) => l.fail) && free.length >= 2) {
-        const cands: [Mark, Mark][] = [];
-        for (let i = 0; i < free.length; i++) {
-          for (let j = i + 1; j < free.length; j++) {
-            const d = Math.hypot(free[i].pos![0] - free[j].pos![0], free[i].pos![1] - free[j].pos![1]);
-            if (d > 200 && d < 460) cands.push([free[i], free[j]]);
-          }
-        }
-        if (cands.length) {
-          const pair = cands[Math.floor(Math.random() * cands.length)];
-          pair.forEach((m) => { m.gps!.phase = 'hold'; m.gps!.at = now; });
-          links.push({ a: pair[0], b: pair[1], at: now, fail: true });
-          nextFail = now + 22000 + Math.random() * 16000;
-          made = true;
-        }
-      }
-      if (!made && free.length >= 2) {
+      if (free.length >= 2) {
         const pairs: [Mark, Mark][] = [];
         for (let i = 0; i < free.length; i++) {
           for (let j = i + 1; j < free.length; j++) {
@@ -577,18 +516,9 @@ export function createTopoMap(
     ctx.save();
     ctx.lineWidth = 1;
     links = links.filter((l) => {
-      if (l.fail) {
-        l.a.gps!.phase = 'hold'; l.a.gps!.at = now;
-        l.b.gps!.phase = 'hold'; l.b.gps!.at = now;
-        if (!l.end && now - l.at > IN + FAIL_LIFE) l.end = now;
-      } else {
-        const minLife = IN + 1500;
-        if (!l.end && ((now - l.at > minLife && (!lit(l.a) || !lit(l.b))) || now - l.at > IN + HOLD)) l.end = now;
-      }
-      if (l.end && now > l.end + OUT) {
-        if (l.fail) { l.a.gps!.phase = 'out'; l.a.gps!.at = now; l.b.gps!.phase = 'out'; l.b.gps!.at = now; }
-        return false;
-      }
+      const minLife = IN + 1500;
+      if (!l.end && ((now - l.at > minLife && (!lit(l.a) || !lit(l.b))) || now - l.at > IN + HOLD)) l.end = now;
+      if (l.end && now > l.end + OUT) return false;
       const ease = (x: number) => 1 - Math.pow(1 - Math.max(0, Math.min(1, x)), 3);
       const p1 = ease((now - l.at) / IN);
       const p0 = l.end ? ease((now - l.end) / OUT) : 0;
@@ -596,11 +526,7 @@ export function createTopoMap(
       const x = (p: number) => A[0] + (B[0] - A[0]) * p;
       const y = (p: number) => A[1] + (B[1] - A[1]) * p;
       const flick = 0.3 + Math.random() * 0.22 + (Math.random() < 0.05 ? -0.24 : 0);
-      const red = !!l.fail && now - l.at > IN * 0.9;
-      const fade = l.end ? Math.max(0, 1 - (now - l.end) / OUT) : 1;
-      ctx.strokeStyle = red
-        ? `rgba(214,67,47,${Math.max(0.12, (0.55 + Math.random() * 0.3) * fade).toFixed(3)})`
-        : accA(Number(Math.max(0.06, flick).toFixed(3)));
+      ctx.strokeStyle = accA(Number(Math.max(0.06, flick).toFixed(3)));
       ctx.setLineDash(Math.random() < 0.12 ? [Math.random() * 30 + 8, Math.random() * 14 + 4] : []);
       ctx.lineDashOffset = Math.random() * 20;
       ctx.beginPath();
@@ -608,7 +534,6 @@ export function createTopoMap(
       ctx.lineTo(x(p1), y(p1));
       ctx.stroke();
       ctx.setLineDash([]);
-      if (red) drawFailText(ctx, l, now - l.at - IN * 0.9, fade);
       return true;
     });
     ctx.restore();

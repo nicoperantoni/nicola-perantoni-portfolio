@@ -1,4 +1,6 @@
 import type { ImageMetadata } from 'astro';
+import { useTranslations } from '../i18n/utils';
+import type { Locale } from '../i18n/ui';
 
 const photoModules = import.meta.glob<{ default: ImageMetadata }>(
   '/src/assets/photos/*.webp',
@@ -24,21 +26,6 @@ const projectGroups: ProjectGroup[] = [
   { label: 'Zullo Bike', files: [6].map((n) => `zullo-${n}.webp`) },
 ];
 
-// Note manifesto, copy definitivo — vedi README "Content".
-const manifestoNotes: string[] = [
-  'Amo il movimento, l’adrenalina, la tranquillità e il silenzio che anticipano la performance, il sogno del record personale, la forza, la mentalità e la grinta necessarie per raggiungere il proprio obiettivo. Qualsiasi esso sia.',
-  'Mi nutro di tutto ciò che può stimolare la mia creatività: arte, musica, libri, cinema e design.',
-  'Coltivo la contaminazione tra persone, discipline e arti.',
-];
-
-export const services: { n: string; title: string }[] = [
-  { n: '01', title: 'Gare ed Eventi' },
-  { n: '02', title: 'Training Camp' },
-  { n: '03', title: 'Campagne ed editoriali' },
-  { n: '04', title: 'Ritratti' },
-  { n: '05', title: 'Video' },
-];
-
 export interface FlowImage {
   kind: 'image';
   image: ImageMetadata;
@@ -58,7 +45,8 @@ export type FlowItem = FlowImage | FlowText;
  * nota non chiuda il flusso (resta almeno una foto sotto). Algoritmo fedele
  * al prototipo (buildFlow) — vedi README "Work — flusso fotografico".
  */
-export function buildFlow(): FlowItem[] {
+export function buildFlow(lang: Locale): FlowItem[] {
+  const t = useTranslations(lang);
   const flow: FlowItem[] = [];
   const maxLen = Math.max(...projectGroups.map((g) => g.files.length));
   for (let r = 0; r < maxLen; r++) {
@@ -68,7 +56,7 @@ export function buildFlow(): FlowItem[] {
       flow.push({
         kind: 'image',
         image: photo(file),
-        alt: `Fotografia sportiva di Nicola Perantoni — ${g.label}`,
+        alt: `${t.work.altPrefix} — ${g.label}`,
       });
     }
   }
@@ -76,7 +64,7 @@ export function buildFlow(): FlowItem[] {
   const positions = [1, 7, 13];
   positions.forEach((at, i) => {
     const index = Math.min(at + i, flow.length - 1);
-    flow.splice(index, 0, { kind: 'text', body: manifestoNotes[i] });
+    flow.splice(index, 0, { kind: 'text', body: t.work.manifesto[i] });
   });
 
   return flow;

@@ -14,11 +14,6 @@
   --color-on-dark-tertiary: rgba(255, 255, 255, 0.62);
 
   --color-accent: #c8b892;
-  --color-led-ok: #5ee08a;
-  --color-led-ok-glow: rgba(94, 224, 138, 0.55);
-  --color-led-boot: #e8912f;
-  --color-led-boot-glow: rgba(232, 145, 47, 0.6);
-  --color-error: #d6432f;
 
   --font-archivo: 'Archivo', Helvetica, Arial, sans-serif;
   --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
@@ -65,17 +60,6 @@ img {
 }
 
 /* ---------- keyframes ---------- */
-
-@keyframes ledFlicker {
-  0%, 44%, 52%, 78%, 100% { opacity: 1; }
-  46%, 50% { opacity: 0.35; }
-  80% { opacity: 0.6; }
-}
-
-@keyframes ledBoot {
-  0%, 45% { opacity: 1; }
-  46%, 100% { opacity: 0.18; }
-}
 
 @keyframes riseIn {
   from { opacity: 0; transform: translateY(18px); }

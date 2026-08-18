@@ -1,0 +1,55 @@
+---
+// Corpo della home, condiviso tra le due pagine di lingua (pages/index.astro
+// e pages/en/index.astro) così la struttura non si duplica.
+import BaseLayout from './BaseLayout.astro';
+import Veil from '../components/Veil.astro';
+import Hero from '../components/Hero.astro';
+import Work from '../components/Work.astro';
+import Lightbox from '../components/Lightbox.astro';
+import Studio from '../components/Studio.astro';
+import Contacts from '../components/Contacts.astro';
+import Footer from '../components/Footer.astro';
+import LangSwitch from '../components/LangSwitch.astro';
+import { buildFlow } from '../data/content';
+import type { Locale } from '../i18n/ui';
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+
+// Parametri del modulo mappa topografica (README → "Topo Map Module — API").
+const TOPO_ACCENT = '#c8b892';
+const TOPO_MARKERS = 10;
+const TOPO_SHOW_ELEVATION = true;
+
+const flow = buildFlow(lang);
+---
+
+<BaseLayout lang={lang}>
+  <LangSwitch lang={lang} />
+  <Veil />
+  <div class="page">
+    <Hero lang={lang} accent={TOPO_ACCENT} markers={TOPO_MARKERS} showElevation={TOPO_SHOW_ELEVATION} />
+    <Work flow={flow} />
+    <Studio lang={lang} />
+    <Contacts lang={lang} />
+    <Footer />
+  </div>
+  <Lightbox lang={lang} />
+</BaseLayout>
+
+<script>
+  import { initReveal } from '../lib/reveal';
+  initReveal(document);
+</script>
+
+<style is:global>
+  .page {
+    position: relative;
+    min-height: 100dvh;
+    background: var(--color-bg);
+    color: var(--color-text);
+  }
+</style>

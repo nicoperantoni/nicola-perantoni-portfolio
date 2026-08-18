@@ -1,11 +1,20 @@
 ---
+import { useTranslations } from '../i18n/utils';
+import type { Locale } from '../i18n/ui';
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
 ---
 
 <div class="lightbox" id="lightbox">
   <img id="lightbox-image" class="lightbox__image" alt="" />
-  <button id="lightbox-prev" class="lightbox__btn lightbox__btn--prev" aria-label="Foto precedente" type="button">←</button>
-  <button id="lightbox-next" class="lightbox__btn lightbox__btn--next" aria-label="Foto successiva" type="button">→</button>
-  <button id="lightbox-close" class="lightbox__btn lightbox__btn--close" aria-label="Chiudi" type="button">✕</button>
+  <button id="lightbox-prev" class="lightbox__btn lightbox__btn--prev" aria-label={t.lightbox.prev} type="button">←</button>
+  <button id="lightbox-next" class="lightbox__btn lightbox__btn--next" aria-label={t.lightbox.next} type="button">→</button>
+  <button id="lightbox-close" class="lightbox__btn lightbox__btn--close" aria-label={t.lightbox.close} type="button">✕</button>
   <span id="lightbox-counter" class="lightbox__counter"></span>
 </div>
 

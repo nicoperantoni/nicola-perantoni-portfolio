@@ -1,27 +1,18 @@
 ---
 // Parametri del modulo mappa topografica — vedi README → "Topo Map Module — API".
+import { useTranslations } from '../i18n/utils';
+import type { Locale } from '../i18n/ui';
+
 interface Props {
+  lang: Locale;
   accent?: string;
   markers?: number;
   showElevation?: boolean;
 }
 
-const { accent = '#c8b892', markers = 10, showElevation = true } = Astro.props;
-
-const words = ['Corro', 'Pedalo', 'Cammino', 'Viaggio'];
-
-const introParagraphs = [
-  'Mi occupo di fotografia sportiva. Sono di Verona, ma mi sposto ovunque.',
-  'Seguo squadre, atleti e federazioni durante tutta la stagione: dal ritiro estivo alla volata finale. Realizzo editoriali e campagne per brand, in studio e sul campo.',
-  "Cerco il gesto vero, l'istante prima del risultato. Su qualsiasi terreno.",
-];
-
-// bootMs: durata del lampeggio a passi (ledBoot) prima dell'attivazione — vedi README "Blocco stato".
-const statusRows = [
-  { id: 'gps', label: 'GPS Signal:', from: 'Searching', to: 'Active', bootMs: 0.62 },
-  { id: 'device', label: 'Device:', from: 'Turning on', to: 'Enabled', bootMs: 0.78 },
-  { id: 'athlete', label: 'Athlete:', from: 'Warming up', to: 'Ready', bootMs: 0.7 },
-];
+const { lang, accent = '#c8b892', markers = 10, showElevation = true } = Astro.props;
+const t = useTranslations(lang);
+const { words, then, role, paragraphs: introParagraphs } = t.hero;
 ---
 
 <section class="hero">
@@ -36,27 +27,9 @@ const statusRows = [
         <strong class="hero__word-wrap"
           ><span class="hero__word-window"><span id="hero-word" class="hero__word">{words[0]}</span></span></strong
         ><br />
-        <em class="hero__serif">quindi</em><br />
-        <strong class="hero__bold">fotografo</strong>
+        <em class="hero__serif">{then}</em><br />
+        <strong class="hero__bold">{role}</strong>
       </h1>
-
-      <div class="hero__status">
-        {
-          statusRows.map((row) => (
-            <Fragment>
-              <span
-                id={`led-${row.id}`}
-                class="hero__led is-boot"
-                style={`animation: ledBoot ${row.bootMs}s steps(1, end) infinite;`}
-              />
-              <span class="hero__status-label">{row.label}</span>
-              <span id={`val-${row.id}`} class="hero__status-value">
-                {row.from}
-              </span>
-            </Fragment>
-          ))
-        }
-      </div>
 
       <div class="hero__intro">
         {introParagraphs.map((p) => <span>{p}</span>)}
@@ -185,47 +158,6 @@ const statusRows = [
     font-weight: 600;
   }
 
-  .hero__status {
-    display: grid;
-    grid-template-columns: auto auto 8.6em;
-    align-items: center;
-    justify-content: center;
-    column-gap: 10px;
-    row-gap: 8px;
-    font-family: var(--font-mono);
-    font-weight: 400;
-    font-size: clamp(10px, 1vw, 12px);
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--color-on-dark-tertiary);
-  }
-
-  .hero__status-label,
-  .hero__status-value {
-    text-align: left;
-  }
-
-  .hero__status-value {
-    white-space: pre;
-    overflow: hidden;
-  }
-
-  .hero__led {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-  }
-
-  .hero__led.is-boot {
-    background: var(--color-led-boot);
-    box-shadow: 0 0 8px var(--color-led-boot-glow);
-  }
-
-  .hero__led.is-ok {
-    background: var(--color-led-ok);
-    box-shadow: 0 0 8px var(--color-led-ok-glow);
-  }
-
   .hero__intro {
     display: flex;
     flex-direction: column;
@@ -255,7 +187,6 @@ const statusRows = [
 <script>
   import { createTopoMap } from '../lib/topo-map';
   import { startWordCycle } from '../lib/word-cycle';
-  import { runBootSequence } from '../lib/boot-status';
 
   const { accent, markers, showElevation, words } = (window as any).__heroConfig as {
     accent: string;
@@ -272,18 +203,4 @@ const statusRows = [
 
   const wordEl = document.getElementById('hero-word');
   if (wordEl) startWordCycle(wordEl, words);
-
-  const rows = [
-    { id: 'gps', from: 'Searching', to: 'Active' },
-    { id: 'device', from: 'Turning on', to: 'Enabled' },
-    { id: 'athlete', from: 'Warming up', to: 'Ready' },
-  ]
-    .map((r) => {
-      const ledEl = document.getElementById(`led-${r.id}`);
-      const textEl = document.getElementById(`val-${r.id}`);
-      return ledEl && textEl ? { ledEl, textEl, from: r.from, to: r.to } : null;
-    })
-    .filter((r): r is NonNullable<typeof r> => r !== null);
-
-  runBootSequence(rows);
 </script>
