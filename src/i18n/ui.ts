@@ -29,9 +29,9 @@ export const ui = {
       then: 'quindi',
       role: 'fotografo',
       paragraphs: [
-        'Mi occupo di fotografia sportiva. Sono di Verona, ma mi sposto ovunque.',
-        'Seguo squadre, atleti e federazioni durante tutta la stagione: dal ritiro estivo alla volata finale. Realizzo editoriali e campagne per brand, in studio e sul campo.',
-        "Cerco il gesto vero, l'istante prima del risultato. Su qualsiasi terreno.",
+        'Sono un fotografo di sport con base a Verona.',
+        "Realizzo reportage, editoriali e campagne, in studio o all'aperto. Still-life e video.",
+        'Le mie immagini raccontano una storia: cerco sempre di andare oltre, come un atleta che insegue il proprio limite.',
       ],
     },
     work: {
@@ -88,9 +88,9 @@ export const ui = {
       then: 'then',
       role: 'shoot',
       paragraphs: [
-        "I work in sports photography. I'm based in Verona, but I travel anywhere.",
-        'I follow teams, athletes and federations throughout the season: from summer training camps to the final sprint. I shoot editorials and campaigns for brands, in studio and on location.',
-        'I look for the real gesture, the instant before the result. On any terrain.',
+        "I'm a sports photographer based in Verona.",
+        'I shoot reportage, editorials and campaigns, in studio or outdoors. Still life and video.',
+        'My images tell a story: I always try to go further, like an athlete chasing their own limit.',
       ],
     },
     work: {
