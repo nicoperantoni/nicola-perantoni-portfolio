@@ -18,19 +18,17 @@ interface ProjectGroup {
 
 // Ordine e numerazione dei file per progetto — vedi README "Assets".
 const projectGroups: ProjectGroup[] = [
-  { label: 'PH Apparel × Cérvelo', files: [1, 2, 3, 4].map((n) => `ph-x-cervelo-${n}.webp`) },
-  { label: 'Zullo Bike', files: [1, 6, 3, 4].map((n) => `zullo-${n}.webp`) },
-  { label: 'Ristora', files: [1, 2, 6, 4].map((n) => `ristora-${n}.webp`) },
-  { label: 'PH Apparel Spring Camp', files: [3, 9, 8, 12].map((n) => `ph-training-camp-${n}.webp`) },
+  { label: 'PH Apparel × Cérvelo', files: [4].map((n) => `ph-x-cervelo-${n}.webp`) },
+  { label: 'Ristora', files: [6].map((n) => `ristora-${n}.webp`) },
+  { label: 'PH Apparel Spring Camp', files: [8, 13].map((n) => `ph-training-camp-${n}.webp`) },
+  { label: 'Zullo Bike', files: [6].map((n) => `zullo-${n}.webp`) },
 ];
 
 // Note manifesto, copy definitivo — vedi README "Content".
 const manifestoNotes: string[] = [
   'Amo il movimento, l’adrenalina, la tranquillità e il silenzio che anticipano la performance, il sogno del record personale, la forza, la mentalità e la grinta necessarie per raggiungere il proprio obiettivo. Qualsiasi esso sia.',
   'Mi nutro di tutto ciò che può stimolare la mia creatività: arte, musica, libri, cinema e design.',
-  'Cerco il silenzio, la natura, il tempo passato con il proprio sé.',
   'Coltivo la contaminazione tra persone, discipline e arti.',
-  'La fotografia è la mia cura.',
 ];
 
 export const services: { n: string; title: string }[] = [
@@ -55,7 +53,7 @@ export interface FlowText {
 export type FlowItem = FlowImage | FlowText;
 
 /**
- * Interlaccia le foto dei quattro progetti (una per progetto, a giro) e poi
+ * Interlaccia le foto dei progetti (una per progetto, a giro) e poi
  * inserisce le note manifesto a posizioni fisse, con il vincolo che l'ultima
  * nota non chiuda il flusso (resta almeno una foto sotto). Algoritmo fedele
  * al prototipo (buildFlow) — vedi README "Work — flusso fotografico".
@@ -75,8 +73,7 @@ export function buildFlow(): FlowItem[] {
     }
   }
 
-  const imgs = flow.length;
-  const positions = [3, 7, 11, 13, Math.max(14, imgs - 2)];
+  const positions = [1, 7, 13];
   positions.forEach((at, i) => {
     const index = Math.min(at + i, flow.length - 1);
     flow.splice(index, 0, { kind: 'text', body: manifestoNotes[i] });

@@ -35,7 +35,7 @@ export function initFlowLayout(container: HTMLElement, options: FlowLayoutOption
     let ti = 0;
     shots.forEach((el) => {
       const txt = el.querySelector('[data-lines-src]');
-      if (txt && nCols > 1) el.dataset.txtCol = String((ti++ % nCols) + 1);
+      if (txt && nCols > 1) el.dataset.txtCol = String(((ti++ + 1) % nCols) + 1);
       else delete el.dataset.txtCol;
       el.style.width = '100%';
       el.style.gridColumn = el.dataset.txtCol ? `${el.dataset.txtCol} / span 1` : 'span 1';
