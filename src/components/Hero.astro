@@ -92,6 +92,40 @@ const { words, then, role, paragraphs: introParagraphs } = t.hero;
     );
   }
 
+  /* Su schermi stretti il testo introduttivo cade più in basso nella mappa
+     (colonna singola, meno spazio orizzontale): la dissolvenza standard
+     lascia ancora troppa mappa visibile lì. Qui sfuma molto prima, così
+     dietro al testo c'è quasi solo nero pieno. */
+  @media (max-width: 640px) {
+    .hero__map {
+      mask-image: linear-gradient(
+        to bottom,
+        #000 0%,
+        #000 34%,
+        rgba(0, 0, 0, 0.7) 48%,
+        rgba(0, 0, 0, 0.35) 58%,
+        rgba(0, 0, 0, 0.12) 68%,
+        transparent 78%
+      );
+      -webkit-mask-image: linear-gradient(
+        to bottom,
+        #000 0%,
+        #000 34%,
+        rgba(0, 0, 0, 0.7) 48%,
+        rgba(0, 0, 0, 0.35) 58%,
+        rgba(0, 0, 0, 0.12) 68%,
+        transparent 78%
+      );
+    }
+
+    /* Lo spazio sopra al testo introduttivo era tarato per compensare la
+       mappa ancora visibile lì — ora che la dissolvenza (sopra) fa già
+       il lavoro, può stare più vicino al titolo senza perdere leggibilità. */
+    .hero__intro {
+      padding-top: clamp(36px, 7vh, 90px);
+    }
+  }
+
   .hero__canvas {
     display: block;
     width: 100%;
@@ -110,7 +144,7 @@ const { words, then, role, paragraphs: introParagraphs } = t.hero;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: clamp(20px, 3vh, 40px);
+    gap: clamp(20px, 4vh, 40px);
     flex: 0 0 auto;
     min-height: 66dvh;
     padding-top: clamp(120px, 22vh, 300px);
@@ -123,7 +157,7 @@ const { words, then, role, paragraphs: introParagraphs } = t.hero;
     margin: 0;
     font-family: var(--font-archivo);
     font-weight: 300;
-    font-size: clamp(2.2rem, 7.6vw, 7rem);
+    font-size: clamp(3.2rem, 11vw, 7rem);
     line-height: 1.14;
     letter-spacing: -0.035em;
     color: var(--color-on-dark);
@@ -166,7 +200,7 @@ const { words, then, role, paragraphs: introParagraphs } = t.hero;
     max-width: 1000px;
     margin: 0 auto;
     text-align: center;
-    padding-top: clamp(30px, 7vh, 110px);
+    padding-top: clamp(56px, 12vh, 130px);
     padding-bottom: clamp(40px, 7vh, 96px);
     font-family: var(--font-archivo);
     font-weight: 300;

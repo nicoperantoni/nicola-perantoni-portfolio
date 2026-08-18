@@ -429,6 +429,11 @@ export function createTopoMap(
     if (!m.act) m.act = { txt: '', phase: 'wait', at: now + Math.random() * 1200 };
     const a = m.act;
     const IN = 800, OUT = 620;
+    // Il marker può entrare nella zona "central" (sotto al titolo/testo
+    // dell'hero) anche a etichetta già visibile, non solo al momento della
+    // rivelazione — senza questo controllo continuo l'etichetta resta
+    // visibile e attraversa il testo mentre il marker ci passa sopra.
+    if (central && (a.phase === 'in' || a.phase === 'hold')) { a.phase = 'out'; a.at = now; }
     if (a.phase === 'wait') {
       if (now < a.at || central) return;
       const used = topoMarks
@@ -463,7 +468,10 @@ export function createTopoMap(
     const g = m.gps;
     const IN = 900, HOLD = 4400, OUT = 700;
     const cv = ctx.canvas, cw = cv.clientWidth || 1, ch = cv.clientHeight || 1;
-    const central = Math.abs(pos[0] / cw - 0.5) < 0.3 && pos[1] / ch > 0.42;
+    const central = Math.abs(pos[0] / cw - 0.5) < 0.44 && pos[1] / ch > 0.42;
+    // Vedi commento in drawActivity: la soppressione deve valere anche a
+    // rivelazione già avvenuta, non solo al suo avvio.
+    if (central && (g.phase === 'in' || g.phase === 'hold')) { g.phase = 'out'; g.at = now; }
     if (g.phase === 'wait') {
       if (now < g.at || central) { drawActivity(ctx, m, pos, now, central); return; }
       g.txt = gpsText();
