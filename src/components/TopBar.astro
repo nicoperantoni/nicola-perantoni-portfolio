@@ -1,0 +1,60 @@
+---
+import { useTranslations } from '../i18n/utils';
+import type { Locale } from '../i18n/ui';
+import LangSwitch from './LangSwitch.astro';
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const pdfHref = lang === 'en' ? '/portfolio-en.pdf' : '/portfolio-it.pdf';
+---
+
+<div class="topbar">
+  <div class="topbar__side" aria-hidden="true"></div>
+  <a href={pdfHref} class="topbar__link" download>{t.topbar.pdfLink}</a>
+  <div class="topbar__side topbar__side--end">
+    <LangSwitch lang={lang} />
+  </div>
+</div>
+
+<style>
+  .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 150;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 12px;
+    padding: clamp(12px, 2vh, 18px) clamp(14px, 3vw, 28px);
+    background: var(--color-bg);
+    font-family: var(--font-mono);
+  }
+
+  .topbar__side {
+    display: flex;
+    min-width: 0;
+  }
+
+  .topbar__side--end {
+    justify-content: flex-end;
+  }
+
+  .topbar__link {
+    justify-self: center;
+    font-size: clamp(11px, 1.2vw, 13px);
+    letter-spacing: 0.05em;
+    color: rgba(16, 17, 20, 0.92);
+    text-decoration: none;
+    white-space: nowrap;
+    transition: color 0.25s ease;
+  }
+
+  .topbar__link:hover {
+    color: #000000;
+    text-decoration: underline;
+  }
+</style>

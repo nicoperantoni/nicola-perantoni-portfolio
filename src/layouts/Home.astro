@@ -9,7 +9,7 @@ import Lightbox from '../components/Lightbox.astro';
 import Studio from '../components/Studio.astro';
 import Contacts from '../components/Contacts.astro';
 import Footer from '../components/Footer.astro';
-import LangSwitch from '../components/LangSwitch.astro';
+import TopBar from '../components/TopBar.astro';
 import { buildFlow } from '../data/content';
 import type { Locale } from '../i18n/ui';
 
@@ -28,7 +28,7 @@ const flow = buildFlow(lang);
 ---
 
 <BaseLayout lang={lang}>
-  <LangSwitch lang={lang} />
+  <TopBar lang={lang} />
   <Veil />
   <div class="page">
     <Hero lang={lang} accent={TOPO_ACCENT} markers={TOPO_MARKERS} showElevation={TOPO_SHOW_ELEVATION} />

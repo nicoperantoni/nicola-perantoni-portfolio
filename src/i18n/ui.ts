@@ -24,6 +24,9 @@ export const ui = {
       jsonLdJobTitle: 'Fotografo sportivo',
       jsonLdOffers: ['Gare ed eventi', 'Ritiri e training camp', 'Campagne e editoriali', "Ritratti d'atleta", 'Video'],
     },
+    topbar: {
+      pdfLink: 'Scarica il portfolio completo in PDF',
+    },
     hero: {
       words: ['Corro', 'Pedalo', 'Cammino', 'Viaggio'],
       then: 'quindi',
@@ -83,6 +86,9 @@ export const ui = {
         'Sports photography: races and events, training camps, brand campaigns and editorials, athlete portraits and video.',
       jsonLdJobTitle: 'Sports Photographer',
       jsonLdOffers: ['Races and events', 'Training camps', 'Campaigns and editorials', 'Athlete portraits', 'Video'],
+    },
+    topbar: {
+      pdfLink: 'Download the full portfolio (PDF)',
     },
     hero: {
       words: ['Run', 'Ride', 'Walk', 'Travel'],
