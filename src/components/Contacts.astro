@@ -28,7 +28,7 @@ const t = useTranslations(lang);
   <div class="contacts__row">
     <div class="contacts__block">
       <span class="contacts__label">{t.contacts.emailLabel}</span>
-      <a href="mailto:nicola.perantoni@gmail.com" class="contacts__value">nicola.perantoni@gmail.com</a>
+      <a href="#" id="contact-email" class="contacts__value" rel="nofollow"></a>
     </div>
     <div class="contacts__block">
       <span class="contacts__label">{t.contacts.instagramLabel}</span>
@@ -113,3 +113,18 @@ const t = useTranslations(lang);
     color: #000000;
   }
 </style>
+
+<script>
+  // Indirizzo scritto al contrario, ricomposto solo lato client: gli
+  // scraper che leggono l'HTML statico non trovano una stringa email.
+  const user = 'inotnarep.alocin'.split('').reverse().join('');
+  const domain = 'moc.liamg'.split('').reverse().join('');
+  const email = `${user}@${domain}`;
+
+  const link = document.getElementById('contact-email') as HTMLAnchorElement | null;
+  if (link) {
+    link.href = `mailto:${email}`;
+    link.textContent = email;
+    link.removeAttribute('rel');
+  }
+</script>
