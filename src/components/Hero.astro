@@ -8,14 +8,21 @@ interface Props {
   accent?: string;
   markers?: number;
   showElevation?: boolean;
+  theme?: 'dark' | 'light';
 }
 
-const { lang, accent = '#c8b892', markers = 10, showElevation = true } = Astro.props;
+const { lang, accent = '#c8b892', markers = 10, showElevation = true, theme = 'dark' } = Astro.props;
 const t = useTranslations(lang);
 const { words, then, role, tagline, paragraphs: introParagraphs } = t.hero;
+// Stesso hex dei design token --color-text / --color-on-dark (global.css):
+// lo script del canvas non legge le CSS custom properties, va duplicato a mano.
+const lineColor = theme === 'light' ? '#101114' : '#ffffff';
+// L'oro è troppo poco leggibile per le etichette (GPS/attività) su sfondo
+// chiaro: lì il testo passa allo stesso scuro delle curve di livello.
+const labelColor = theme === 'light' ? '#101114' : accent;
 ---
 
-<section class="hero">
+<section class="hero" data-theme={theme}>
   <div class="hero__panel">
     <div class="hero__map" aria-hidden="true">
       <canvas id="topo-static" class="hero__canvas"></canvas>
@@ -46,6 +53,20 @@ const { words, then, role, tagline, paragraphs: introParagraphs } = t.hero;
     min-height: 94dvh;
     display: flex;
     align-items: stretch;
+    --hero-bg: #000000;
+    --hero-text: var(--color-on-dark);
+    --hero-text-secondary: var(--color-on-dark-secondary);
+    --hero-text-tertiary: var(--color-on-dark-tertiary);
+  }
+
+  .hero[data-theme='light'] {
+    /* Volutamente diverso dal grigio (--color-bg) del resto del sito: come
+       nella versione dark, l'hero resta una sezione visivamente a sé —
+       qui un bianco caldo che richiama l'oro dell'accent. */
+    --hero-bg: #f4f1ec;
+    --hero-text: var(--color-text);
+    --hero-text-secondary: var(--color-text-secondary);
+    --hero-text-tertiary: var(--color-text-tertiary);
   }
 
   .hero__panel {
@@ -58,7 +79,7 @@ const { words, then, role, tagline, paragraphs: introParagraphs } = t.hero;
     gap: clamp(22px, 4vh, 56px);
     padding: clamp(20px, 3vw, 44px);
     text-align: center;
-    background: #000000;
+    background: var(--hero-bg);
     overflow: hidden;
   }
 
@@ -162,7 +183,7 @@ const { words, then, role, tagline, paragraphs: introParagraphs } = t.hero;
     font-size: clamp(3.2rem, 11vw, 7rem);
     line-height: 1.14;
     letter-spacing: -0.035em;
-    color: var(--color-on-dark);
+    color: var(--hero-text);
   }
 
   .hero__word-wrap {
@@ -201,7 +222,7 @@ const { words, then, role, tagline, paragraphs: introParagraphs } = t.hero;
     font-size: clamp(10px, 1vw, 12px);
     letter-spacing: 0.26em;
     text-transform: uppercase;
-    color: var(--color-on-dark-tertiary);
+    color: var(--hero-text-tertiary);
   }
 
   .hero__intro {
@@ -219,32 +240,34 @@ const { words, then, role, tagline, paragraphs: introParagraphs } = t.hero;
     font-size: clamp(1.05rem, 1.6vw, 1.6rem);
     line-height: 1.45;
     letter-spacing: -0.01em;
-    color: var(--color-on-dark-secondary);
+    color: var(--hero-text-secondary);
     text-wrap: pretty;
   }
 </style>
 
-<script is:inline define:vars={{ accent, markers, showElevation, words }}>
+<script is:inline define:vars={{ accent, markers, showElevation, lineColor, labelColor, words }}>
   // define:vars è inline-only (niente import bundlati, niente TypeScript):
   // passa solo i dati al modulo processato da Vite nel secondo <script>.
-  window.__heroConfig = { accent, markers, showElevation, words };
+  window.__heroConfig = { accent, markers, showElevation, lineColor, labelColor, words };
 </script>
 
 <script>
   import { createTopoMap } from '../lib/topo-map';
   import { startWordCycle } from '../lib/word-cycle';
 
-  const { accent, markers, showElevation, words } = (window as any).__heroConfig as {
+  const { accent, markers, showElevation, lineColor, labelColor, words } = (window as any).__heroConfig as {
     accent: string;
     markers: number;
     showElevation: boolean;
+    labelColor: string;
+    lineColor: string;
     words: string[];
   };
 
   const staticCanvas = document.getElementById('topo-static') as HTMLCanvasElement | null;
   const marksCanvas = document.getElementById('topo-marks') as HTMLCanvasElement | null;
   if (staticCanvas && marksCanvas) {
-    createTopoMap(staticCanvas, marksCanvas, { accent, markers, showElevation });
+    createTopoMap(staticCanvas, marksCanvas, { accent, markers, showElevation, lineColor, labelColor });
   }
 
   const wordEl = document.getElementById('hero-word');

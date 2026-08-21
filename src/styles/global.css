@@ -1,6 +1,6 @@
 /* Design tokens — vedi README "Design Tokens" per i valori di riferimento. */
 :root {
-  --color-bg: rgb(175, 175, 175);
+  --color-bg: #faf8f5;
   --color-text: #101114;
   --color-text-secondary: rgba(16, 17, 20, 0.68);
   --color-text-tertiary: rgba(16, 17, 20, 0.72);
