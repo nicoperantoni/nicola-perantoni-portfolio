@@ -422,12 +422,13 @@ export function createTopoMap(
     }
   }
 
-  function drawLabel(ctx: CanvasRenderingContext2D, txt: string, m: Mark, pos: Point) {
+  function drawLabel(ctx: CanvasRenderingContext2D, txt: string, m: Mark, pos: Point, alpha: number) {
+    if (alpha <= 0) return;
     ctx.save();
     ctx.font = '500 11px ui-monospace, SFMono-Regular, Menlo, monospace';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'alphabetic';
-    ctx.fillStyle = labelA(0.72);
+    ctx.fillStyle = labelA(0.72 * alpha);
     const cw = ctx.canvas.clientWidth || 1;
     const tw = ctx.measureText(txt).width;
     ctx.fillText(txt, Math.max(tw / 2 + 8, Math.min(pos[0], cw - tw / 2 - 8)), Math.max(18, pos[1] - m.r - 9));
@@ -442,17 +443,18 @@ export function createTopoMap(
     return dms(90) + (Math.random() < 0.5 ? 'N' : 'S') + ' ' + dms(180) + (Math.random() < 0.5 ? 'E' : 'W');
   }
 
-  function drawActivity(ctx: CanvasRenderingContext2D, m: Mark, pos: Point, now: number, central: boolean) {
+  function drawActivity(ctx: CanvasRenderingContext2D, m: Mark, pos: Point, now: number, suppress: boolean, edgeAlpha: number) {
     if (!m.act) m.act = { txt: '', phase: 'wait', at: now + Math.random() * 1200 };
     const a = m.act;
     const IN = 800, OUT = 620;
     // Il marker può entrare nella zona "central" (sotto al titolo/testo
-    // dell'hero) anche a etichetta già visibile, non solo al momento della
-    // rivelazione — senza questo controllo continuo l'etichetta resta
-    // visibile e attraversa il testo mentre il marker ci passa sopra.
-    if (central && (a.phase === 'in' || a.phase === 'hold')) { a.phase = 'out'; a.at = now; }
+    // dell'hero) o avvicinarsi al capo di un percorso aperto (vedi
+    // edgeAlpha in drawTopoMarks) anche a etichetta già visibile, non solo
+    // al momento della rivelazione — senza questo controllo continuo
+    // l'etichetta resta visibile invece di sparire in anticipo.
+    if (suppress && (a.phase === 'in' || a.phase === 'hold')) { a.phase = 'out'; a.at = now; }
     if (a.phase === 'wait') {
-      if (now < a.at || central) return;
+      if (now < a.at || suppress) return;
       const used = topoMarks
         .filter((o) => o !== m && o.act && o.act.txt && o.pos && m.pos && Math.hypot(o.pos[0] - m.pos[0], o.pos[1] - m.pos[1]) < 520)
         .map((o) => o.act!.txt);
@@ -477,20 +479,25 @@ export function createTopoMap(
       if (a.phase === 'in') out += p < 0 ? ' ' : p < 240 ? SCRAMBLE_CH[(Math.floor(p / 40) + i * 3) % SCRAMBLE_CH.length] : c;
       else out += p < 0 ? c : p < 160 ? SCRAMBLE_CH[(Math.floor(p / 35) + i * 5) % SCRAMBLE_CH.length] : ' ';
     }
-    drawLabel(ctx, out, m, pos);
+    drawLabel(ctx, out, m, pos, edgeAlpha);
   }
 
-  function drawGps(ctx: CanvasRenderingContext2D, m: Mark, pos: Point, now: number) {
+  function drawGps(ctx: CanvasRenderingContext2D, m: Mark, pos: Point, now: number, edgeAlpha: number) {
     if (!m.gps) m.gps = { txt: '', phase: 'wait', at: now + 1500 + Math.random() * 14000 };
     const g = m.gps;
     const IN = 900, HOLD = 4400, OUT = 700;
     const cv = ctx.canvas, cw = cv.clientWidth || 1, ch = cv.clientHeight || 1;
     const central = Math.abs(pos[0] / cw - 0.5) < 0.44 && pos[1] / ch > 0.42;
+    // Un marker su un percorso non chiuso, avvicinandosi al capo, ricomincia
+    // dall'altro capo con un salto di posizione (vedi edgeAlpha in
+    // drawTopoMarks): l'etichetta deve sparire prima che questo avvenga,
+    // non restare "congelata" fino al salto.
+    const suppress = central || edgeAlpha < 1;
     // Vedi commento in drawActivity: la soppressione deve valere anche a
     // rivelazione già avvenuta, non solo al suo avvio.
-    if (central && (g.phase === 'in' || g.phase === 'hold')) { g.phase = 'out'; g.at = now; }
+    if (suppress && (g.phase === 'in' || g.phase === 'hold')) { g.phase = 'out'; g.at = now; }
     if (g.phase === 'wait') {
-      if (now < g.at || central) { drawActivity(ctx, m, pos, now, central); return; }
+      if (now < g.at || suppress) { drawActivity(ctx, m, pos, now, suppress, edgeAlpha); return; }
       g.txt = gpsText();
       g.phase = 'in';
       g.at = now;
@@ -510,7 +517,7 @@ export function createTopoMap(
       if (g.phase === 'in') out += p < 0 ? ' ' : p < 260 ? GPS_CH[(Math.floor(p / 40) + i * 3) % GPS_CH.length] : c;
       else out += p < 0 ? c : p < 180 ? GPS_CH[(Math.floor(p / 35) + i * 5) % GPS_CH.length] : ' ';
     }
-    drawLabel(ctx, out, m, pos);
+    drawLabel(ctx, out, m, pos, edgeAlpha);
   }
 
   function drawLinks(ctx: CanvasRenderingContext2D, now: number) {
@@ -578,24 +585,39 @@ export function createTopoMap(
     const dt = reduced || !lastMark ? 0 : Math.min((now - lastMark) / 1000, 0.05);
     lastMark = now;
     const fill = opts.accent;
+    const EDGE_FADE = 0.06;
     topoMarks.forEach((m) => {
       const p = m.path, n = p.length;
       m.t += (m.sp * dt * (m.dir || 1)) / 420;
       if (m.t >= 1) m.t -= 1;
       if (m.t < 0) m.t += 1;
       const closed = Math.hypot(p[0][0] - p[n - 1][0], p[0][1] - p[n - 1][1]) < 3;
-      const idxf = (((m.t % 1) + 1) % 1) * (n - 1);
+      const tt = ((m.t % 1) + 1) % 1;
+      const idxf = tt * (n - 1);
       const i0 = Math.floor(idxf), i1 = Math.min(i0 + 1, n - 1), kk = idxf - i0;
       const pos: Point = [p[i0][0] + (p[i1][0] - p[i0][0]) * kk, p[i0][1] + (p[i1][1] - p[i0][1]) * kk];
       const wrap = (i: number) => (closed ? ((i % (n - 1)) + (n - 1)) % (n - 1) : Math.min(n - 1, Math.max(0, i)));
       const A = p[wrap(i0 - 1)], B = p[wrap(i0 + 2)];
       m.ang = Math.atan2(B[1] - A[1], B[0] - A[0]);
       m.pos = pos;
+      // Su un percorso non chiuso i due capi (p[0] e p[n-1]) sono punti
+      // diversi: quando t si riavvolge da 1 a 0 il marker "salta" dall'uno
+      // all'altro invece di proseguire con continuità (come accade invece
+      // sui percorsi chiusi, dove i capi coincidono). Qui pallino ed
+      // etichetta sfumano a 0 esattamente in corrispondenza del salto, così
+      // non si vede né il salto del pallino né l'etichetta bloccata a metà.
+      const edgeAlpha = reduced || closed
+        ? 1
+        : tt < EDGE_FADE ? tt / EDGE_FADE
+        : tt > 1 - EDGE_FADE ? (1 - tt) / EDGE_FADE
+        : 1;
       ctx.beginPath();
       ctx.arc(pos[0], pos[1], m.r, 0, Math.PI * 2);
       ctx.fillStyle = fill;
+      ctx.globalAlpha = edgeAlpha;
       ctx.fill();
-      if (!reduced) drawGps(ctx, m, pos, now);
+      ctx.globalAlpha = 1;
+      if (!reduced) drawGps(ctx, m, pos, now, edgeAlpha);
     });
     if (!reduced) drawLinks(ctx, now);
     return true;
