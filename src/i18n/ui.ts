@@ -49,11 +49,11 @@ export const ui = {
     studio: {
       servicesLabel: 'Servizi',
       services: [
-        { n: '01', title: 'Reportage di gare ed eventi' },
-        { n: '02', title: 'Campagne ed editoriali' },
-        { n: '03', title: 'Fotografia still-life' },
-        { n: '04', title: 'Ritratti' },
-        { n: '05', title: 'Video' },
+        { n: '01', title: 'Reportage di gare ed eventi', desc: 'Copertura di gare ed eventi sportivi, dalla partenza al traguardo.' },
+        { n: '02', title: 'Campagne ed editoriali', desc: 'Shooting per brand e riviste, in studio o sul campo.' },
+        { n: '03', title: 'Fotografia still-life', desc: 'Prodotto e dettaglio: materiali, texture, componenti tecnici.' },
+        { n: '04', title: 'Ritratti', desc: "Ritratti d'atleta, in azione o in posa." },
+        { n: '05', title: 'Video', desc: 'Riprese per contenuti brevi o editoriali.' },
       ],
     },
     contacts: {
@@ -112,11 +112,11 @@ export const ui = {
     studio: {
       servicesLabel: 'Services',
       services: [
-        { n: '01', title: 'Race & event coverage' },
-        { n: '02', title: 'Campaigns & editorials' },
-        { n: '03', title: 'Still-life photography' },
-        { n: '04', title: 'Portraits' },
-        { n: '05', title: 'Video' },
+        { n: '01', title: 'Race & event coverage', desc: 'Coverage of races and sporting events, start to finish.' },
+        { n: '02', title: 'Campaigns & editorials', desc: 'Shoots for brands and magazines, in studio or on location.' },
+        { n: '03', title: 'Still-life photography', desc: 'Product and detail: materials, textures, technical components.' },
+        { n: '04', title: 'Portraits', desc: 'Athlete portraits, in action or posed.' },
+        { n: '05', title: 'Video', desc: 'Footage for short-form or editorial content.' },
       ],
     },
     contacts: {

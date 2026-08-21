@@ -16,8 +16,10 @@ const t = useTranslations(lang);
     {
       t.studio.services.map((s) => (
         <div class="studio__service-row" data-reveal="up">
+          <span class="studio__service-hover-bar" aria-hidden="true" />
           <span class="studio__service-n">{s.n}</span>
           <h2 class="studio__service-title">{s.title}</h2>
+          <p class="studio__service-desc">{s.desc}</p>
         </div>
       ))
     }
@@ -31,15 +33,13 @@ const t = useTranslations(lang);
     display: flex;
     flex-direction: column;
     gap: clamp(30px, 5vh, 64px);
-    padding: var(--space-section-y) var(--space-section-x) clamp(40px, 7vh, 90px);
+    padding: clamp(36px, 5.5vh, 76px) var(--space-section-x) clamp(40px, 7vh, 90px);
   }
 
   .studio__services {
     display: flex;
     flex-direction: column;
-    padding: clamp(20px, 2.2vw, 32px);
-    border-radius: var(--radius-md);
-    background: var(--color-card);
+    padding: clamp(20px, 2.2vw, 32px) 0;
   }
 
   .studio__services-label {
@@ -53,21 +53,53 @@ const t = useTranslations(lang);
   }
 
   .studio__service-row {
+    position: relative;
+    overflow: hidden;
     display: grid;
-    grid-template-columns: auto 1fr;
-    gap: clamp(10px, 1.2vw, 18px);
-    align-items: baseline;
-    padding: clamp(12px, 1.8vh, 20px) 0;
+    grid-template-columns: auto 1fr minmax(150px, 240px);
+    gap: clamp(10px, 1.6vw, 28px);
+    align-items: center;
+    padding: clamp(14px, 2vh, 22px) clamp(14px, 1.6vw, 24px);
     border-top: 1px solid rgba(16, 17, 20, 0.1);
   }
 
   .studio__service-row:first-of-type {
     border-top: none;
-    padding-top: clamp(6px, 1vh, 10px);
   }
 
-  .studio__service-row:last-of-type {
-    padding-bottom: clamp(6px, 1vh, 10px);
+  /* Barra che si "srotola" dall'alto dietro alla riga, in stile
+     runrobrun.com: stesso meccanismo (scaleY ancorato in alto),
+     colori del sito invece dei loro. */
+  .studio__service-hover-bar {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background: var(--color-text);
+    transform-origin: center top;
+    transform: scaleY(0);
+    transition: transform 0.48s cubic-bezier(0.22, 1, 0.36, 1);
+    pointer-events: none;
+  }
+
+  .studio__service-row:hover .studio__service-hover-bar {
+    transform: scaleY(1);
+  }
+
+  .studio__service-n,
+  .studio__service-title,
+  .studio__service-desc {
+    position: relative;
+    z-index: 1;
+    transition: color 0.3s ease;
+  }
+
+  .studio__service-row:hover .studio__service-n,
+  .studio__service-row:hover .studio__service-title {
+    color: var(--color-accent);
+  }
+
+  .studio__service-row:hover .studio__service-desc {
+    color: var(--color-on-dark-secondary);
   }
 
   .studio__service-n {
@@ -84,5 +116,27 @@ const t = useTranslations(lang);
     line-height: 1.1;
     letter-spacing: -0.03em;
     text-wrap: balance;
+  }
+
+  .studio__service-desc {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    line-height: 1.5;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: var(--color-text-tertiary);
+    text-wrap: pretty;
+  }
+
+  @media (max-width: 640px) {
+    .studio__service-row {
+      grid-template-columns: auto 1fr;
+      row-gap: 6px;
+    }
+
+    .studio__service-desc {
+      grid-column: 1 / -1;
+    }
   }
 </style>

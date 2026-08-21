@@ -23,8 +23,6 @@
 
   --space-section-y: clamp(56px, 9vh, 120px);
   --space-section-x: calc(clamp(18px, 5vw, 64px) + 44px);
-  --radius-md: clamp(8px, 1vw, 14px);
-  --radius-sm: clamp(4px, 0.6vw, 8px);
 }
 
 html {
