@@ -9,9 +9,14 @@
  *    marker.
  *
  * Parametri (vedi anche README → "Topo Map Module — API"):
- *  - accent (string, colore CSS): marker, etichette e linee. Default '#c8b892'.
+ *  - accent (string, colore CSS): marker, etichette e linee di collegamento. Default '#c8b892'.
  *  - markers (number 0–16): numero di marker GPS. Default 10.
  *  - showElevation (boolean): mostra/nasconde le quote sulle curve. Default true.
+ *  - lineColor (string, hex): curve di livello e quote. Default '#ffffff' (sfondo scuro);
+ *    su sfondo chiaro passare un colore scuro, es. '#101114'.
+ *  - labelColor (string, hex): testo di coordinate GPS e attività sopra i marker.
+ *    Default coincide con accent; su sfondo chiaro l'oro è troppo poco leggibile,
+ *    passare un colore scuro, es. '#101114'.
  *
  * Rispetta prefers-reduced-motion: in quel caso disegna un solo frame
  * (marker fermi nella posizione iniziale, nessuna linea né etichetta).
@@ -21,6 +26,8 @@ export interface TopoMapOptions {
   accent?: string;
   markers?: number;
   showElevation?: boolean;
+  lineColor?: string;
+  labelColor?: string;
 }
 
 export interface TopoMapController {
@@ -205,6 +212,8 @@ export function createTopoMap(
     accent: initial.accent ?? '#c8b892',
     markers: initial.markers ?? 10,
     showElevation: initial.showElevation ?? true,
+    lineColor: initial.lineColor ?? '#ffffff',
+    labelColor: initial.labelColor ?? initial.accent ?? '#c8b892',
   };
 
   const field = buildNoise();
@@ -219,6 +228,14 @@ export function createTopoMap(
 
   function accA(a: number): string {
     return hexToRgba(opts.accent, a);
+  }
+
+  function lineA(a: number): string {
+    return hexToRgba(opts.lineColor, a);
+  }
+
+  function labelA(a: number): string {
+    return hexToRgba(opts.labelColor, a);
   }
 
   function renderTopo() {
@@ -280,7 +297,7 @@ export function createTopoMap(
         for (let i = 1; i < p.length; i++) ctx.lineTo(p[i][0], p[i][1]);
       });
       ctx.lineWidth = isIdx ? 1.5 : 0.8;
-      ctx.strokeStyle = isIdx ? 'rgba(255,255,255,0.22)' : 'rgba(255,255,255,0.1)';
+      ctx.strokeStyle = isIdx ? lineA(0.22) : lineA(0.1);
       ctx.lineCap = 'round';
       ctx.lineJoin = 'round';
       ctx.stroke();
@@ -326,7 +343,7 @@ export function createTopoMap(
         ctx.fillStyle = '#000';
         ctx.fillRect(-tw / 2 - 4, -7, tw + 8, 14);
         ctx.globalCompositeOperation = 'source-over';
-        ctx.fillStyle = l.idx ? 'rgba(255,255,255,0.26)' : 'rgba(255,255,255,0.14)';
+        ctx.fillStyle = l.idx ? lineA(0.26) : lineA(0.14);
         ctx.fillText(l.txt, 0, 0.5);
         ctx.restore();
       });
@@ -410,7 +427,7 @@ export function createTopoMap(
     ctx.font = '500 11px ui-monospace, SFMono-Regular, Menlo, monospace';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'alphabetic';
-    ctx.fillStyle = accA(0.55);
+    ctx.fillStyle = labelA(0.72);
     const cw = ctx.canvas.clientWidth || 1;
     const tw = ctx.measureText(txt).width;
     ctx.fillText(txt, Math.max(tw / 2 + 8, Math.min(pos[0], cw - tw / 2 - 8)), Math.max(18, pos[1] - m.r - 9));
