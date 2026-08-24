@@ -31,6 +31,10 @@ const t = useTranslations(lang);
       <a href="#" id="contact-email" class="contacts__value" rel="nofollow"></a>
     </div>
     <div class="contacts__block">
+      <span class="contacts__label">{t.contacts.whatsappLabel}</span>
+      <a href="#" id="contact-whatsapp" class="contacts__value" target="_blank" rel="noopener noreferrer nofollow"></a>
+    </div>
+    <div class="contacts__block">
       <span class="contacts__label">{t.contacts.instagramLabel}</span>
       <a href="https://instagram.com/nicolaperantoni" target="_blank" rel="noopener noreferrer" class="contacts__value"
         >@nicolaperantoni ↗</a
@@ -47,12 +51,12 @@ const t = useTranslations(lang);
   .contacts {
     position: relative;
     z-index: 2;
-    min-height: 48dvh;
+    min-height: 30dvh;
     display: flex;
     flex-direction: column;
     justify-content: center;
     gap: clamp(24px, 4vh, 48px);
-    padding: clamp(56px, 9vh, 110px) var(--space-section-x);
+    padding: clamp(32px, 5.5vh, 66px) var(--space-section-x) clamp(60px, 9vh, 110px);
   }
 
   .contacts__title {
@@ -115,16 +119,24 @@ const t = useTranslations(lang);
 </style>
 
 <script>
-  // Indirizzo scritto al contrario, ricomposto solo lato client: gli
-  // scraper che leggono l'HTML statico non trovano una stringa email.
+  // Indirizzo e numero scritti al contrario, ricomposti solo lato client:
+  // gli scraper che leggono l'HTML statico non trovano le stringhe
+  // (stesso pattern di TopBar.astro).
   const user = 'inotnarep.alocin'.split('').reverse().join('');
   const domain = 'moc.liamg'.split('').reverse().join('');
   const email = `${user}@${domain}`;
 
-  const link = document.getElementById('contact-email') as HTMLAnchorElement | null;
-  if (link) {
-    link.href = `mailto:${email}`;
-    link.textContent = email;
-    link.removeAttribute('rel');
+  const emailLink = document.getElementById('contact-email') as HTMLAnchorElement | null;
+  if (emailLink) {
+    emailLink.href = `mailto:${email}`;
+    emailLink.textContent = email;
+    emailLink.removeAttribute('rel');
+  }
+
+  const phone = '4562717643 93'.replace(/\s/g, '').split('').reverse().join('');
+  const whatsappLink = document.getElementById('contact-whatsapp') as HTMLAnchorElement | null;
+  if (whatsappLink) {
+    whatsappLink.href = `https://wa.me/${phone}`;
+    whatsappLink.textContent = `+${phone.slice(0, 2)} ${phone.slice(2, 5)} ${phone.slice(5, 8)} ${phone.slice(8)} ↗`;
   }
 </script>

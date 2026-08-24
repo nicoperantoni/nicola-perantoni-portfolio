@@ -22,8 +22,6 @@ interface ProjectGroup {
 const projectGroups: ProjectGroup[] = [
   { label: 'PH Apparel × Cérvelo', files: [4].map((n) => `ph-x-cervelo-${n}.webp`) },
   { label: 'Ristora', files: [6].map((n) => `ristora-${n}.webp`) },
-  { label: 'PH Apparel Spring Camp', files: [8, 13].map((n) => `ph-training-camp-${n}.webp`) },
-  { label: 'Zullo Bike', files: [6].map((n) => `zullo-${n}.webp`) },
 ];
 
 export interface FlowImage {
@@ -41,9 +39,8 @@ export type FlowItem = FlowImage | FlowText;
 
 /**
  * Interlaccia le foto dei progetti (una per progetto, a giro) e poi
- * inserisce le note manifesto a posizioni fisse, con il vincolo che l'ultima
- * nota non chiuda il flusso (resta almeno una foto sotto). Algoritmo fedele
- * al prototipo (buildFlow) — vedi README "Work — flusso fotografico".
+ * inserisce la nota manifesto in seconda posizione — vedi README
+ * "Work — flusso fotografico".
  */
 export function buildFlow(lang: Locale): FlowItem[] {
   const t = useTranslations(lang);
@@ -61,11 +58,8 @@ export function buildFlow(lang: Locale): FlowItem[] {
     }
   }
 
-  const positions = [1, 7, 13];
-  positions.forEach((at, i) => {
-    const index = Math.min(at + i, flow.length - 1);
-    flow.splice(index, 0, { kind: 'text', body: t.work.manifesto[i] });
-  });
+  const index = Math.min(1, flow.length - 1);
+  flow.splice(index, 0, { kind: 'text', body: t.work.manifesto[0] });
 
   return flow;
 }
