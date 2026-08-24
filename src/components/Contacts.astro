@@ -15,11 +15,13 @@ const t = useTranslations(lang);
     {
       lang === 'it' ? (
         <Fragment>
-          Racconto <em>storie</em> di brand, gare, <em>squadre <span class="contacts__and">e</span> atleti.</em>
+          Mi piace conoscere <em>nuove persone</em>. Mi piace affrontare <em>nuove sfide</em>. Mi piace anche il{' '}
+          <em>caffè</em>: contattami, e prendiamone uno insieme.
         </Fragment>
       ) : (
         <Fragment>
-          I tell <em>stories</em> of brands, races, <em>teams <span class="contacts__and">and</span> athletes.</em>
+          I like meeting <em>new people</em>. I like taking on <em>new challenges</em>. I also like{' '}
+          <em>coffee</em>: get in touch, and let's grab one together.
         </Fragment>
       )
     }
@@ -61,12 +63,12 @@ const t = useTranslations(lang);
 
   .contacts__title {
     margin: 0 auto;
-    max-width: 20ch;
+    max-width: 34ch;
     text-align: center;
     font-weight: 300;
-    font-size: clamp(2.2rem, 6vw, 5.4rem);
-    line-height: 0.98;
-    letter-spacing: -0.04em;
+    font-size: clamp(1.7rem, 3.6vw, 3.2rem);
+    line-height: 1.25;
+    letter-spacing: -0.02em;
     text-wrap: balance;
   }
 
@@ -75,12 +77,6 @@ const t = useTranslations(lang);
     font-style: italic;
     font-weight: 400;
     font-size: 1em;
-  }
-
-  .contacts__and {
-    font-family: var(--font-archivo);
-    font-style: normal;
-    font-weight: 300;
   }
 
   .contacts__row {

@@ -25,7 +25,7 @@ export const ui = {
       jsonLdOffers: ['Gare ed eventi', 'Ritiri e training camp', 'Campagne e editoriali', "Ritratti d'atleta", 'Video'],
     },
     topbar: {
-      pdfLink: 'Scarica il Portfolio',
+      pdfLink: 'Scarica il mio Portfolio',
       instagramAria: 'Apri il profilo Instagram',
       emailAria: 'Invia una email',
       whatsappAria: 'Scrivi su WhatsApp',
@@ -46,7 +46,7 @@ export const ui = {
         'Amo il movimento, l’adrenalina, la tranquillità e il silenzio che anticipano la performance, il sogno del record personale, la forza, la mentalità e la grinta necessarie per raggiungere il proprio obiettivo.',
       ],
       ctaTitle: 'Vuoi vedere tutto il mio lavoro?',
-      ctaButton: 'Scarica il Portfolio',
+      ctaButton: 'Scarica il mio Portfolio',
     },
     studio: {
       servicesLabel: 'Servizi',
@@ -102,15 +102,14 @@ export const ui = {
       role: 'shoot',
       tagline: 'Creo ergo sum',
       paragraphs: [
-        "I'm a sports photographer based in Verona.",
-        'I shoot reportage, editorials and campaigns, in studio or outdoors. Still life and video.',
-        'My images tell a story: I always try to go further, like an athlete chasing their own limit.',
+        "I'm Nicola. Sports photographer based in Verona. I shoot reportage, editorials and campaigns, in studio or outdoors. Still‑life and video.",
+        'With my images I want to tell a story. Through it, I always try to raise the bar, like an athlete.',
       ],
     },
     work: {
       altPrefix: 'Sports photography by Nicola Perantoni',
       manifesto: [
-        'I love movement, adrenaline, the calm and silence that come before performance, the dream of a personal best, the strength, the mindset and the grit needed to reach your goal. Whatever it may be.',
+        'I love movement, adrenaline, the calm and silence that come before performance, the dream of a personal best, the strength, the mindset and the grit needed to reach your goal.',
       ],
       ctaTitle: 'Want to see all my work?',
       ctaButton: 'Download my Portfolio',
