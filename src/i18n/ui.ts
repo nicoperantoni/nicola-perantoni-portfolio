@@ -53,7 +53,7 @@ export const ui = {
       services: [
         { n: '01', title: 'Reportage di gare ed eventi', desc: 'Dalla partenza al traguardo.' },
         { n: '02', title: 'Campagne ed editoriali', desc: 'Shooting per brand e magazine, in studio oppure on site.' },
-        { n: '03', title: 'Fotografia still-life', desc: 'Prodotto e dettaglio: materiali, texture, componenti tecnici.' },
+        { n: '03', title: 'Fotografia still-life', desc: 'Prodotti, materiali, texture e componenti tecnici.' },
         { n: '04', title: 'Ritratti', desc: 'Dinamici, primi piani e contestualizzati.' },
         { n: '05', title: 'Video', desc: 'Contenuti social oriented ed editoriali.' },
       ],
@@ -119,7 +119,7 @@ export const ui = {
       services: [
         { n: '01', title: 'Race & event coverage', desc: 'Start to finish.' },
         { n: '02', title: 'Campaigns & editorials', desc: 'Shoots for brands and magazines, in studio or on site.' },
-        { n: '03', title: 'Still-life photography', desc: 'Product and detail: materials, textures, technical components.' },
+        { n: '03', title: 'Still-life photography', desc: 'Products, materials, textures and technical components.' },
         { n: '04', title: 'Portraits', desc: 'Dynamic, close-ups and in context.' },
         { n: '05', title: 'Video', desc: 'Social-oriented and editorial content.' },
       ],

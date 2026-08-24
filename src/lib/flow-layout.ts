@@ -34,7 +34,7 @@ export function initFlowLayout(container: HTMLElement, options: FlowLayoutOption
     const colW = (w - gap * (nCols - 1)) / nCols;
     let ti = 0;
     shots.forEach((el) => {
-      const txt = el.querySelector('[data-lines-src]');
+      const txt = el.querySelector('.shot__text');
       if (txt && nCols > 1) el.dataset.txtCol = String(((ti++ + 1) % nCols) + 1);
       else delete el.dataset.txtCol;
       el.style.width = '100%';
