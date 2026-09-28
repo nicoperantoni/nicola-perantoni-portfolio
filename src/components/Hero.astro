@@ -7,11 +7,10 @@ interface Props {
   lang: Locale;
   accent?: string;
   markers?: number;
-  showElevation?: boolean;
   theme?: 'dark' | 'light';
 }
 
-const { lang, accent = '#c8b892', markers = 10, showElevation = true, theme = 'dark' } = Astro.props;
+const { lang, accent = '#c8b892', markers = 10, theme = 'dark' } = Astro.props;
 const t = useTranslations(lang);
 const { words, then, role, tagline, paragraphs: introParagraphs } = t.hero;
 // Stesso hex dei design token --color-text / --color-on-dark (global.css):
@@ -25,8 +24,8 @@ const labelColor = theme === 'light' ? '#101114' : accent;
 <section class="hero" data-theme={theme}>
   <div class="hero__panel">
     <div class="hero__map" aria-hidden="true">
-      <canvas id="topo-static" class="hero__canvas"></canvas>
-      <canvas id="topo-marks" class="hero__canvas hero__canvas--marks"></canvas>
+      <div id="hero-deck" class="hero__deck"></div>
+      <canvas id="hero-labels" class="hero__canvas hero__canvas--marks"></canvas>
     </div>
 
     <div class="hero__content">
@@ -44,6 +43,12 @@ const labelColor = theme === 'light' ? '#101114' : accent;
         {introParagraphs.map((p) => <span>{p}</span>)}
       </div>
     </div>
+
+    <p class="hero__attribution">
+      © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a>{' · '}
+      <a href="https://openmaptiles.org/" target="_blank" rel="noopener noreferrer">OpenMapTiles</a>{' · '}
+      <a href="https://openfreemap.org/" target="_blank" rel="noopener noreferrer">OpenFreeMap</a>
+    </p>
   </div>
 </section>
 
@@ -149,6 +154,42 @@ const labelColor = theme === 'light' ? '#101114' : accent;
     }
   }
 
+  /* Contenitore di deck.gl: parte trasparente e sfuma quando le tile
+     visibili sono caricate (classe aggiunta dallo script), così non si
+     vede la cartografia comparire a pezzi. */
+  .hero__deck {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 1.4s ease;
+  }
+
+  .hero__deck.is-ready {
+    opacity: 1;
+  }
+
+  .hero__attribution {
+    position: absolute;
+    right: clamp(12px, 2vw, 24px);
+    bottom: clamp(8px, 1.2vh, 14px);
+    z-index: 1;
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.06em;
+    color: var(--hero-text-tertiary);
+    opacity: 0.6;
+  }
+
+  .hero__attribution a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .hero__attribution a:hover {
+    text-decoration: underline;
+  }
+
   .hero__canvas {
     display: block;
     width: 100%;
@@ -245,29 +286,38 @@ const labelColor = theme === 'light' ? '#101114' : accent;
   }
 </style>
 
-<script is:inline define:vars={{ accent, markers, showElevation, lineColor, labelColor, words }}>
+<script is:inline define:vars={{ accent, markers, lineColor, labelColor, words }}>
   // define:vars è inline-only (niente import bundlati, niente TypeScript):
   // passa solo i dati al modulo processato da Vite nel secondo <script>.
-  window.__heroConfig = { accent, markers, showElevation, lineColor, labelColor, words };
+  window.__heroConfig = { accent, markers, lineColor, labelColor, words };
 </script>
 
 <script>
-  import { createTopoMap } from '../lib/topo-map';
   import { startWordCycle } from '../lib/word-cycle';
 
-  const { accent, markers, showElevation, lineColor, labelColor, words } = (window as any).__heroConfig as {
+  const { accent, markers, lineColor, labelColor, words } = (window as any).__heroConfig as {
     accent: string;
     markers: number;
-    showElevation: boolean;
     labelColor: string;
     lineColor: string;
     words: string[];
   };
 
-  const staticCanvas = document.getElementById('topo-static') as HTMLCanvasElement | null;
-  const marksCanvas = document.getElementById('topo-marks') as HTMLCanvasElement | null;
-  if (staticCanvas && marksCanvas) {
-    createTopoMap(staticCanvas, marksCanvas, { accent, markers, showElevation, lineColor, labelColor });
+  // deck.gl è pesante: lo si carica dopo il primo render, in un chunk a
+  // parte, così titolo e testo dell'hero non lo aspettano.
+  const deckEl = document.getElementById('hero-deck');
+  const labelsCanvas = document.getElementById('hero-labels') as HTMLCanvasElement | null;
+  if (deckEl && labelsCanvas) {
+    import('../lib/deck-map').then(({ createDeckMap }) => {
+      createDeckMap(deckEl, labelsCanvas, {
+        accent,
+        markers,
+        lineColor,
+        labelColor,
+        avoid: Array.from(document.querySelectorAll<HTMLElement>('.hero__headline, .hero__tagline, .hero__intro')),
+        onReady: () => deckEl.classList.add('is-ready'),
+      });
+    });
   }
 
   const wordEl = document.getElementById('hero-word');

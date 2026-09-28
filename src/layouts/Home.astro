@@ -21,8 +21,7 @@ const { lang } = Astro.props;
 
 // Parametri del modulo mappa topografica (README → "Topo Map Module — API").
 const TOPO_ACCENT = '#c8b892';
-const TOPO_MARKERS = 10;
-const TOPO_SHOW_ELEVATION = true;
+const TOPO_MARKERS = 14;
 
 const flow = buildFlow(lang);
 ---
@@ -31,7 +30,7 @@ const flow = buildFlow(lang);
   <TopBar lang={lang} />
   <Veil />
   <div class="page">
-    <Hero lang={lang} accent={TOPO_ACCENT} markers={TOPO_MARKERS} showElevation={TOPO_SHOW_ELEVATION} theme="light" />
+    <Hero lang={lang} accent={TOPO_ACCENT} markers={TOPO_MARKERS} theme="light" />
     <Work flow={flow} lang={lang} />
     <Studio lang={lang} />
     <Contacts lang={lang} />
