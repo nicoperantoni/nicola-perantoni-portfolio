@@ -16,7 +16,9 @@ export interface FlowLayoutOptions {
 export function initFlowLayout(container: HTMLElement, options: FlowLayoutOptions = {}): () => void {
   const columnsFor = (w: number) => (w >= 1000 ? 3 : w >= 620 ? 2 : 1);
 
+  let lastWidth = -1;
   const layout = () => {
+    lastWidth = container.clientWidth;
     const shots = Array.from(container.querySelectorAll<HTMLElement>('.shot'));
     if (!shots.length) return;
     const cs = getComputedStyle(container);
@@ -75,9 +77,20 @@ export function initFlowLayout(container: HTMLElement, options: FlowLayoutOption
     layoutTimer = setTimeout(layout, 60);
   };
 
+  // Su mobile 'resize' scatta anche quando la barra degli indirizzi
+  // compare/scompare durante lo scroll: cambia solo l'altezza, e la griglia
+  // dipende solo dalla larghezza. Al massimo un ricalcolo per frame.
+  let resizeRaf = 0;
+  const onResize = () => {
+    cancelAnimationFrame(resizeRaf);
+    resizeRaf = requestAnimationFrame(() => {
+      if (container.clientWidth !== lastWidth) layout();
+    });
+  };
+
   container.addEventListener('click', onClick);
   container.addEventListener('load', onLoad, true);
-  window.addEventListener('resize', layout);
+  window.addEventListener('resize', onResize);
   document.fonts?.ready?.then(layout).catch(() => {});
 
   layout();
@@ -86,7 +99,8 @@ export function initFlowLayout(container: HTMLElement, options: FlowLayoutOption
   return () => {
     container.removeEventListener('click', onClick);
     container.removeEventListener('load', onLoad, true);
-    window.removeEventListener('resize', layout);
+    window.removeEventListener('resize', onResize);
+    cancelAnimationFrame(resizeRaf);
     clearTimeout(layoutTimer);
     delayedTimers.forEach(clearTimeout);
   };

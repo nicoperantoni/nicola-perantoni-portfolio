@@ -1,23 +1,30 @@
 /**
  * Mappa reale animata per l'hero — alternativa a topo-map.ts basata su
- * deck.gl. Disegna:
- *  - la cartografia vera di Verona (strade e acqua da tile vettoriali
- *    OpenFreeMap/OpenMapTiles, nessuna API key) in monocromia,
- *  - marker che percorrono anelli reali (corsa e bici) generati da
- *    scripts/generate-hero-routes.mjs, con scia sfumata,
- *  - su un <canvas> 2D sovrapposto: coordinate GPS reali del marker o
- *    attività, e linee di collegamento fra marker (stessa grammatica
- *    visiva di topo-map.ts).
+ * deck.gl. Due livelli:
+ *  - deck.gl (WebGL), STATICO: la cartografia vera di Verona (strade e
+ *    acqua da tile vettoriali OpenFreeMap/OpenMapTiles, nessuna API key) in
+ *    monocromia e i tracciati completi degli anelli. Viene ridisegnato solo
+ *    quando arrivano le tile o cambia la dimensione — mai a ogni frame.
+ *  - un <canvas> 2D sovrapposto, ANIMATO: marker che percorrono anelli
+ *    reali (corsa e bici, da scripts/generate-hero-routes.mjs) con scia
+ *    sfumata, coordinate GPS reali o attività, linee di collegamento
+ *    (stessa grammatica visiva di topo-map.ts). Le posizioni a schermo
+ *    arrivano dalla stessa proiezione usata da deck.gl.
  *
- * Il modulo è pensato per essere caricato con import() dinamico: deck.gl
- * pesa, e non deve rallentare il primo render della pagina.
+ * Prima marker e scie erano layer deck.gl ricreati a ogni frame: deck.gl
+ * ridisegnava così anche tutta la cartografia, ~7,8 ms/frame su CPU mobile.
  *
- * Rispetta prefers-reduced-motion: un solo frame, marker fermi, niente
- * etichette né collegamenti. Si ferma quando l'hero esce dallo schermo.
+ * Il modulo è pensato per essere caricato con import() dinamico, a pagina
+ * già caricata (vedi Hero.astro): deck.gl pesa.
+ *
+ * Animazione limitata a 30 fps (marker lenti: a 60 la differenza non si
+ * vede, il costo sì). Rispetta prefers-reduced-motion: un solo frame,
+ * marker fermi, niente scie, etichette né collegamenti. Si ferma quando
+ * l'hero esce dallo schermo.
  */
 
 import { Deck, WebMercatorViewport } from '@deck.gl/core';
-import { LineLayer, PathLayer, ScatterplotLayer } from '@deck.gl/layers';
+import { PathLayer } from '@deck.gl/layers';
 import { MVTLayer } from '@deck.gl/geo-layers';
 import routesData from '../data/hero-routes.json';
 
@@ -81,7 +88,9 @@ const PITCH = 45;
 const EARTH_CIRC = 40075016.686;
 const TILE_PX = 512;
 const TRAIL_PX = 150;
-const TRAIL_STEPS = 28;
+const TRAIL_STEPS = 24;
+const FRAME_MS = 1000 / 30;
+const FADE_IN_MS = 1400; // come la transizione di .hero__deck in Hero.astro
 
 const ACTIVITIES = [
   'THRESHOLD EFFORT', 'HILL REPEATS', 'ZONE 4', 'NEGATIVE SPLIT', 'LONG RIDE',
@@ -186,6 +195,7 @@ export function createDeckMap(
   let running = false;
   let destroyed = false;
   let ready = false;
+  let readyAt = 0;
   let metersPerPixel = 10;
 
   // Vista fissa sul centro storico: lo zoom mostra ~VIEW_WIDTH_M metri in
@@ -199,6 +209,23 @@ export function createDeckMap(
   }
 
   let viewState = fitView();
+  // Proiezione lon/lat → px, ricalcolata solo al resize (la vista è fissa).
+  let viewport = makeViewport();
+
+  function makeViewport() {
+    const vp = new WebMercatorViewport({
+      width: container.clientWidth || 1,
+      height: container.clientHeight || 1,
+      ...viewState,
+    });
+    metersPerPixel = vp.metersPerPixel;
+    return vp;
+  }
+
+  const toScreen = (p: LonLat): [number, number] => {
+    const [x, y] = viewport.project(p);
+    return [x, y];
+  };
 
   const baseLayer = new MVTLayer({
     id: 'basemap',
@@ -238,61 +265,13 @@ export function createDeckMap(
     onViewportLoad: () => {
       if (ready) return;
       ready = true;
+      readyAt = performance.now();
       initial.onReady?.();
+      if (reduced) frame(performance.now());
     },
   });
 
-  const deck = new Deck({
-    parent: container as HTMLDivElement,
-    width: '100%',
-    height: '100%',
-    viewState,
-    controller: false,
-    useDevicePixels: Math.min(window.devicePixelRatio || 1, 2),
-    layers: [baseLayer],
-    style: { position: 'absolute', inset: '0', pointerEvents: 'none' },
-    onResize: () => {
-      viewState = fitView();
-      deck.setProps({ viewState });
-      sizeLabelCanvas();
-    },
-  });
-
-  function sizeLabelCanvas() {
-    const w = labelCanvas.clientWidth, h = labelCanvas.clientHeight;
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    if (labelCanvas.width !== Math.round(w * dpr)) labelCanvas.width = Math.round(w * dpr);
-    if (labelCanvas.height !== Math.round(h * dpr)) labelCanvas.height = Math.round(h * dpr);
-  }
-
-  function project(): (p: LonLat) => [number, number] {
-    const vp = new WebMercatorViewport({
-      width: container.clientWidth || 1,
-      height: container.clientHeight || 1,
-      ...viewState,
-    });
-    metersPerPixel = vp.metersPerPixel;
-    return (p) => {
-      const [x, y] = vp.project(p);
-      return [x, y];
-    };
-  }
-
-  interface Seg { from: LonLat; to: LonLat; a: number }
-
-  function trailFor(m: Mark, trailM: number): Seg[] {
-    const out: Seg[] = [];
-    const step = trailM / TRAIL_STEPS;
-    let prev = pointAt(m.route, wrapD(m.route, m.d - trailM));
-    for (let i = 1; i <= TRAIL_STEPS; i++) {
-      const cur = pointAt(m.route, wrapD(m.route, m.d - trailM + step * i));
-      out.push({ from: prev, to: cur, a: (i / TRAIL_STEPS) ** 1.6 });
-      prev = cur;
-    }
-    return out;
-  }
-
-  // Tracciati GPS completi, appena accennati: sotto le scie dei marker.
+  // Tracciati GPS completi, appena accennati: statici, sotto le scie.
   const tracksLayer = new PathLayer<Route>({
     id: 'tracks',
     data: routes,
@@ -304,32 +283,66 @@ export function createDeckMap(
     capRounded: true,
   });
 
-  function renderLayers() {
-    const trailM = TRAIL_PX * metersPerPixel;
-    const segs = reduced ? [] : marks.flatMap((m) => trailFor(m, trailM));
-    deck.setProps({
-      layers: [
-        baseLayer,
-        tracksLayer,
-        new LineLayer<Seg>({
-          id: 'trails',
-          data: segs,
-          getSourcePosition: (s) => s.from,
-          getTargetPosition: (s) => s.to,
-          getColor: (s) => [accentRgb[0], accentRgb[1], accentRgb[2], Math.round(s.a * 255)],
-          getWidth: 3,
-          widthUnits: 'pixels',
-        }),
-        new ScatterplotLayer<Mark>({
-          id: 'markers',
-          data: marks.slice(),
-          getPosition: (m) => m.lonLat!,
-          getRadius: (m) => m.r,
-          radiusUnits: 'pixels',
-          getFillColor: [accentRgb[0], accentRgb[1], accentRgb[2], 255],
-        }),
-      ],
+  const deck = new Deck({
+    parent: container as HTMLDivElement,
+    width: '100%',
+    height: '100%',
+    viewState,
+    controller: false,
+    useDevicePixels: Math.min(window.devicePixelRatio || 1, 2),
+    layers: [baseLayer, tracksLayer],
+    style: { position: 'absolute', inset: '0', pointerEvents: 'none' },
+    onResize: () => {
+      viewState = fitView();
+      viewport = makeViewport();
+      deck.setProps({ viewState });
+      sizeLabelCanvas();
+      if (reduced) frame(performance.now());
+    },
+  });
+
+  function sizeLabelCanvas() {
+    const w = labelCanvas.clientWidth, h = labelCanvas.clientHeight;
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    if (labelCanvas.width !== Math.round(w * dpr)) labelCanvas.width = Math.round(w * dpr);
+    if (labelCanvas.height !== Math.round(h * dpr)) labelCanvas.height = Math.round(h * dpr);
+  }
+
+  // ---------- marker e scie (canvas 2D) ----------
+
+  const trailStyles = Array.from({ length: TRAIL_STEPS + 1 }, (_, i) => hexToRgba(accent, (i / TRAIL_STEPS) ** 1.6));
+
+  function drawTrail(ctx: CanvasRenderingContext2D, m: Mark, trailM: number) {
+    // Segmenti con opacità crescente verso il marker: ogni tratto ha il
+    // proprio stroke, così la scia sfuma senza gradienti costosi.
+    const step = trailM / TRAIL_STEPS;
+    let prev = toScreen(pointAt(m.route, wrapD(m.route, m.d - trailM)));
+    for (let i = 1; i <= TRAIL_STEPS; i++) {
+      const cur = toScreen(pointAt(m.route, wrapD(m.route, m.d - trailM + step * i)));
+      ctx.strokeStyle = trailStyles[i];
+      ctx.beginPath();
+      ctx.moveTo(prev[0], prev[1]);
+      ctx.lineTo(cur[0], cur[1]);
+      ctx.stroke();
+      prev = cur;
+    }
+  }
+
+  function drawMarks(ctx: CanvasRenderingContext2D) {
+    ctx.save();
+    if (!reduced) {
+      ctx.lineWidth = 3;
+      ctx.lineCap = 'round';
+      const trailM = TRAIL_PX * metersPerPixel;
+      marks.forEach((m) => drawTrail(ctx, m, trailM));
+    }
+    ctx.fillStyle = accent;
+    marks.forEach((m) => {
+      ctx.beginPath();
+      ctx.arc(m.pos![0], m.pos![1], m.r, 0, Math.PI * 2);
+      ctx.fill();
     });
+    ctx.restore();
   }
 
   // ---------- etichette e collegamenti (canvas 2D) ----------
@@ -480,21 +493,26 @@ export function createDeckMap(
   // ---------- ciclo ----------
 
   function frame(now: number) {
-    const dt = reduced || !last ? 0 : Math.min((now - last) / 1000, 0.05);
+    // dt reale fra due frame disegnati (a 30 fps ~33 ms); il tetto evita
+    // salti dopo una pausa (tab in background, hero fuori schermo).
+    const dt = reduced || !last ? 0 : Math.min((now - last) / 1000, 0.1);
     last = now;
-    const toScreen = project();
     marks.forEach((m) => {
       m.d = wrapD(m.route, m.d + m.pxSpeed * metersPerPixel * dt);
       m.lonLat = pointAt(m.route, m.d);
       m.pos = toScreen(m.lonLat);
     });
-    renderLayers();
 
     sizeLabelCanvas();
     const ctx = labelCanvas.getContext('2d')!;
     const dpr = labelCanvas.width / (labelCanvas.clientWidth || 1);
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.clearRect(0, 0, labelCanvas.clientWidth, labelCanvas.clientHeight);
+    // Marker e scie compaiono insieme alla cartografia, con la stessa
+    // dissolvenza del contenitore deck.gl.
+    if (!ready) return;
+    ctx.globalAlpha = reduced ? 1 : Math.min(1, (now - readyAt) / FADE_IN_MS);
+    drawMarks(ctx);
     // Titolo e testo dell'hero entrano come rettangoli già "occupati":
     // nessuna etichetta può comparire sotto di loro. Letti a ogni frame
     // perché la parola del titolo cambia larghezza.
@@ -503,16 +521,20 @@ export function createDeckMap(
       const r = el.getBoundingClientRect();
       return [r.left - origin.left - 8, r.top - origin.top - 6, r.right - origin.left + 8, r.bottom - origin.top + 6];
     });
-    if (!reduced && ready) {
+    if (!reduced) {
       marks.forEach((m) => drawGps(ctx, m, m.pos!, now));
       drawLinks(ctx, now);
     }
+    ctx.globalAlpha = 1;
   }
 
   function loop(now: number) {
     if (!running) return;
-    frame(now);
     raf = requestAnimationFrame(loop);
+    // 30 fps: si salta un frame su due a 60 Hz (tolleranza di 2 ms per il
+    // jitter dei timestamp, altrimenti si scenderebbe a 20 fps).
+    if (last && now - last < FRAME_MS - 2) return;
+    frame(now);
   }
 
   function start() {

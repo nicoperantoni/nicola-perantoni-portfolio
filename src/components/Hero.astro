@@ -303,12 +303,19 @@ const labelColor = theme === 'light' ? '#101114' : accent;
     words: string[];
   };
 
-  // deck.gl è pesante: lo si carica dopo il primo render, in un chunk a
-  // parte, così titolo e testo dell'hero non lo aspettano.
+  // deck.gl è pesante (~240 KB): lo si scarica solo a pagina caricata e
+  // a browser libero, in un chunk a parte. Avviato subito, su connessioni
+  // lente si contendeva la banda con font e CSS e ritardava il primo
+  // render (FCP mobile 1,4 → 2,1 s nelle misure Lighthouse).
   const deckEl = document.getElementById('hero-deck');
   const labelsCanvas = document.getElementById('hero-labels') as HTMLCanvasElement | null;
+  const whenIdle = (fn: () => void) => {
+    const run = () => ('requestIdleCallback' in window ? requestIdleCallback(fn, { timeout: 1500 }) : setTimeout(fn, 200));
+    if (document.readyState === 'complete') run();
+    else window.addEventListener('load', run, { once: true });
+  };
   if (deckEl && labelsCanvas) {
-    import('../lib/deck-map').then(({ createDeckMap }) => {
+    whenIdle(() => import('../lib/deck-map').then(({ createDeckMap }) => {
       createDeckMap(deckEl, labelsCanvas, {
         accent,
         markers,
@@ -317,7 +324,7 @@ const labelColor = theme === 'light' ? '#101114' : accent;
         avoid: Array.from(document.querySelectorAll<HTMLElement>('.hero__headline, .hero__tagline, .hero__intro')),
         onReady: () => deckEl.classList.add('is-ready'),
       });
-    });
+    }));
   }
 
   const wordEl = document.getElementById('hero-word');

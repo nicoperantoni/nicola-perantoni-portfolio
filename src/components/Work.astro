@@ -15,7 +15,10 @@ const pdfHref = lang === 'en' ? '/portfolio-en.pdf' : '/portfolio-it.pdf';
 
 const EAGER_IMAGE_COUNT = 4;
 const PHOTO_WIDTHS = [420, 640, 900, 1200];
-const PHOTO_SIZES = '(min-width: 1000px) 28vw, (min-width: 620px) 43vw, 88vw';
+// Larghezza reale di una colonna (vedi flow-layout.ts e --space-section-x):
+// prima 88vw su mobile sovrastimava di ~⅓ e il browser scaricava una
+// variante più grande del necessario.
+const PHOTO_SIZES = '(min-width: 1000px) calc(28.7vw - 30px), (min-width: 620px) calc(43.4vw - 44px), calc(90vw - 88px)';
 
 let imageIndex = -1;
 ---

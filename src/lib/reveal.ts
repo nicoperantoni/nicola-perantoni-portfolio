@@ -1,11 +1,10 @@
 /**
  * Reveal allo scroll: IntersectionObserver su [data-reveal], unobserve al
- * primo ingresso (data-seen="1"). Le celle testo con [data-lines-src]
+ * primo ingresso (data-seen="1"). Scansione all'avvio e a font caricati. Le celle testo con [data-lines-src]
  * vengono spezzate in righe reali (misurando offsetTop di ogni parola) e
  * ricalcolate quando la larghezza cambia di oltre 4px.
  */
 
-const RESCAN_INTERVAL = 600;
 const RESIZE_DEBOUNCE = 120;
 const LINE_TOLERANCE = 3;
 const WIDTH_TOLERANCE = 4;
@@ -92,11 +91,13 @@ export function initReveal(root: ParentNode = document): () => void {
     root.querySelectorAll('[data-reveal]:not([data-seen])').forEach((el) => io.observe(el));
   };
 
+  // Il contenuto è tutto statico: basta una scansione all'avvio e una a
+  // font caricati (la divisione in righe dipende dalle metriche del font).
+  // Prima qui girava un setInterval ogni 600 ms per tutta la vita della pagina.
   scan();
-  const interval = setInterval(scan, RESCAN_INTERVAL);
+  document.fonts?.ready?.then(scan).catch(() => {});
 
   return () => {
     io.disconnect();
-    clearInterval(interval);
   };
 }

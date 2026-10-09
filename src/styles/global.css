@@ -15,9 +15,8 @@
 
   --color-accent: #c8b892;
 
-  --font-archivo: 'Archivo', Helvetica, Arial, sans-serif;
-  --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
-  --font-serif-italic: 'Instrument Serif', Georgia, serif;
+  /* --font-archivo, --font-mono, --font-serif-italic: definiti dal
+     componente <Font /> (BaseLayout.astro) a partire da astro.config.mjs. */
 
   --ease-signature: cubic-bezier(0.2, 0.7, 0.2, 1);
 
@@ -59,8 +58,12 @@ img {
 
 /* ---------- keyframes ---------- */
 
+/* Parte da 0.01, non da 0: Chrome ignora per l'LCP il testo dipinto a
+   opacità 0 e non lo riconsidera a fine dissolvenza. Con i font self-hosted
+   (pronti prima della dissolvenza) l'LCP finiva sul primo cambio della
+   parola dell'hero, ~2 s dopo. A occhio 0.01 e 0 sono identici. */
 @keyframes riseIn {
-  from { opacity: 0; transform: translateY(18px); }
+  from { opacity: 0.01; transform: translateY(18px); }
   to { opacity: 1; transform: translateY(0); }
 }
 

@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
 import Analytics from '@vercel/analytics/astro';
+import { Font } from 'astro:assets';
 import { useTranslations } from '../i18n/utils';
 import type { Locale } from '../i18n/ui';
 
@@ -71,12 +72,11 @@ const jsonLd = {
     <link rel="icon" href="/favicon.ico" sizes="any" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Archivo:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap"
-      rel="stylesheet"
-    />
+    <!-- Precaricati solo i font visibili subito nell'hero: Archivo 300
+         (titolo e testo) e Instrument Serif corsivo ("quindi"). -->
+    <Font cssVariable="--font-archivo" preload={[{ weight: 300 }]} />
+    <Font cssVariable="--font-serif-italic" preload />
+    <Font cssVariable="--font-mono" />
   </head>
   <body>
     <slot />
