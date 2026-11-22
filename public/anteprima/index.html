@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Anteprima del redesign: da non indicizzare. -->
+<meta name="robots" content="noindex, nofollow">
+<title>Studio Devastante</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #111112;
+    --mute: #8a8a8a;
+    --rule: rgba(17, 17, 18, 0.22);
+    --bg: #ffffff;
+    --pad: 14px;
+    --col-gap: 24px;
+    --aside: 33vw;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font-family: 'Archivo', Helvetica, Arial, sans-serif; font-size: 12.5px; line-height: 1.32; -webkit-font-smoothing: antialiased; }
+  a { color: inherit; text-decoration: none; }
+  a.u { text-decoration: underline; text-underline-offset: 2px; }
+  a.u:hover { text-decoration-thickness: 2px; }
+  p { margin: 0; }
+  img { display: block; width: 100%; height: auto; }
+
+  .page { display: grid; grid-template-columns: minmax(0, 1fr) var(--aside); }
+
+  /* ---------- colonna sinistra: scorre ---------- */
+  .main { padding: var(--pad) var(--col-gap) 80px var(--pad); }
+  /* Griglia a 4 colonne come il template: la prima ospita titolo e numeri. */
+  .row { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; column-gap: var(--col-gap); }
+  .meta-top { margin-bottom: 6px; }
+  .meta-top span:first-child { grid-column: 2; }
+  .headline { margin: 0; white-space: nowrap; font-weight: 600; font-size: clamp(30px, 6.6vw, 112px); line-height: 0.98; letter-spacing: -0.035em; }
+
+  .project { margin-top: clamp(110px, 18vh, 200px); }
+  .project .num { grid-row: 1 / span 2; align-self: start; font-weight: 600; font-size: clamp(56px, 6.2vw, 104px); line-height: 0.8; letter-spacing: -0.04em; }
+  .project .info .mute { color: var(--mute); }
+
+  /* Galleria: foto principale; clic a sinistra/destra = precedente/successiva. */
+  .gallery { grid-column: 2 / span 3; margin-top: 26px; }
+  .stage { position: relative; aspect-ratio: 4 / 3; background: #f0f0f0; overflow: hidden; }
+  .stage .main { width: 100%; height: 100%; object-fit: contain; transition: opacity .35s ease; }
+  .stage .main.is-fading { opacity: 0; }
+  .nav { position: absolute; top: 0; bottom: 0; width: 50%; padding: 0; border: 0; background: transparent; }
+  .nav.prev { left: 0; cursor: w-resize; }
+  .nav.next { right: 0; cursor: e-resize; }
+  .nav:focus-visible { outline: 2px solid var(--ink); outline-offset: -2px; }
+  .thumbs { display: flex; align-items: flex-end; gap: 12px; margin-top: 12px; }
+  .thumb { display: flex; flex-direction: column; gap: 6px; width: 64px; padding: 0; border: 0; background: none; font: inherit; color: var(--mute); text-align: left; cursor: pointer; }
+  .thumb img { aspect-ratio: 2 / 3; object-fit: cover; opacity: .45; transition: opacity .25s ease; }
+  .thumb:hover img, .thumb.on img { opacity: 1; }
+  .thumb.on { color: var(--ink); }
+  .count { margin-left: auto; color: var(--mute); }
+
+  /* ---------- colonna destra: fissa ---------- */
+  .aside { position: sticky; top: 0; height: 100vh; overflow-y: auto; padding: var(--pad) var(--pad) 40px 0; scrollbar-width: none; }
+  .aside::-webkit-scrollbar { display: none; }
+  .block { display: grid; grid-template-columns: 1fr 1.25fr; column-gap: var(--col-gap); padding: 6px 0 22px; border-top: 1px solid var(--rule); }
+  .block:first-child { border-top: 0; padding-top: 0; }
+  .block h2 { margin: 0; font-size: inherit; font-weight: 400; }
+  .block .content { display: flex; flex-direction: column; gap: 12px; }
+  .services { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 12px; }
+  .services .mute { color: var(--mute); }
+  .contact-line { display: flex; flex-direction: column; }
+  .contact-line .mute { color: var(--mute); }
+  .content.lang { flex-direction: row; gap: 10px; }
+  .lang .on { text-decoration: underline; text-underline-offset: 2px; }
+
+  @media (max-width: 900px) {
+    .page { grid-template-columns: 1fr; }
+    .aside { position: static; height: auto; overflow: visible; padding: 40px var(--pad) 40px; }
+    .main { padding-right: var(--pad); padding-bottom: 0; }
+    .row { grid-template-columns: 1fr 1fr; }
+    .meta-top span:first-child { grid-column: auto; }
+    .project .num { grid-row: auto; grid-column: 1 / -1; margin-bottom: 14px; }
+    .gallery { grid-column: 1 / -1; }
+    .thumb { width: 52px; }
+  }
+  @media (prefers-reduced-motion: reduce) { .stage .main { transition: none; } }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <main class="main">
+    <div class="row meta-top">
+      <span>Fotografia sportiva</span>
+      <span>Verona, Italia</span>
+      <span><a class="u" href="#">Scarica il mio Portfolio ↓</a></span>
+    </div>
+    <h1 class="headline">Studio Devastante</h1>
+    <div id="projects"></div>
+  </main>
+
+  <aside class="aside">
+    <section class="block">
+      <h2>Profilo</h2>
+      <div class="content">
+        <p>Sono Nicola. Fotografo con base a Verona. Realizzo reportage, editoriali e campagne, in studio o outdoor. Still‑life e video.</p>
+        <p>Con le mie immagini voglio raccontare una storia. Grazie a essa cerco sempre di alzare l'asticella, come un atleta.</p>
+        <p>Amo il movimento, l’adrenalina, la tranquillità e il silenzio che anticipano la performance, il sogno del record personale, la forza, la mentalità e la grinta necessarie per raggiungere il proprio obiettivo.</p>
+      </div>
+    </section>
+
+    <section class="block">
+      <h2>Servizi</h2>
+      <ol class="services">
+        <li>Reportage di gare ed eventi<br><span class="mute">Dalla partenza al traguardo.</span></li>
+        <li>Campagne ed editoriali<br><span class="mute">Shooting per brand e magazine, in studio oppure on site.</span></li>
+        <li>Fotografia still-life<br><span class="mute">Prodotti, materiali, texture e componenti tecnici.</span></li>
+        <li>Ritratti<br><span class="mute">Dinamici, primi piani e contestualizzati.</span></li>
+        <li>Video<br><span class="mute">Contenuti social oriented ed editoriali.</span></li>
+      </ol>
+    </section>
+
+    <section class="block">
+      <h2>Contatti</h2>
+      <div class="content">
+        <p>Mi piace conoscere nuove persone. Mi piace affrontare nuove sfide. Mi piace anche il caffè: contattami, e prendiamone uno insieme.</p>
+        <p class="contact-line"><span class="mute">Email</span><a class="u" href="#" id="c-email" rel="nofollow"></a></p>
+        <p class="contact-line"><span class="mute">WhatsApp</span><a class="u" href="#" id="c-wa" target="_blank" rel="noopener nofollow"></a></p>
+        <p class="contact-line"><span class="mute">Instagram</span><a class="u" href="https://instagram.com/nicolaperantoni" target="_blank" rel="noopener">@nicolaperantoni ↗</a></p>
+        <p class="contact-line"><span class="mute">Sede</span>Italia — Disponibile ovunque</p>
+      </div>
+    </section>
+
+    <section class="block">
+      <h2>Portfolio</h2>
+      <div class="content"><p><a class="u" href="#">Scarica il mio Portfolio (PDF) ↓</a></p></div>
+    </section>
+
+    <section class="block">
+      <h2>Lingua</h2>
+      <div class="content lang"><span class="on">IT</span><a class="u" href="#">EN</a></div>
+    </section>
+
+    <section class="block">
+      <h2>&nbsp;</h2>
+      <div class="content"><p style="color: var(--mute)">© 2026 Studio Devastante di Nicola Perantoni<br>P.IVA 04623590231</p></div>
+    </section>
+  </aside>
+</div>
+
+<script>
+  // Recapiti ricomposti lato client (stesso schema del sito attuale).
+  const email = 'inotnarep.alocin'.split('').reverse().join('') + '@' + 'moc.liamg'.split('').reverse().join('');
+  const e = document.getElementById('c-email'); e.href = 'mailto:' + email; e.textContent = email;
+  const ph = '4562717643 93'.replace(/\s/g, '').split('').reverse().join('');
+  const w = document.getElementById('c-wa'); w.href = 'https://wa.me/' + ph;
+  w.textContent = `+${ph.slice(0, 2)} ${ph.slice(2, 5)} ${ph.slice(5, 8)} ${ph.slice(8)} ↗`;
+
+  // Progetti (nessun link a pagine di dettaglio).
+  const PROJECTS = [
+    { n: 3, name: 'PH Apparel × Cérvelo', year: '[Anno]', photos: ['ph-x-cervelo-4', 'ph-x-cervelo-1', 'ph-x-cervelo-3', 'ph-x-cervelo-2'] },
+    { n: 2, name: 'PH Training Camp', year: '[Anno]', photos: ['ph-training-camp-12', 'ph-training-camp-14', 'ph-training-camp-9', 'ph-training-camp-3'] },
+    { n: 1, name: 'Ristora', year: '[Anno]', photos: ['ristora-6', 'ristora-2', 'ristora-4', 'ristora-1'] },
+  ];
+  const root = document.getElementById('projects');
+  PROJECTS.forEach((p) => {
+    const sec = document.createElement('section');
+    sec.className = 'project row';
+    sec.innerHTML = `
+      <span class="num">${p.n}</span>
+      <p class="info"><span class="mute">Progetto</span><br>${p.name}</p>
+      <p class="info"><span class="mute">Anno</span><br>${p.year}</p>
+      <div class="gallery">
+        <div class="stage">
+          <img class="main" src="img/${p.photos[0]}.webp" alt="${p.name} — foto 1 di ${p.photos.length}">
+          <button class="nav prev" type="button" aria-label="Foto precedente"></button>
+          <button class="nav next" type="button" aria-label="Foto successiva"></button>
+        </div>
+        <div class="thumbs">
+          ${p.photos.map((f, i) => `<button class="thumb" type="button" aria-label="Foto ${p.n}.${i + 1}"><img src="img/${f}.webp" alt=""><span>${p.n}.${i + 1}</span></button>`).join('')}
+          <span class="count">1 / ${p.photos.length}</span>
+        </div>
+      </div>`;
+    root.appendChild(sec);
+
+    // Galleria: clic sulla metà sinistra/destra della foto o sulle miniature.
+    const main = sec.querySelector('.main');
+    const thumbs = [...sec.querySelectorAll('.thumb')];
+    const count = sec.querySelector('.count');
+    let i = 0;
+    const show = (k) => {
+      i = (k + p.photos.length) % p.photos.length;
+      main.classList.add('is-fading');
+      setTimeout(() => {
+        main.src = `img/${p.photos[i]}.webp`;
+        main.alt = `${p.name} — foto ${i + 1} di ${p.photos.length}`;
+        main.classList.remove('is-fading');
+      }, 180);
+      thumbs.forEach((t, j) => t.classList.toggle('on', j === i));
+      count.textContent = `${i + 1} / ${p.photos.length}`;
+    };
+    sec.querySelector('.prev').addEventListener('click', () => show(i - 1));
+    sec.querySelector('.next').addEventListener('click', () => show(i + 1));
+    thumbs.forEach((t, j) => t.addEventListener('click', () => show(j)));
+    thumbs[0].classList.add('on');
+  });
+</script>
+</body>
+</html>
