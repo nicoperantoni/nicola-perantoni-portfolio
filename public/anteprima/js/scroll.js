@@ -22,7 +22,9 @@ export function initScroll({ stage, track, panels, imgs, perCopy }) {
       // Solo le foto vicine allo schermo: le altre restano ferme (risparmio).
       if (center < -wStage || center > 2 * wStage) return;
       const n = Math.max(-1, Math.min(1, (center - wStage / 2) / (wStage / 2 + p.offsetWidth)));
-      img.style.transform = `translate3d(${(-n * 7).toFixed(2)}%, 0, 0)`;
+      // Foto larghe il 140% del riquadro: ±14% della foto = ±19,6% del
+      // riquadro, appena dentro al margine del 20% su ciascun lato.
+      img.style.transform = `translate3d(${(-n * 14).toFixed(2)}%, 0, 0)`;
     });
   }
 

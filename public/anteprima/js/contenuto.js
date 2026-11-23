@@ -6,8 +6,8 @@ export const PHOTOS = [
   'ph-training-camp-14', 'ristora-2', 'ph-x-cervelo-3', 'ph-training-camp-9',
   'ristora-4', 'ph-x-cervelo-2', 'ph-training-camp-3', 'ristora-1',
 ];
-// Ogni 4 foto un pannello di testo; l'ultimo chiude lo scroll.
-const TEXT_AFTER = { 3: 't-profilo', 7: 't-servizi', 11: 't-fine' };
+// A metà sequenza il Profilo; il Portfolio chiude lo scroll.
+const TEXT_AFTER = { 5: 't-profilo', 11: 't-fine' };
 
 // Scroll infinito: la sequenza (foto + testi) è ripetuta COPIES volte di
 // fila; la posizione si riporta sempre dentro la copia centrale, così

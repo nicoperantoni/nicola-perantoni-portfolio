@@ -1,14 +1,17 @@
-// Pagine interne (Manifesto, Contatti): titolo fermo a tutta larghezza,
+// Pagine interne (Servizi, Manifesto, Contatti): titolo fermo a tutta larghezza,
 // righe che compaiono scorrendo, stesso menu della home.
 import { reduced } from './env.js';
 import { initMenu } from './menu.js';
 import { fillContacts } from './contenuto.js';
+import { initServicePreview } from './anteprima-foto.js';
 
 const headline = document.getElementById('headline');
 const points = [...document.querySelectorAll('.rows > li')];
 
 initMenu();
 fillContacts(document);
+const svcList = document.querySelector('.svc-list');
+if (svcList) initServicePreview(svcList, document.querySelector('.svc-preview'));
 
 // Titolo a tutta larghezza: si misura a 100px e si imposta in cqi.
 const fit = () => {

@@ -35,10 +35,10 @@ p { margin: 0; }
 
 /* Menu a tutto schermo: voci grandi in basso a sinistra. */
 .menu { position: fixed; inset: 0; z-index: 40; display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; padding: var(--pad) var(--pad) var(--pad-v); background: var(--bg); container-type: inline-size; }
-/* In basso a destra: recapiti su due colonne e, sotto, copyright e P.IVA
+/* In basso a destra: recapiti su una colonna e, sotto, copyright e P.IVA
    su una sola riga; il blocco è allineato al fondo delle voci. */
 .menu-aside { display: flex; flex-direction: column; gap: clamp(20px, 3vh, 32px); }
-.menu-contacts { display: grid; grid-template-columns: repeat(2, auto); gap: 18px 48px; margin: 0; }
+.menu-contacts { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; margin: 0; }
 .menu-contacts dt { color: var(--mute); font-size: clamp(13px, 1vw, 15px); }
 .menu-contacts dd { margin: 2px 0 0; font-size: clamp(17px, 1.4vw, 22px); font-weight: 500; letter-spacing: -0.01em; }
 .menu-legal { margin: 0; color: var(--mute); font-size: clamp(13px, 1vw, 15px); line-height: 1.34; white-space: nowrap; }
@@ -61,7 +61,7 @@ p { margin: 0; }
 .panel { position: relative; flex: none; height: 100%; margin: 0; overflow: hidden; }
 .panel.photo { aspect-ratio: 2 / 3; background: #f0f0f0; border-radius: var(--radius); }
 /* Foto più larga della cornice: lo spazio in più serve alla parallasse. */
-.panel.photo img { position: absolute; top: 0; left: -9%; width: 118%; height: 100%; object-fit: cover; will-change: transform; -webkit-user-drag: none; pointer-events: none; }
+.panel.photo img { position: absolute; top: 0; left: -20%; width: 140%; height: 100%; object-fit: cover; will-change: transform; -webkit-user-drag: none; pointer-events: none; }
 
 /* Pannelli di testo tra una foto e l'altra (ex colonna destra). */
 .panel.text { width: clamp(300px, 30vw, 500px); display: flex; flex-direction: column; gap: 0; font-size: clamp(15px, 1.25vw, 19px); line-height: 1.34; user-select: text; }
@@ -71,8 +71,10 @@ p { margin: 0; }
 .panel.text { container-type: inline-size; }
 .panel.text h2 { margin: 0; white-space: nowrap; font-size: 20cqi; font-weight: 600; line-height: 0.82; letter-spacing: -0.035em; color: var(--ink); }
 .panel.text .content { display: flex; flex-direction: column; gap: 16px; }
+/* Profilo e Portfolio: titolo e testo centrati nella scheda. */
+.panel.text.centered { text-align: center; }
+.panel.text.centered .lang { justify-content: center; }
 .panel.text .mute { color: var(--mute); }
-.services { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: clamp(26px, 3.4vh, 40px); }
 .lang { display: flex; gap: 10px; }
 .lang .on { text-decoration: underline; text-underline-offset: 2px; }
 /* Titolo in fondo al pannello: il fondo delle lettere tonde (o, S, C, che
@@ -96,7 +98,7 @@ p { margin: 0; }
    A fine caricamento cresce fino a tutta larghezza mentre sale. */
 .is-loading .site-head, .is-loading .stage { visibility: hidden; }
 
-/* ---------- pagine interne (Manifesto, Contatti) ---------- */
+/* ---------- pagine interne (Servizi, Manifesto, Contatti) ---------- */
 /* Titolo nascosto finché il font è pronto e la grandezza è calcolata. */
 .page-sub:not(.is-ready) .headline { visibility: hidden; }
 .topbar { align-items: center; }
@@ -115,6 +117,23 @@ p { margin: 0; }
 .split .rows > li { grid-template-columns: minmax(0, 1fr); gap: 8px; }
 .rows-info > li { padding-bottom: clamp(28px, 4vh, 48px); }
 .rows-info p { font-size: clamp(24px, 2.4vw, 40px); }
+
+/* Servizi: nome grande, descrizione piccola in grigio. Col mouse, passando
+   su un servizio gli altri si attenuano e compare una foto che segue il
+   puntatore; sui dispositivi touch la foto è dentro la riga. */
+.svc-list > li { padding-bottom: clamp(28px, 5vh, 56px); }
+.rows .svc-desc { margin-top: 10px; font-size: clamp(15px, 1.25vw, 19px); font-weight: 400; line-height: 1.34; letter-spacing: 0; color: var(--mute); }
+.svc-list .svc > div > p:first-child { transition: color 0.3s; }
+.svc-thumb { display: none; }
+.svc-preview { position: fixed; left: 0; top: 0; z-index: 30; width: clamp(220px, 20vw, 340px); aspect-ratio: 2 / 3; overflow: hidden; border-radius: var(--radius); pointer-events: none; visibility: hidden; }
+.svc-preview img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+@media (hover: hover) and (pointer: fine) {
+  .svc-list:hover .svc:not(:hover) > div > p:first-child { color: var(--mute); }
+}
+@media not ((hover: hover) and (pointer: fine)) {
+  .svc-preview { display: none; }
+  .svc-thumb { display: block; width: min(60%, 260px); aspect-ratio: 2 / 3; margin-top: 16px; object-fit: cover; border-radius: var(--radius); }
+}
 
 @media (max-width: 900px) {
   .shell { height: 100svh; }
