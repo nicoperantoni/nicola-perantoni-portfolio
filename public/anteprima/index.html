@@ -11,84 +11,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrambleTextPlugin.min.js"></script>
-<style>
-  :root {
-    --ink: #111112;
-    --mute: #8a8a8a;
-    --rule: rgba(17, 17, 18, 0.22);
-    --bg: #ffffff;
-    --pad: 14px;
-    --gap: clamp(32px, 3.4vw, 56px);
-    --radius: clamp(8px, 1vw, 14px);
-  }
-  * { box-sizing: border-box; }
-  body { margin: 0; background: var(--bg); color: var(--ink); font-family: 'Archivo', Helvetica, Arial, sans-serif; font-size: 12.5px; line-height: 1.32; -webkit-font-smoothing: antialiased; }
-  a { color: inherit; text-decoration: none; }
-  a.u { text-decoration: underline; text-underline-offset: 2px; }
-  a.u:hover { text-decoration-thickness: 2px; }
-  p { margin: 0; }
-
-  /* Desktop: tutto in una schermata. Testata in alto, sotto lo scroll
-     orizzontale a tutta larghezza con foto e testi. */
-  .shell { display: grid; grid-template-rows: auto minmax(0, 1fr); height: 100dvh; }
-
-  /* Testata: solo il titolo, in alto; poco spazio sotto così foto e testi
-     hanno più altezza. */
-  .site-head { padding: var(--pad) var(--pad) clamp(16px, 2.6vh, 32px); container-type: inline-size; text-align: center; }
-  /* Titolo a tutta larghezza: la grandezza segue la larghezza della testata. */
-  .headline { margin: 0; white-space: nowrap; font-weight: 600; font-size: 12.7cqi; line-height: 0.98; letter-spacing: -0.035em; }
-
-  /* ---------- scroll orizzontale gigante ---------- */
-  .stage { position: relative; min-height: 0; margin: 0 var(--pad) var(--pad); overflow: hidden; outline: none; touch-action: pan-y; user-select: none; }
-  .stage.fine { cursor: none; }
-  .track { display: flex; gap: var(--gap); height: 100%; width: max-content; will-change: transform; }
-  .panel { position: relative; flex: none; height: 100%; margin: 0; overflow: hidden; }
-  .panel.photo { aspect-ratio: 2 / 3; background: #f0f0f0; border-radius: var(--radius); }
-  /* Foto più larga della cornice: lo spazio in più serve alla parallasse. */
-  .panel.photo img { position: absolute; top: 0; left: -9%; width: 118%; height: 100%; object-fit: cover; will-change: transform; -webkit-user-drag: none; pointer-events: none; }
-
-  /* Pannelli di testo tra una foto e l'altra (ex colonna destra). */
-  .panel.text { width: clamp(300px, 30vw, 500px); display: flex; flex-direction: column; gap: 0; padding-top: 2px; font-size: clamp(15px, 1.25vw, 19px); line-height: 1.34; user-select: text; }
-  /* Titolo di sezione nero, a tutta larghezza del pannello: la grandezza è
-     in cqi (rispetto al pannello) e il rapporto larghezza/grandezza di ogni
-     parola è misurato via JS, così ogni titolo riempie esattamente la riga. */
-  .panel.text { container-type: inline-size; }
-  .panel.text h2 { margin: 0; white-space: nowrap; font-size: 20cqi; font-weight: 600; line-height: 0.82; letter-spacing: -0.035em; color: var(--ink); }
-  .panel.text .content { display: flex; flex-direction: column; gap: 16px; }
-  .panel.text .mute { color: var(--mute); }
-  .services { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 16px; }
-  .contact-line { display: flex; flex-direction: column; }
-  .lang { display: flex; gap: 10px; }
-  .lang .on { text-decoration: underline; text-underline-offset: 2px; }
-  /* Corpo del testo centrato in verticale nello spazio sotto al titolo. */
-  .panel.text > h2 + * { margin-block: auto; }
-  .panel.text .end { color: var(--mute); }
-
-  /* Cursore personalizzato sul palco. */
-  .cursor { position: fixed; left: 0; top: 0; z-index: 50; pointer-events: none; padding: 7px 12px; border-radius: 999px; background: var(--ink); color: #fff; font-size: 12px; white-space: nowrap; opacity: 0; }
-
-  /* ---------- loader ---------- */
-  /* Due copie del titolo sovrapposte: nera sullo sfondo bianco, bianca
-     ritagliata (clip-path) esattamente sulla porzione coperta dalla barra. */
-  .loader { position: fixed; inset: 0; z-index: 100; padding: 0 var(--pad); background: var(--bg); pointer-events: none; container-type: inline-size; }
-  .loader-bar { position: absolute; inset: 0; background: var(--ink); clip-path: inset(0 100% 0 0); }
-  .loader-word { position: absolute; left: 50%; top: 50%; margin: 0; white-space: nowrap; font-weight: 600; font-size: 10.4cqi; line-height: 0.98; letter-spacing: -0.035em; transform: translate(-50%, -50%); }
-  .loader-word.on-bar { color: #fff; clip-path: inset(0 100% 0 0); }
-  /* Nel loader il titolo è ~18% più piccolo: le lettere casuali dello
-     scramble sono più larghe e a piena grandezza uscirebbero dallo schermo.
-     A fine caricamento cresce fino a tutta larghezza mentre sale. */
-  .is-loading .site-head, .is-loading .stage { visibility: hidden; }
-
-  @media (max-width: 900px) {
-    .shell { height: 100svh; }
-    /* Scroll nativo col dito, con la stessa parallasse. */
-    .stage { overflow-x: auto; overflow-y: hidden; scrollbar-width: none; touch-action: pan-x pan-y; scroll-snap-type: x mandatory; }
-    .stage::-webkit-scrollbar { display: none; }
-    .panel { scroll-snap-align: start; }
-    .panel.text { width: 78vw; }
-    .track { gap: 16px; }
-  }
-</style>
+<link rel="stylesheet" href="style.css">
 </head>
 <body class="is-loading">
 <div class="loader" id="loader" aria-hidden="true">
@@ -99,6 +22,12 @@
 
 <div class="shell">
   <header class="site-head">
+    <div class="topbar">
+      <button class="menu-btn" id="menu-btn" type="button" aria-expanded="false" aria-controls="menu">
+        <span class="menu-icon" aria-hidden="true"><i></i><i></i></span>
+        <span class="menu-label" id="menu-label">Menu</span>
+      </button>
+    </div>
     <h1 class="headline" id="headline">Studio Devastante</h1>
   </header>
 
@@ -106,6 +35,17 @@
     <div class="track" id="track"></div>
   </main>
 </div>
+
+<!-- Menu a tutto schermo: porta alle sezioni dello scroll. -->
+<nav class="menu" id="menu" aria-label="Sezioni" hidden>
+  <ul class="menu-list">
+    <li><button type="button" data-go="Profilo">Profilo</button></li>
+    <li><button type="button" data-go="Servizi">Servizi</button></li>
+    <li><button type="button" data-go="Contatti">Contatti</button></li>
+    <li><button type="button" data-go="Portfolio">Portfolio</button></li>
+  </ul>
+  <p class="menu-legal">© 2026 Studio Devastante di Nicola Perantoni<br>P.IVA 04623590231</p>
+</nav>
 
 <!-- Contenuti dei pannelli di testo, inseriti nello scroll tra le foto. -->
 <template id="t-profilo">
@@ -149,298 +89,11 @@
       <p><a class="u" href="#">Scarica il mio Portfolio (PDF) ↓</a></p>
       <p class="lang"><span class="on">IT</span><a class="u" href="#">EN</a></p>
     </div>
-    <p class="end">© 2026 Studio Devastante di Nicola Perantoni<br>P.IVA 04623590231</p>
   </section>
 </template>
 
 <div class="cursor" id="cursor" aria-hidden="true">← Scorri →</div>
 
-<script>
-  // ---------------------------------------------------------------------
-  // Contenuto dello scroll: foto con i pannelli di testo in mezzo.
-  // ---------------------------------------------------------------------
-  const PHOTOS = [
-    'ph-x-cervelo-4', 'ph-training-camp-12', 'ristora-6', 'ph-x-cervelo-1',
-    'ph-training-camp-14', 'ristora-2', 'ph-x-cervelo-3', 'ph-training-camp-9',
-    'ristora-4', 'ph-x-cervelo-2', 'ph-training-camp-3', 'ristora-1',
-  ];
-  // Ogni 3 foto un pannello di testo; l'ultimo chiude lo scroll.
-  const TEXT_AFTER = { 2: 't-profilo', 5: 't-servizi', 8: 't-contatti', 11: 't-fine' };
-
-  const stage = document.getElementById('stage');
-  const track = document.getElementById('track');
-
-  // Scroll infinito: la sequenza (foto + testi) è ripetuta COPIES volte di
-  // fila; la posizione si riporta sempre dentro la copia centrale, così
-  // scorrendo non si arriva mai a una fine, in nessuna direzione.
-  const COPIES = 3;
-  const imgs = [];
-  for (let c = 0; c < COPIES; c++) {
-    PHOTOS.forEach((f, i) => {
-      const fig = document.createElement('figure');
-      fig.className = 'panel photo';
-      // Solo la copia centrale è letta dagli screen reader; le altre sono ripetizioni.
-      if (c !== 1) fig.setAttribute('aria-hidden', 'true');
-      fig.innerHTML = `<img src="img/${f}.webp" alt="${c === 1 ? `Fotografia di Nicola Perantoni, ${i + 1} di ${PHOTOS.length}` : ''}" draggable="false">`;
-      track.appendChild(fig);
-      imgs.push(fig.firstElementChild);
-      if (TEXT_AFTER[i]) {
-        const t = document.getElementById(TEXT_AFTER[i]).content.firstElementChild.cloneNode(true);
-        if (c !== 1) { t.setAttribute('aria-hidden', 'true'); t.querySelectorAll('a').forEach((a) => a.setAttribute('tabindex', '-1')); }
-        track.appendChild(t);
-      }
-    });
-  }
-  const panels = [...track.children];
-  const perCopy = panels.length / COPIES;
-
-  // Titoli delle sezioni a tutta larghezza del pannello: si misura la parola
-  // a 100px e si imposta la grandezza come frazione della larghezza (cqi).
-  const fitTitles = () => track.querySelectorAll('.panel.text h2').forEach((h) => {
-    h.style.fontSize = '100px';
-    const r = document.createRange(); r.selectNodeContents(h);
-    const ratio = r.getBoundingClientRect().width / 100;
-    h.style.fontSize = `calc(100cqi / ${ratio.toFixed(4)})`;
-  });
-  document.fonts.ready.then(fitTitles);
-
-  // Recapiti ricomposti lato client (stesso schema del sito attuale).
-  const email = 'inotnarep.alocin'.split('').reverse().join('') + '@' + 'moc.liamg'.split('').reverse().join('');
-  const ph = '4562717643 93'.replace(/\s/g, '').split('').reverse().join('');
-  track.querySelectorAll('[data-email]').forEach((e) => { e.href = 'mailto:' + email; e.textContent = email; });
-  track.querySelectorAll('[data-wa]').forEach((w) => {
-    w.href = 'https://wa.me/' + ph;
-    w.textContent = `+${ph.slice(0, 2)} ${ph.slice(2, 5)} ${ph.slice(5, 8)} ${ph.slice(8)} ↗`;
-  });
-
-  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const fine = matchMedia('(pointer: fine)').matches;
-  const isMobile = () => window.innerWidth <= 900;
-
-  // ---------------------------------------------------------------------
-  // Scroll orizzontale infinito con inerzia (desktop: rotella, trascinamento,
-  // frecce; telefono: scroll nativo) e parallasse dentro le foto.
-  // ---------------------------------------------------------------------
-  // W = larghezza di una copia (gap compreso). target/current sono posizioni
-  // "libere" (anche negative o enormi); a schermo si mostra wrap(x) + W,
-  // cioè sempre un punto della copia centrale.
-  let target = 0, current = 0, W = 0;
-  const wrap = (x) => ((x % W) + W) % W;
-  const measure = () => { W = panels[perCopy].offsetLeft - panels[0].offsetLeft; };
-
-  function render(shown) {
-    if (reduced) return;
-    const wStage = stage.clientWidth;
-    imgs.forEach((img) => {
-      const p = img.parentElement;
-      const center = p.offsetLeft - shown + p.offsetWidth / 2;
-      // Solo le foto vicine allo schermo: le altre restano ferme (risparmio).
-      if (center < -wStage || center > 2 * wStage) return;
-      const n = Math.max(-1, Math.min(1, (center - wStage / 2) / (wStage / 2 + p.offsetWidth)));
-      img.style.transform = `translate3d(${(-n * 7).toFixed(2)}%, 0, 0)`;
-    });
-  }
-
-  const showDesktop = () => {
-    const shown = wrap(current) + W;
-    track.style.transform = `translate3d(${-shown}px, 0, 0)`;
-    render(shown);
-  };
-
-  gsap.ticker.add(() => {
-    if (isMobile() || !W) return;
-    const d = target - current;
-    if (Math.abs(d) < 0.05 && track.dataset.x === String(current)) return;
-    current += d * (reduced ? 1 : 0.085);
-    if (Math.abs(d) < 0.05) current = target;
-    track.dataset.x = String(current);
-    showDesktop();
-  });
-
-  stage.addEventListener('wheel', (ev) => {
-    if (isMobile()) return;
-    ev.preventDefault();
-    target += (Math.abs(ev.deltaY) > Math.abs(ev.deltaX) ? ev.deltaY : ev.deltaX) * 1.2;
-  }, { passive: false });
-
-  let drag = null;
-  stage.addEventListener('pointerdown', (ev) => {
-    if (isMobile() || ev.pointerType !== 'mouse' || ev.target.closest('a, .panel.text')) return;
-    drag = { x: ev.clientX, start: target };
-    stage.setPointerCapture(ev.pointerId);
-  });
-  stage.addEventListener('pointermove', (ev) => { if (drag) target = drag.start - (ev.clientX - drag.x) * 1.4; });
-  const endDrag = () => { drag = null; };
-  stage.addEventListener('pointerup', endDrag);
-  stage.addEventListener('pointercancel', endDrag);
-
-  // Frecce: un pannello alla volta, all'infinito.
-  document.addEventListener('keydown', (ev) => {
-    if (document.body.classList.contains('is-loading')) return;
-    if (ev.key !== 'ArrowRight' && ev.key !== 'ArrowLeft') return;
-    ev.preventDefault();
-    const dir = ev.key === 'ArrowRight' ? 1 : -1;
-    // Bordi sinistri dei pannelli di una copia, relativi all'inizio copia.
-    const lefts = panels.slice(0, perCopy).map((p) => p.offsetLeft - panels[0].offsetLeft);
-    if (isMobile()) {
-      const x = stage.scrollLeft - W;
-      const next = dir > 0 ? (lefts.find((l) => l > x + 2) ?? W) : ([...lefts].reverse().find((l) => l < x - 2) ?? lefts[perCopy - 1] - W);
-      stage.scrollTo({ left: next + W, behavior: reduced ? 'auto' : 'smooth' });
-    } else {
-      const base = Math.floor(target / W) * W;
-      const x = target - base;
-      const next = dir > 0 ? (lefts.find((l) => l > x + 2) ?? W) : ([...lefts].reverse().find((l) => l < x - 2) ?? lefts[perCopy - 1] - W);
-      target = base + next;
-    }
-  });
-
-  // Telefono: scroll nativo; quando si esce dalla copia centrale si salta
-  // della larghezza di una copia (stesso contenuto, nessun salto visibile).
-  stage.addEventListener('scroll', () => {
-    if (!isMobile() || !W) return;
-    if (stage.scrollLeft < W * 0.5) stage.scrollLeft += W;
-    else if (stage.scrollLeft > W * 1.5) stage.scrollLeft -= W;
-    render(stage.scrollLeft);
-  }, { passive: true });
-
-  const layout = () => {
-    measure();
-    if (isMobile()) {
-      track.style.transform = '';
-      if (stage.scrollLeft < W * 0.5) stage.scrollLeft = W;
-      render(stage.scrollLeft);
-    } else {
-      stage.scrollLeft = 0;
-      current = target;
-      showDesktop();
-    }
-  };
-  window.addEventListener('resize', layout);
-
-  // Cursore personalizzato (nascosto sui pannelli di testo, dove si seleziona).
-  const cursor = document.getElementById('cursor');
-  if (fine && !reduced) {
-    stage.classList.add('fine');
-    const qx = gsap.quickTo(cursor, 'x', { duration: 0.35, ease: 'power3.out' });
-    const qy = gsap.quickTo(cursor, 'y', { duration: 0.35, ease: 'power3.out' });
-    gsap.set(cursor, { xPercent: -50, yPercent: -50 });
-    stage.addEventListener('pointermove', (ev) => {
-      qx(ev.clientX); qy(ev.clientY);
-      const onText = !!ev.target.closest('.panel.text');
-      stage.style.cursor = onText ? 'auto' : '';
-      gsap.to(cursor, { opacity: onText ? 0 : 1, duration: 0.2, overwrite: 'auto' });
-    });
-    stage.addEventListener('pointerleave', () => gsap.to(cursor, { opacity: 0, duration: 0.25 }));
-  }
-
-  // ---------------------------------------------------------------------
-  // Loader: lettere animate, barra nera che avanza col caricamento reale
-  // (foto + font), testo bianco sulla barra e nero sul bianco. A fine
-  // caricamento la barra esce, il titolo va al suo posto e lo scroll sale.
-  // ---------------------------------------------------------------------
-  const loader = document.getElementById('loader');
-  const bar = document.getElementById('loader-bar');
-  const wordDark = document.getElementById('word-dark');
-  const wordLight = document.getElementById('word-light');
-  const headline = document.getElementById('headline');
-
-  gsap.registerPlugin(ScrambleTextPlugin);
-  const TITLE = 'Studio Devastante';
-
-  // Bordo sinistro (L) e destro (R) della barra, in % dello schermo: la
-  // copia bianca del titolo è ritagliata esattamente sulla stessa porzione.
-  const edges = { L: 0, R: 0 };
-  const paint = () => {
-    bar.style.clipPath = `inset(0 ${100 - edges.R}% 0 ${edges.L}%)`;
-    const vw = window.innerWidth;
-    const r = wordLight.getBoundingClientRect();
-    const toWord = (pct) => Math.max(0, Math.min(100, (((pct / 100) * vw - r.left) / r.width) * 100));
-    wordLight.style.clipPath = `inset(-30% ${100 - toWord(edges.R)}% -30% ${toWord(edges.L)}%)`;
-  };
-
-  // ScrambleText in loop finché si carica: lettere casuali che si
-  // ricompongono nel titolo. Lo scramble gira sulla copia nera; la bianca ne
-  // copia il testo a ogni fotogramma, così le due mostrano sempre le stesse
-  // lettere e il passaggio di colore sul bordo della barra resta netto.
-  const syncWords = () => { wordLight.textContent = wordDark.textContent; paint(); };
-  // Solo lettere minuscole di larghezza media (niente m, w, maiuscole): il
-  // titolo occupa tutta la larghezza e lettere più larghe lo farebbero
-  // uscire dallo schermo durante lo scramble.
-  const SCRAMBLE = { text: TITLE, chars: 'abcdeghknopqsuvxyz', speed: 0.55, revealDelay: 0.45 };
-  const scrambleLoop = reduced ? null : gsap.timeline({ repeat: -1, repeatDelay: 0.35 })
-    .to(wordDark, { duration: 1.5, scrambleText: SCRAMBLE, onUpdate: syncWords });
-
-  // Avanzamento reale: font + 12 foto. La barra lo insegue con morbidezza,
-  // con una durata minima perché l'animazione si legga anche con la cache.
-  const tasks = [document.fonts.ready, ...PHOTOS.map((f) => new Promise((res) => {
-    const im = new Image(); im.onload = im.onerror = res; im.src = `img/${f}.webp`;
-  }))];
-  let done = 0;
-  const MIN_TIME = 1.8;
-  const startedAt = performance.now();
-  let barTween = null;
-  const advance = () => {
-    const elapsed = (performance.now() - startedAt) / 1000;
-    // Senza cache segue il caricamento; con la cache non corre oltre il ritmo minimo.
-    const cap = Math.min(1, elapsed / MIN_TIME + 0.1);
-    const goal = Math.min(done / tasks.length, cap) * 100;
-    if (goal <= edges.R) return;
-    barTween?.kill();
-    barTween = gsap.to(edges, { R: goal, duration: 0.6, ease: 'power2.out', onUpdate: paint });
-  };
-  tasks.forEach((t) => t.then(() => { done++; advance(); }));
-  const pulse = setInterval(advance, 200);
-  paint();
-
-  Promise.all(tasks)
-    .then(() => new Promise((res) => setTimeout(res, Math.max(0, MIN_TIME * 1000 - (performance.now() - startedAt)))))
-    .then(() => {
-      clearInterval(pulse);
-      barTween?.kill();
-      if (reduced) { finish(); return; }
-      // Ultimo giro di scramble che si chiude sul titolo, poi l'uscita.
-      scrambleLoop?.kill();
-      gsap.to(wordDark, { duration: 0.7, scrambleText: { ...SCRAMBLE, revealDelay: 0.15 }, onUpdate: syncWords, onComplete: () => { wordDark.textContent = TITLE; syncWords(); exitLoader(); } });
-    });
-
-  function exitLoader() {
-      // Il titolo vero diventa misurabile (resta invisibile) per calcolare
-      // lo spostamento della copia del loader fino alla sua posizione.
-      const head = document.querySelector('.site-head');
-      head.style.visibility = 'hidden';
-      document.body.classList.remove('is-loading');
-      document.querySelector('.stage').style.visibility = 'hidden';
-      const from = wordDark.getBoundingClientRect();
-      const to = headline.getBoundingClientRect();
-      const dx = (to.left + to.width / 2) - (from.left + from.width / 2);
-      const dy = (to.top + to.height / 2) - (from.top + from.height / 2);
-      const s = to.width / from.width;
-
-      gsap.timeline({ onComplete: finish })
-        .to(edges, { R: 100, duration: 0.45, ease: 'power2.inOut', onUpdate: paint })
-        // La barra esce verso destra scoprendo di nuovo il bianco.
-        .to(edges, { L: 100, duration: 0.9, ease: 'expo.inOut', onUpdate: paint }, '+=0.15')
-        // Il titolo si sposta al suo posto, in alto.
-        .to([wordDark, wordLight], { x: `+=${dx}`, y: `+=${dy}`, scale: s, duration: 1, ease: 'expo.inOut' }, '-=0.35')
-        .add(() => {
-          head.style.visibility = '';
-          gsap.set(loader, { autoAlpha: 0 });
-          const st = document.querySelector('.stage');
-          st.style.visibility = '';
-          layout();
-          // Lo scroll gigante sale dal basso.
-          const inView = panels.filter((p) => { const r = p.getBoundingClientRect(); return r.right > 0 && r.left < innerWidth; });
-          gsap.from(inView, { yPercent: 110, duration: 1.2, ease: 'expo.out', stagger: 0.07, clearProps: 'transform' });
-        });
-  }
-
-  function finish() {
-    document.body.classList.remove('is-loading');
-    document.querySelector('.site-head').style.visibility = '';
-    document.querySelector('.stage').style.visibility = '';
-    loader.remove();
-    layout();
-  }
-</script>
+<script type="module" src="js/main.js"></script>
 </body>
 </html>
