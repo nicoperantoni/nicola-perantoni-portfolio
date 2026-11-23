@@ -8,7 +8,7 @@ import { reduced } from './env.js';
 gsap.registerPlugin(ScrambleTextPlugin);
 
 // title: testo del titolo; photos: foto da precaricare; panels: pannelli
-// dello scroll; layout(): misura lo scroll; onDone(): a pagina pronta.
+// dello scroll; layout(): misura lo scroll; onDone() (facoltativo): a pagina pronta.
 export function initLoader({ title, photos, panels, layout, onDone }) {
   const loader = document.getElementById('loader');
   const bar = document.getElementById('loader-bar');
@@ -109,6 +109,6 @@ export function initLoader({ title, photos, panels, layout, onDone }) {
     stage.style.visibility = '';
     loader.remove();
     layout();
-    onDone();
+    onDone?.();
   }
 }

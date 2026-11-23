@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Anteprima del redesign: da non indicizzare. -->
+<meta name="robots" content="noindex, nofollow">
+<title>Contatti — Studio Devastante</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="page-sub">
+<header class="site-head">
+  <div class="topbar">
+    <button class="menu-btn" id="menu-btn" type="button" aria-expanded="false" aria-controls="menu">
+      <span class="menu-icon" aria-hidden="true"><i></i><i></i></span>
+      <span class="menu-label" id="menu-label">Menu</span>
+    </button>
+  </div>
+  <h1 class="headline" id="headline">Contatti</h1>
+</header>
+
+<main class="sub-body">
+  <!-- Due colonne: a sinistra l'invito, a destra i recapiti. -->
+  <div class="split">
+    <ul class="rows">
+      <li><p>Mi piace conoscere nuove persone. Mi piace affrontare nuove sfide. Mi piace anche il caffè: contattami, e prendiamone uno insieme.</p></li>
+    </ul>
+    <ul class="rows rows-info">
+      <li><span class="num">Email</span><p><a class="u" href="#" data-email rel="nofollow"></a></p></li>
+      <li><span class="num">WhatsApp</span><p><a class="u" href="#" data-wa target="_blank" rel="noopener nofollow"></a></p></li>
+      <li><span class="num">Instagram</span><p><a class="u" href="https://instagram.com/nicolaperantoni" target="_blank" rel="noopener">@nicolaperantoni ↗</a></p></li>
+      <li><span class="num">Sede</span><p>Italia — Disponibile ovunque</p></li>
+    </ul>
+  </div>
+</main>
+
+<!-- Menu a tutto schermo: stesse voci della home. -->
+<nav class="menu" id="menu" aria-label="Sezioni" hidden>
+  <ul class="menu-list">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="manifesto.html">Manifesto</a></li>
+    <li><a href="contatti.html" aria-current="page">Contatti</a></li>
+  </ul>
+  <!-- In basso a destra: recapiti e, su una riga, copyright e P.IVA. -->
+  <div class="menu-aside">
+    <dl class="menu-contacts">
+      <div><dt>Email</dt><dd><a class="u" href="#" data-email rel="nofollow"></a></dd></div>
+      <div><dt>WhatsApp</dt><dd><a class="u" href="#" data-wa target="_blank" rel="noopener nofollow"></a></dd></div>
+      <div><dt>Instagram</dt><dd><a class="u" href="https://instagram.com/nicolaperantoni" target="_blank" rel="noopener">@nicolaperantoni ↗</a></dd></div>
+      <div><dt>Sede</dt><dd>Italia — Disponibile ovunque</dd></div>
+    </dl>
+    <p class="menu-legal">© 2026 Studio Devastante di Nicola Perantoni · P.IVA 04623590231</p>
+  </div>
+</nav>
+
+<script type="module" src="js/pagina.js"></script>
+</body>
+</html>

@@ -26,8 +26,8 @@ p { margin: 0; }
 /* Riga sopra al titolo con il tasto Menu a sinistra. Il tasto resta sopra
    al menu aperto (z-index) e diventa "Chiudi". */
 .topbar { display: flex; justify-content: flex-start; margin-bottom: 8px; }
-.menu-btn { position: relative; z-index: 60; display: inline-flex; align-items: center; gap: 8px; margin: 0; padding: 4px 0; border: 0; background: none; color: var(--ink); font: inherit; font-size: 15px; font-weight: 500; line-height: 1; cursor: pointer; }
-.menu-icon { position: relative; width: 18px; height: 10px; }
+.menu-btn { position: relative; z-index: 60; display: inline-flex; align-items: center; gap: 10px; margin: 0; padding: 4px 0; border: 0; background: none; color: var(--ink); font: inherit; font-size: 18px; font-weight: 500; line-height: 1; cursor: pointer; }
+.menu-icon { position: relative; width: 22px; height: 12px; }
 .menu-icon i { position: absolute; left: 0; width: 100%; height: 2px; background: currentColor; border-radius: 1px; }
 .menu-icon i:first-child { top: 0; }
 .menu-icon i:last-child { bottom: 0; }
@@ -35,19 +35,23 @@ p { margin: 0; }
 
 /* Menu a tutto schermo: voci grandi in basso a sinistra. */
 .menu { position: fixed; inset: 0; z-index: 40; display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; padding: var(--pad) var(--pad) var(--pad-v); background: var(--bg); container-type: inline-size; }
-/* Copyright e P.IVA in basso a destra, allineati al fondo delle voci. */
-.menu-legal { margin: 0; color: var(--mute); font-size: clamp(13px, 1vw, 15px); line-height: 1.34; text-align: right; }
+/* In basso a destra: recapiti su due colonne e, sotto, copyright e P.IVA
+   su una sola riga; il blocco è allineato al fondo delle voci. */
+.menu-aside { display: flex; flex-direction: column; gap: clamp(20px, 3vh, 32px); }
+.menu-contacts { display: grid; grid-template-columns: repeat(2, auto); gap: 18px 48px; margin: 0; }
+.menu-contacts dt { color: var(--mute); font-size: clamp(13px, 1vw, 15px); }
+.menu-contacts dd { margin: 2px 0 0; font-size: clamp(17px, 1.4vw, 22px); font-weight: 500; letter-spacing: -0.01em; }
+.menu-legal { margin: 0; color: var(--mute); font-size: clamp(13px, 1vw, 15px); line-height: 1.34; white-space: nowrap; }
 .menu[hidden] { display: none; }
 .menu-list { margin: 0; padding: 0; list-style: none; }
 .menu-list li { overflow: clip; overflow-clip-margin: 0.04em; }
-.menu-list button { display: block; margin: 0; padding: 0; border: 0; background: none; color: var(--ink); font: inherit; font-weight: 600; font-size: clamp(56px, 12cqi, 190px); line-height: 0.92; letter-spacing: -0.035em; text-align: left; cursor: pointer; transition: color 0.25s; }
-.menu-list:hover button:not(:hover), .menu-list:has(button:focus-visible) button:not(:focus-visible) { color: var(--mute); }
-.menu-list button:focus-visible { outline: none; }
+.menu-list button, .menu-list a { display: block; margin: 0; padding: 0; border: 0; background: none; color: var(--ink); font: inherit; font-weight: 600; font-size: clamp(56px, min(12cqi, 15vh), 190px); line-height: 0.92; letter-spacing: -0.035em; text-align: left; cursor: pointer; transition: color 0.25s; }
+.menu-list:hover :is(button, a):not(:hover), .menu-list:has(:focus-visible) :is(button, a):not(:focus-visible) { color: var(--mute); }
+.menu-list :is(button, a):focus-visible { outline: none; }
+/* Pagina corrente: in grigio, come "sei qui". */
+.menu-list a[aria-current="page"] { color: var(--mute); cursor: default; }
 
 /* Titolo a tutta larghezza: la grandezza segue la larghezza della testata. */
-.headline .roll { display: inline-block; text-align: center; }
-.headline .roll-in { display: block; position: relative; }
-.headline .roll-in > span { position: absolute; left: 0; right: 0; top: 100%; }
 .headline { margin: 0; white-space: nowrap; font-weight: 600; font-size: 12.7cqi; line-height: 0.98; letter-spacing: -0.035em; }
 
 /* ---------- scroll orizzontale gigante ---------- */
@@ -68,8 +72,7 @@ p { margin: 0; }
 .panel.text h2 { margin: 0; white-space: nowrap; font-size: 20cqi; font-weight: 600; line-height: 0.82; letter-spacing: -0.035em; color: var(--ink); }
 .panel.text .content { display: flex; flex-direction: column; gap: 16px; }
 .panel.text .mute { color: var(--mute); }
-.services { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 16px; }
-.contact-line { display: flex; flex-direction: column; }
+.services { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: clamp(26px, 3.4vh, 40px); }
 .lang { display: flex; gap: 10px; }
 .lang .on { text-decoration: underline; text-underline-offset: 2px; }
 /* Titolo in fondo al pannello: il fondo delle lettere tonde (o, S, C, che
@@ -93,6 +96,26 @@ p { margin: 0; }
    A fine caricamento cresce fino a tutta larghezza mentre sale. */
 .is-loading .site-head, .is-loading .stage { visibility: hidden; }
 
+/* ---------- pagine interne (Manifesto, Contatti) ---------- */
+/* Titolo nascosto finché il font è pronto e la grandezza è calcolata. */
+.page-sub:not(.is-ready) .headline { visibility: hidden; }
+.topbar { align-items: center; }
+.sub-body { padding: 0 var(--pad) clamp(80px, 14vh, 160px); }
+.rows { margin: 0; padding: 0; list-style: none; }
+/* Ogni riga: etichetta o numero a sinistra, testo grande a destra, riga sopra che si
+   allunga quando il punto entra nello schermo (--line da 0 a 1). */
+.rows > li { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 3fr); gap: var(--gap); padding: clamp(18px, 2.4vh, 28px) 0 clamp(48px, 9vh, 110px); }
+.rows > li::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 1px; background: var(--ink); transform: scaleX(var(--line, 1)); transform-origin: left; }
+.rows .num { font-size: clamp(15px, 1.25vw, 19px); font-weight: 500; color: var(--mute); }
+.rows p { font-size: clamp(28px, 3.6vw, 60px); font-weight: 600; line-height: 1.04; letter-spacing: -0.03em; text-wrap: pretty; overflow-wrap: anywhere; }
+
+/* Contatti divisi in due colonne: invito a sinistra, recapiti a destra.
+   Nelle colonne l'etichetta va sopra al valore e i recapiti sono più piccoli. */
+.split { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--gap); align-items: start; }
+.split .rows > li { grid-template-columns: minmax(0, 1fr); gap: 8px; }
+.rows-info > li { padding-bottom: clamp(28px, 4vh, 48px); }
+.rows-info p { font-size: clamp(24px, 2.4vw, 40px); }
+
 @media (max-width: 900px) {
   .shell { height: 100svh; }
   /* Scroll nativo col dito, con la stessa parallasse. */
@@ -101,8 +124,13 @@ p { margin: 0; }
   .panel { scroll-snap-align: start; }
   .panel.text { width: 78vw; }
   .track { gap: 16px; }
-  .menu-list button { font-size: 20cqi; }
+  .menu-list button, .menu-list a { font-size: 20cqi; }
   /* Su telefono il copyright va sotto alle voci, a sinistra. */
   .menu { flex-direction: column; align-items: flex-start; justify-content: flex-end; }
-  .menu-legal { text-align: left; }
+  .menu-aside { margin-top: 32px; }
+  .menu-contacts { grid-template-columns: minmax(0, 1fr); gap: 12px; }
+  /* Una sola riga anche sul telefono: il corpo si riduce quanto basta. */
+  .menu-legal { font-size: min(13px, calc((100vw - 2 * var(--pad)) / 31.5)); }
+  .rows > li { grid-template-columns: minmax(0, 1fr); gap: 12px; }
+  .split { grid-template-columns: minmax(0, 1fr); gap: 0; }
 }

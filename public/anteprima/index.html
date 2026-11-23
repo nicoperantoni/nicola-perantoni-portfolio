@@ -36,15 +36,23 @@
   </main>
 </div>
 
-<!-- Menu a tutto schermo: porta alle sezioni dello scroll. -->
+<!-- Menu a tutto schermo: porta alle altre pagine. -->
 <nav class="menu" id="menu" aria-label="Sezioni" hidden>
   <ul class="menu-list">
-    <li><button type="button" data-go="Profilo">Profilo</button></li>
-    <li><button type="button" data-go="Servizi">Servizi</button></li>
-    <li><button type="button" data-go="Contatti">Contatti</button></li>
-    <li><button type="button" data-go="Portfolio">Portfolio</button></li>
+    <li><a href="index.html" aria-current="page">Home</a></li>
+    <li><a href="manifesto.html">Manifesto</a></li>
+    <li><a href="contatti.html">Contatti</a></li>
   </ul>
-  <p class="menu-legal">© 2026 Studio Devastante di Nicola Perantoni<br>P.IVA 04623590231</p>
+  <!-- In basso a destra: recapiti e, su una riga, copyright e P.IVA. -->
+  <div class="menu-aside">
+    <dl class="menu-contacts">
+      <div><dt>Email</dt><dd><a class="u" href="#" data-email rel="nofollow"></a></dd></div>
+      <div><dt>WhatsApp</dt><dd><a class="u" href="#" data-wa target="_blank" rel="noopener nofollow"></a></dd></div>
+      <div><dt>Instagram</dt><dd><a class="u" href="https://instagram.com/nicolaperantoni" target="_blank" rel="noopener">@nicolaperantoni ↗</a></dd></div>
+      <div><dt>Sede</dt><dd>Italia — Disponibile ovunque</dd></div>
+    </dl>
+    <p class="menu-legal">© 2026 Studio Devastante di Nicola Perantoni · P.IVA 04623590231</p>
+  </div>
 </nav>
 
 <!-- Contenuti dei pannelli di testo, inseriti nello scroll tra le foto. -->
@@ -68,18 +76,6 @@
       <li>Ritratti<br><span class="mute">Dinamici, primi piani e contestualizzati.</span></li>
       <li>Video<br><span class="mute">Contenuti social oriented ed editoriali.</span></li>
     </ol>
-  </section>
-</template>
-<template id="t-contatti">
-  <section class="panel text">
-    <h2>Contatti</h2>
-    <div class="content">
-      <p>Mi piace conoscere nuove persone. Mi piace affrontare nuove sfide. Mi piace anche il caffè: contattami, e prendiamone uno insieme.</p>
-      <p class="contact-line"><span class="mute">Email</span><a class="u" href="#" data-email rel="nofollow"></a></p>
-      <p class="contact-line"><span class="mute">WhatsApp</span><a class="u" href="#" data-wa target="_blank" rel="noopener nofollow"></a></p>
-      <p class="contact-line"><span class="mute">Instagram</span><a class="u" href="https://instagram.com/nicolaperantoni" target="_blank" rel="noopener">@nicolaperantoni ↗</a></p>
-      <p class="contact-line"><span class="mute">Sede</span>Italia — Disponibile ovunque</p>
-    </div>
   </section>
 </template>
 <template id="t-fine">

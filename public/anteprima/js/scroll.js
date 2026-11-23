@@ -102,18 +102,5 @@ export function initScroll({ stage, track, panels, imgs, perCopy }) {
   };
   window.addEventListener('resize', layout);
 
-  // Porta al pannello di testo con quel titolo, nella ripetizione più vicina
-  // alla posizione attuale (così il percorso è il più breve possibile).
-  const goTo = (title) => {
-    const i = panels.slice(0, perCopy).findIndex((p) => p.querySelector('h2')?.textContent === title);
-    if (i < 0) return;
-    const left = panels[i].offsetLeft - panels[0].offsetLeft;
-    if (isMobile()) {
-      // Resta dentro la fascia [0.5W, 1.5W] per non far scattare il salto infinito.
-      stage.scrollTo({ left: left < W * 0.5 ? left + W : left, behavior: reduced ? 'auto' : 'smooth' });
-    } else {
-      target = left + Math.round((target - left) / W) * W;
-    }
-  };
-  return { layout, goTo };
+  return { layout };
 }

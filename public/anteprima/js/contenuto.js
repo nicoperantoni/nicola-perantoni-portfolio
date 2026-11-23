@@ -6,8 +6,8 @@ export const PHOTOS = [
   'ph-training-camp-14', 'ristora-2', 'ph-x-cervelo-3', 'ph-training-camp-9',
   'ristora-4', 'ph-x-cervelo-2', 'ph-training-camp-3', 'ristora-1',
 ];
-// Ogni 3 foto un pannello di testo; l'ultimo chiude lo scroll.
-const TEXT_AFTER = { 2: 't-profilo', 5: 't-servizi', 8: 't-contatti', 11: 't-fine' };
+// Ogni 4 foto un pannello di testo; l'ultimo chiude lo scroll.
+const TEXT_AFTER = { 3: 't-profilo', 7: 't-servizi', 11: 't-fine' };
 
 // Scroll infinito: la sequenza (foto + testi) è ripetuta COPIES volte di
 // fila; la posizione si riporta sempre dentro la copia centrale, così
@@ -49,11 +49,11 @@ export function fitTitles(track) {
 }
 
 // Recapiti ricomposti lato client (stesso schema del sito attuale).
-export function fillContacts(track) {
+export function fillContacts(root) {
   const email = 'inotnarep.alocin'.split('').reverse().join('') + '@' + 'moc.liamg'.split('').reverse().join('');
   const ph = '4562717643 93'.replace(/\s/g, '').split('').reverse().join('');
-  track.querySelectorAll('[data-email]').forEach((e) => { e.href = 'mailto:' + email; e.textContent = email; });
-  track.querySelectorAll('[data-wa]').forEach((w) => {
+  root.querySelectorAll('[data-email]').forEach((e) => { e.href = 'mailto:' + email; e.textContent = email; });
+  root.querySelectorAll('[data-wa]').forEach((w) => {
     w.href = 'https://wa.me/' + ph;
     w.textContent = `+${ph.slice(0, 2)} ${ph.slice(2, 5)} ${ph.slice(5, 8)} ${ph.slice(8)} ↗`;
   });
