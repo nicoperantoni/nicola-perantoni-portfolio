@@ -1,6 +1,7 @@
 ---
 // Menu a tutto schermo: voci grandi in basso a sinistra, in basso a destra
-// recapiti e, su una riga, copyright e P.IVA. Animazioni in lib/menu.ts.
+// recapiti e, sotto, copyright e P.IVA su due righe. Animazioni in
+// lib/menu.ts.
 import ContactList from './ContactList.astro';
 import { useTranslations, pagePath } from '../i18n/utils';
 import { pages, type Locale, type Page } from '../i18n/ui';
@@ -28,6 +29,6 @@ const t = useTranslations(lang);
   </ul>
   <div class="menu-aside">
     <ContactList lang={lang} variant="menu" />
-    <p class="menu-legal">{t.site.legal}</p>
+    <p class="menu-legal">{t.site.copyright}<br />{t.site.vat}</p>
   </div>
 </nav>

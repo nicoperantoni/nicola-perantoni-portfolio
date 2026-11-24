@@ -23,7 +23,8 @@ export const ui = {
   it: {
     site: {
       name: 'Studio Devastante',
-      legal: '© 2026 Studio Devastante di Nicola Perantoni · P.IVA 04623590231',
+      copyright: '© 2026 Studio Devastante di Nicola Perantoni',
+      vat: 'P.IVA 04623590231',
     },
     seo: {
       ogLocale: 'it_IT',
@@ -104,7 +105,8 @@ export const ui = {
   en: {
     site: {
       name: 'Studio Devastante',
-      legal: '© 2026 Studio Devastante by Nicola Perantoni · VAT IT04623590231',
+      copyright: '© 2026 Studio Devastante by Nicola Perantoni',
+      vat: 'VAT IT04623590231',
     },
     seo: {
       ogLocale: 'en_US',

@@ -46,7 +46,7 @@ p { margin: 0; }
 
 /* ---------- menu a tutto schermo ---------- */
 /* Voci grandi in basso a sinistra; in basso a destra recapiti su una colonna
-   e, sotto, copyright e P.IVA su una riga. */
+   e, sotto, copyright e P.IVA su due righe. */
 .menu { position: fixed; inset: 0; z-index: 40; display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; padding: var(--pad) var(--pad) var(--pad-v); background: var(--bg); container-type: inline-size; }
 .menu[hidden] { display: none; }
 .menu-aside { display: flex; flex-direction: column; gap: clamp(20px, 3vh, 32px); }
@@ -68,11 +68,15 @@ html.scroll-locked .menu { overscroll-behavior: contain; }
 
 /* ---------- Home: scala di foto (lib/scale.ts) ---------- */
 .page-home { height: 100dvh; overflow: hidden; }
+/* Il titolo sta sopra le foto, che gli scorrono sotto, e lascia passare i
+   comandi (trascinamento, rotella, click sulle foto). Il livello va al solo
+   titolo, non alla testata: il tasto Menu deve restare sopra al menu aperto. */
+.page-home .headline { position: relative; z-index: 4; pointer-events: none; }
 /* Il titolo entra lettera per lettera (padding compensato: spazio per le
    lettere più alte della riga). */
 .page-home .headline { overflow: hidden; padding-block: 0.06em; margin-block: -0.06em; }
 .hl { display: inline-block; white-space: pre; }
-/* Le foto occupano tutta la pagina e passano sopra al titolo. Sono disegnate
+/* Le foto occupano tutta la pagina e passano sotto al titolo. Sono disegnate
    alla grandezza più grande che raggiungono (restano nitide) e ridimensionate
    con scale(), con l'origine in basso a sinistra. */
 .scale { position: fixed; inset: 0; z-index: 3; overflow: hidden; touch-action: none; cursor: grab; user-select: none; -webkit-user-select: none; }
@@ -120,11 +124,6 @@ html.scroll-locked .menu { overscroll-behavior: contain; }
 .arrival-bg { position: absolute; inset: 0; background: var(--bg); }
 .arrival-word { position: absolute; left: 50%; top: 50%; margin: 0; white-space: nowrap; font-size: clamp(56px, min(12cqi, 15vh), 190px); line-height: 0.92; transform: translate(-50%, -50%); }
 .is-arriving .site-head, .is-arriving .scale, .is-arriving .scale-arrows, .is-arriving .sub-body { visibility: hidden; }
-/* In Home le foto stanno sopra al titolo: anche durante la salita stanno sopra
-   alla parola (e le frecce sopra alle foto), così la coprono già mentre sale
-   e alla fine, al posto della parola, c'è il titolo vero sotto le foto. */
-.is-arriving .scale { z-index: 101; }
-.is-arriving .scale-arrows { z-index: 102; }
 
 /* ---------- pagine interne (Servizi, Manifesto, Contatti) ---------- */
 /* Titolo nascosto finché il font è pronto e la grandezza è calcolata. */
@@ -166,8 +165,6 @@ html.scroll-locked .menu { overscroll-behavior: contain; }
   .menu { flex-direction: column; align-items: flex-start; justify-content: flex-end; }
   .menu-aside { margin-top: 32px; }
   .menu-contacts { gap: 12px; }
-  /* Una sola riga anche sul telefono: il corpo si riduce quanto basta. */
-  .menu-legal { font-size: min(13px, calc((100vw - 2 * var(--pad)) / 31.5)); }
   .rows > li { grid-template-columns: minmax(0, 1fr); gap: 12px; }
   .split { grid-template-columns: minmax(0, 1fr); gap: 0; }
 }
