@@ -45,27 +45,30 @@ function toHeadline(word: HTMLElement, headline: HTMLElement) {
   };
 }
 
-export function initArrival({ ready, layout, reveal }: ArrivalOptions): Promise<void> {
+export async function initArrival({ ready, layout, reveal }: ArrivalOptions): Promise<void> {
   const html = document.documentElement;
   const overlay = document.getElementById('arrival')!;
   const bg = document.getElementById('arrival-bg')!;
   const word = document.getElementById('arrival-word')!;
   const headline = document.getElementById('headline')!;
-  const content = [...document.querySelectorAll<HTMLElement>('.site-head, .scale, .scale-arrows, .sub-body')];
+  const head = document.querySelector<HTMLElement>('.site-head')!;
+  // Ciò che entra dal basso insieme alla parola.
+  const body = [...document.querySelectorAll<HTMLElement>('.scale, .scale-arrows, .sub-body')];
   const title = headline.getAttribute('aria-label') ?? headline.textContent?.trim() ?? '';
   const start = word.textContent?.trim() || title;
 
   const finish = () => {
     html.classList.remove('is-arriving');
     overlay.remove();
+    [head, ...body].forEach((el) => { el.style.visibility = ''; });
     layout?.();
   };
 
   // Solo i font, e al massimo un attimo: la pagina è già in cache.
-  const waitReady = Promise.race([ready, new Promise((r) => setTimeout(r, 1200))]);
+  await Promise.race([ready, new Promise((r) => setTimeout(r, 1200))]);
+  if (reduced) { finish(); reveal?.(); return; }
 
-  return waitReady.then(() => new Promise<void>((resolve) => {
-    if (reduced) { finish(); reveal?.(); resolve(); return; }
+  await new Promise<void>((resolve) => {
     const tl = gsap.timeline({ onComplete: () => { finish(); resolve(); } });
 
     // Verso la Home: "Home" diventa "Studio Devastante" con le lettere che si
@@ -82,18 +85,17 @@ export function initArrival({ ready, layout, reveal }: ArrivalOptions): Promise<
     // si misura quando la salita parte (dopo l'eventuale cambio di parola).
     let move: ReturnType<typeof toHeadline> | null = null;
     const m = () => (move ??= toHeadline(word, headline));
-    const body = content.filter((el) => !el.classList.contains('site-head'));
     const RISE = { duration: 1.05, ease: 'expo.inOut' };
     tl.add(() => {
       // Il titolo vero resta nascosto finché la parola non lo raggiunge.
-      content.forEach((el) => { el.style.visibility = el.classList.contains('site-head') ? 'hidden' : 'visible'; });
+      head.style.visibility = 'hidden';
+      body.forEach((el) => { el.style.visibility = 'visible'; });
       layout?.();
       reveal?.();
     })
       .addLabel('rise')
       .to(word, { x: () => m().x, y: () => m().y, scale: () => m().scale, ...RISE }, 'rise')
       .fromTo(body, { y: () => window.innerHeight * 0.6 }, { y: 0, clearProps: 'transform', ...RISE }, 'rise')
-      .to(bg, { autoAlpha: 0, duration: 0.3, ease: 'power1.out' }, 'rise')
-      .add(() => { content.forEach((el) => { el.style.visibility = ''; }); });
-  }));
+      .to(bg, { autoAlpha: 0, duration: 0.3, ease: 'power1.out' }, 'rise');
+  });
 }

@@ -7,9 +7,9 @@ const SITE = 'https://devastante.studio';
 
 export default defineConfig({
   site: SITE,
-  // Font scaricati da Google in fase di build e serviti dal sito stesso, con
-  // fallback dalle metriche allineate. Solo i pesi usati: Space Grotesk per i
-  // titoli, Archivo per il testo.
+  // Font serviti dal sito stesso, con fallback dalle metriche allineate. Solo i
+  // pesi usati: Space Grotesk (file locale) per i titoli, Archivo (scaricato da
+  // Google in fase di build) per il testo.
   fonts: [
     {
       // Space Grotesk dal progetto originale (OFL, licenza accanto al file):
@@ -18,7 +18,8 @@ export default defineConfig({
       provider: fontProviders.local(),
       name: 'Space Grotesk',
       cssVariable: '--font-display',
-      // Solo titoli: titolo grande, Portfolio, loader, voci del menu.
+      // Solo titoli: titolo grande, loader, parola del passaggio tra le
+      // pagine, voci del menu.
       options: {
         variants: [{ src: ['./src/assets/fonts/SpaceGrotesk-SemiBold.woff2'], weight: 600, style: 'normal' }],
       },

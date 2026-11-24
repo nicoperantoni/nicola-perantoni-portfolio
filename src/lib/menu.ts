@@ -12,13 +12,13 @@ import { TRANSITION_KEY } from './transition';
  * nascosto (classe "menu-pending" messa in <head> da BaseLayout), così
  * all'apertura della pagina non distrae.
  */
-export function showMenuButton(delay = 0) {
+export function showMenuButton() {
   const html = document.documentElement;
   if (!html.classList.contains('menu-pending')) return;
   const btn = document.getElementById('menu-btn')!;
   html.classList.remove('menu-pending');
   if (reduced) return;
-  gsap.fromTo(btn, { yPercent: -160, autoAlpha: 0 }, { yPercent: 0, autoAlpha: 1, duration: 0.9, ease: 'expo.out', delay, clearProps: 'transform,opacity,visibility' });
+  gsap.fromTo(btn, { yPercent: -160, autoAlpha: 0 }, { yPercent: 0, autoAlpha: 1, duration: 0.9, ease: 'expo.out', clearProps: 'transform,opacity,visibility' });
 }
 
 export function initMenu() {

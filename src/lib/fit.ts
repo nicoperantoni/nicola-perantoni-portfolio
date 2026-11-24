@@ -10,11 +10,12 @@ export function fitWidth(h: HTMLElement) {
 
 // Attende il font effettivo degli elementi: document.fonts.ready da solo può
 // risolversi prima che il browser abbia iniziato a scaricarlo.
-export function fontsFor(els: Iterable<Element>): Promise<unknown> {
+export async function fontsFor(els: Iterable<Element>): Promise<void> {
   const specs = new Set<string>();
   for (const el of els) {
     const s = getComputedStyle(el);
     specs.add(`${s.fontWeight} 100px ${s.fontFamily}`);
   }
-  return Promise.all([...specs].map((s) => document.fonts.load(s).catch(() => null))).then(() => document.fonts.ready);
+  await Promise.all([...specs].map((s) => document.fonts.load(s).catch(() => null)));
+  await document.fonts.ready;
 }

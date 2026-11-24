@@ -12,17 +12,18 @@ import { reduced } from './env';
 
 gsap.registerPlugin(Observer);
 
-/** Formato delle foto (larghezza / altezza). */
-export const ASPECT = 2 / 3;
+/** Formato delle foto (larghezza / altezza), come nel resto del sito. */
+const ASPECT = 2 / 3;
 /** Ogni gradino è il 32% più grande del precedente. */
 const R = 1.32;
 /** Oltre il centro + MAX_U gradini la foto è già fuori dallo schermo. */
 const MAX_U = 2.6;
 /** Inizio della fila: lì le foto sono già fuori dallo schermo a sinistra. */
 const U0 = -2;
+/** Margine laterale della pagina (--pad in global.css). */
 const PAD = 14;
 
-export interface Rect { left: number; top: number; width: number; height: number }
+interface Rect { left: number; top: number; width: number; height: number }
 
 export function initScale(stage: HTMLElement, head: HTMLElement) {
   const items = [...stage.querySelectorAll<HTMLElement>('.scale-item')];
