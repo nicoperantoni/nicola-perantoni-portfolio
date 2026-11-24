@@ -67,27 +67,10 @@ p { margin: 0; }
 /* Foto più larga della cornice: lo spazio in più serve alla parallasse. */
 .panel.photo img { position: absolute; top: 0; left: -20%; width: 140%; height: 100%; object-fit: cover; will-change: transform; -webkit-user-drag: none; pointer-events: none; }
 
-/* Pannelli di testo tra una foto e l'altra (ex colonna destra). */
-/* Titolo di sezione nero, a tutta larghezza del pannello: la grandezza è
-   in cqi (rispetto al pannello) e il rapporto larghezza/grandezza di ogni
-   parola è misurato via JS, così ogni titolo riempie esattamente la riga.
-   Spaziatura più aperta del titolo grande e niente legature, così f-i e
-   r-t non si toccano (vale anche per "Portfolio" in .cta-title). */
-.panel.text { width: clamp(300px, 30vw, 500px); display: flex; flex-direction: column; font-size: clamp(15px, 1.25vw, 19px); line-height: 1.34; user-select: text; container-type: inline-size; }
-.panel.text h2 { margin: 0; white-space: nowrap; font-family: var(--display); font-size: 20cqi; font-weight: 600; line-height: 0.82; letter-spacing: -0.01em; font-variant-ligatures: no-common-ligatures; }
+/* Pannello di testo tra una foto e l'altra (Profilo): testo allineato a
+   sinistra, centrato in verticale nella scheda. */
+.panel.text { width: clamp(300px, 30vw, 500px); display: flex; flex-direction: column; justify-content: center; font-size: clamp(15px, 1.25vw, 19px); line-height: 1.34; user-select: text; }
 .panel.text .content { display: flex; flex-direction: column; gap: 16px; }
-/* Profilo e Portfolio: titolo e testo centrati nella scheda. */
-.panel.text.centered { text-align: center; }
-.lang { display: flex; gap: 12px; margin: 0 0 0 auto; font-size: 18px; font-weight: 500; line-height: 1; }
-.lang .on { text-decoration: underline; text-underline-offset: 2px; }
-/* L'altra lingua in grigio e senza sottolineatura, così si capisce quale è attiva. */
-.lang a.u { color: var(--mute); text-decoration: none; transition: color 0.2s; }
-.lang a.u:hover { color: var(--ink); }
-/* Titolo in fondo al pannello: il fondo delle lettere tonde (o, S, C, che
-   in Sora scendono di 0,019em sotto la linea di base) tocca la base delle foto senza
-   essere tagliato. Corpo del testo centrato nello spazio sopra al titolo. */
-.panel.text > h2 { order: 2; margin-bottom: -0.054em; }
-.panel.text > h2 + * { margin-block: auto; }
 
 /* Cursore personalizzato sul palco. */
 .cursor { position: fixed; left: 0; top: 0; z-index: 50; pointer-events: none; padding: 7px 12px; border-radius: 999px; background: var(--ink); color: #fff; font-size: 12px; white-space: nowrap; opacity: 0; }
@@ -113,7 +96,11 @@ p { margin: 0; }
    caricamento cresce fino a tutta larghezza mentre sale. */
 .loader-word { position: absolute; left: 50%; top: 50%; margin: 0; white-space: nowrap; font-family: var(--display); font-weight: 600; font-size: 9cqi; line-height: 0.98; letter-spacing: -0.035em; transform: translate(-50%, -50%); }
 .loader-word.on-bar { color: #fff; clip-path: inset(0 100% 0 0); }
-.is-loading .site-head, .is-loading .stage { visibility: hidden; }
+.is-loading .site-head, .is-loading .stage, .is-loading .sub-body { visibility: hidden; }
+html:not(.is-loading) .loader { display: none; }
+/* Arrivando dal menu il loader parte dalla voce scelta, già al centro e
+   grande quanto nel menu, così il passaggio tra le due pagine non si vede. */
+.via-menu .loader-word { font-size: clamp(56px, min(12cqi, 15vh), 190px); line-height: 0.92; }
 
 /* ---------- pagine interne (Servizi, Manifesto, Contatti) ---------- */
 /* Titolo nascosto finché il font è pronto e la grandezza è calcolata. */
@@ -159,7 +146,7 @@ p { margin: 0; }
   .panel { scroll-snap-align: start; }
   .panel.text { width: 78vw; }
   .track { gap: 16px; }
-  .menu-list a { font-size: 20cqi; }
+  .menu-list a, .via-menu .loader-word { font-size: 20cqi; }
   /* Su telefono il copyright va sotto alle voci, a sinistra. */
   .menu { flex-direction: column; align-items: flex-start; justify-content: flex-end; }
   .menu-aside { margin-top: 32px; }

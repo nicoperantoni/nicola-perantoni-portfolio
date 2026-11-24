@@ -20,12 +20,7 @@ const n = HOME_PHOTOS.length;
 const copies = Array.from({ length: COPIES }, (_, c) => c);
 ---
 
-<BaseLayout lang={lang} page="home" bodyClass="is-loading">
-  <div class="loader" id="loader" aria-hidden="true" slot="before">
-    <div class="loader-bar" id="loader-bar"></div>
-    <p class="loader-word" id="word-dark">{t.site.name}</p>
-    <p class="loader-word on-bar" id="word-light">{t.site.name}</p>
-  </div>
+<BaseLayout lang={lang} page="home">
 
   <main class="stage" id="stage" tabindex="0" aria-label={h.stageAria}>
     <div class="track" id="track" data-copies={COPIES}>
@@ -49,8 +44,7 @@ const copies = Array.from({ length: COPIES }, (_, c) => c);
                 />
               </figure>
               {TEXT_AFTER[i] === 'profile' && (
-                <section class="panel text centered" aria-hidden={hidden}>
-                  <h2>{h.profileTitle}</h2>
+                <section class="panel text" aria-hidden={hidden} aria-label={h.profileTitle}>
                   <div class="content">
                     {h.profile.map((p) => <p>{p}</p>)}
                   </div>
@@ -77,13 +71,15 @@ const copies = Array.from({ length: COPIES }, (_, c) => c);
 </BaseLayout>
 
 <script>
+  import { gsap } from 'gsap';
   import { initScroll } from '../lib/scroll';
   import { initCursor } from '../lib/cursor';
-  import { initLoader } from '../lib/loader';
+  import { initLoader, isLoading, imagesLoaded } from '../lib/loader';
   import { initMenu } from '../lib/menu';
   import { initPortfolioCards } from '../lib/portfolio';
   import { fillContacts } from '../lib/contacts';
   import { fitWidth, fontsFor } from '../lib/fit';
+  import { reduced } from '../lib/env';
 
   const stage = document.getElementById('stage')!;
   const track = document.getElementById('track')!;
@@ -91,8 +87,8 @@ const copies = Array.from({ length: COPIES }, (_, c) => c);
   const imgs = [...track.querySelectorAll<HTMLImageElement>('.panel.photo img')];
   const perCopy = panels.length / Number(track.dataset.copies);
 
-  // Titoli delle schede a tutta larghezza, a font caricato.
-  const titles = [...track.querySelectorAll<HTMLElement>('.panel.text h2, .cta-title')];
+  // "Portfolio" a tutta larghezza della sua scheda, a font caricato.
+  const titles = [...track.querySelectorAll<HTMLElement>('.cta-title')];
   const fonts = fontsFor([document.getElementById('headline')!, ...titles, document.querySelector('.panel.text p')!]).then(
     () => titles.forEach(fitWidth),
   );
@@ -102,11 +98,25 @@ const copies = Array.from({ length: COPIES }, (_, c) => c);
   initPortfolioCards(track);
   initMenu();
   initCursor(stage, document.getElementById('cursor')!);
-  initLoader({
-    title: document.getElementById('word-dark')!.textContent ?? '',
-    images: imgs.filter((img) => img.closest<HTMLElement>('.panel')!.dataset.copy === '1'),
-    fonts,
-    panels,
-    layout,
-  });
+
+  if (isLoading()) {
+    initLoader({
+      // Font e foto della copia centrale dello scroll.
+      waitFor: [fonts, imagesLoaded(imgs.filter((img) => img.closest<HTMLElement>('.panel')!.dataset.copy === '1'))],
+      layout,
+      // Lo scroll gigante sale dal basso.
+      reveal: () => {
+        if (reduced) return;
+        const inView = panels.filter((p) => {
+          const r = p.getBoundingClientRect();
+          return r.right > 0 && r.left < innerWidth;
+        });
+        gsap.from(inView, { yPercent: 110, duration: 1.2, ease: 'expo.out', stagger: 0.07, clearProps: 'transform' });
+      },
+    });
+  } else {
+    // Home già vista in questa sessione: niente loader.
+    layout();
+    fonts.then(layout);
+  }
 </script>

@@ -74,8 +74,7 @@ export function initScroll({ stage, track, panels, imgs, perCopy }: ScrollOption
 
   // Frecce: un pannello alla volta, all'infinito.
   document.addEventListener('keydown', (ev) => {
-    const body = document.body.classList;
-    if (body.contains('is-loading') || body.contains('menu-open')) return;
+    if (document.documentElement.classList.contains('is-loading') || document.body.classList.contains('menu-open')) return;
     if (ev.key !== 'ArrowRight' && ev.key !== 'ArrowLeft') return;
     ev.preventDefault();
     const dir = ev.key === 'ArrowRight' ? 1 : -1;

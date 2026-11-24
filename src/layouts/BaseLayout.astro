@@ -12,13 +12,15 @@ import { locales, type Locale, type Page } from '../i18n/ui';
 interface Props {
   lang: Locale;
   page: Page;
-  /** Classe del <body> (es. "is-loading" in home, "page-sub" nelle pagine interne). */
+  /** Classe del <body> ("page-sub" nelle pagine interne). */
   bodyClass?: string;
 }
 
 const { lang, page, bodyClass } = Astro.props;
 const t = useTranslations(lang);
 const seo = t.seo.pages[page];
+const headline = page === 'home' ? t.site.name : t[page].title;
+const isHome = page === 'home';
 
 const site = Astro.site!;
 const abs = (p: string) => new URL(p, site).href;
@@ -78,13 +80,45 @@ const jsonLd = {
     <Font cssVariable="--font-display" preload />
     <Font cssVariable="--font-text" preload={[{ weight: 400 }, { weight: 500 }]} />
     <slot name="head" />
+
+    <!-- Loader, deciso prima che la pagina compaia: parte arrivando da una
+         voce del menu (su ogni pagina) e al primo ingresso in Home nella
+         sessione; tornando in Home in altro modo non riparte. -->
+    <script is:inline define:vars={{ isHome }}>
+      (function () {
+        var c = document.documentElement.classList;
+        try {
+          var t = JSON.parse(sessionStorage.getItem('sd-transition') || 'null');
+          sessionStorage.removeItem('sd-transition');
+          if (t && Date.now() - t.ts < 15000) {
+            c.add('is-loading', 'via-menu');
+            window.__sdLabel = String(t.label || '');
+          } else if (isHome && !sessionStorage.getItem('sd-intro')) {
+            c.add('is-loading');
+          }
+        } catch (e) {
+          if (isHome) c.add('is-loading');
+        }
+      })();
+    </script>
   </head>
-  <body class={bodyClass}>
-    <slot name="before" />
-    <div class:list={[page === 'home' && 'shell']}>
+  <body class={bodyClass} data-page={page}>
+    <div class="loader" id="loader" aria-hidden="true">
+      <div class="loader-bar" id="loader-bar"></div>
+      <p class="loader-word" id="word-dark">{headline}</p>
+      <p class="loader-word on-bar" id="word-light">{headline}</p>
+    </div>
+    <script is:inline>
+      // Arrivando dal menu il loader parte dalla voce scelta.
+      if (window.__sdLabel) {
+        document.getElementById('word-dark').textContent = window.__sdLabel;
+        document.getElementById('word-light').textContent = window.__sdLabel;
+      }
+    </script>
+    <div class:list={[isHome && 'shell']}>
       <header class="site-head">
-        <TopBar lang={lang} page={page} />
-        <h1 class="headline" id="headline">{page === 'home' ? t.site.name : t[page].title}</h1>
+        <TopBar lang={lang} />
+        <h1 class="headline" id="headline">{headline}</h1>
       </header>
       <slot />
     </div>

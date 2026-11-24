@@ -28,8 +28,8 @@ export function initPortfolioCards(track: HTMLElement) {
       tl = gsap
         .timeline()
         // La scritta cade lentamente e si ferma sul fondo con un piccolo rimbalzo.
-        .to(title, { y: restY, duration: 1.3 * k, ease: 'bounce.out' }, 0)
-        .to(title, { keyframes: [{ rotation: 5, duration: 0.45 * k }, { rotation: 0, duration: 0.85 * k, ease: 'power2.out' }] }, 0)
+        .to(title, { y: restY, duration: 1.05 * k, ease: 'bounce.out' }, 0)
+        .to(title, { keyframes: [{ rotation: 5, duration: 0.36 * k }, { rotation: 0, duration: 0.69 * k, ease: 'power2.out' }] }, 0)
         // Il pulsante nasce piccolo e si ingrandisce con un leggero rimbalzo.
         .fromTo(btn, { scale: 0.3, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 0.7 * k, ease: 'back.out(1.8)' }, 0.3 * k);
     };

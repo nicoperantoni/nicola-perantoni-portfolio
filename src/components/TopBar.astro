@@ -1,16 +1,15 @@
 ---
 // Riga sopra al titolo: tasto Menu a sinistra (resta sopra al menu aperto e
-// diventa "Chiudi"), lingua a destra con il link alla stessa pagina
-// nell'altra lingua.
-import { useTranslations, pagePath } from '../i18n/utils';
-import { locales, type Locale, type Page } from '../i18n/ui';
+// diventa "Chiudi"). Niente selettore di lingua: la lingua la sceglie il
+// browser del visitatore (middleware.ts).
+import { useTranslations } from '../i18n/utils';
+import type { Locale } from '../i18n/ui';
 
 interface Props {
   lang: Locale;
-  page: Page;
 }
 
-const { lang, page } = Astro.props;
+const { lang } = Astro.props;
 const t = useTranslations(lang);
 ---
 
@@ -27,17 +26,4 @@ const t = useTranslations(lang);
     <span class="menu-icon" aria-hidden="true"><i></i><i></i></span>
     <span class="menu-label" id="menu-label">{t.menu.open}</span>
   </button>
-  <p class="lang" aria-label={t.site.langLabel}>
-    {
-      locales.map((l) =>
-        l === lang ? (
-          <span class="on" aria-current="true">{l.toUpperCase()}</span>
-        ) : (
-          <a class="u" href={pagePath(page, l)} hreflang={l} lang={l}>
-            {l.toUpperCase()}
-          </a>
-        ),
-      )
-    }
-  </p>
 </div>

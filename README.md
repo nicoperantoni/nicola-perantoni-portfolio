@@ -33,9 +33,12 @@ Sito statico, zero backend, nessun framework UI:
 
 Ogni pagina ha il proprio canonical, gli hreflang verso l'altra lingua, Open Graph e (in home) JSON-LD `ProfessionalService`.
 
+Non c'è un selettore di lingua: [`middleware.ts`](middleware.ts) (Vercel Routing Middleware) legge `Accept-Language` e manda chi ha il browser in italiano alle pagine italiane, tutti gli altri a quelle inglesi (redirect 307). Senza `Accept-Language` e per i bot non reindirizza, così i motori di ricerca vedono entrambe le versioni. In locale (`astro dev` / `astro preview`) il middleware non gira.
+
 ## Funzionalità
 
-- **Loader**: il titolo si rimescola (ScrambleText) mentre una barra nera avanza con il caricamento reale di font e foto. Alla fine il titolo vola al suo posto e le foto salgono dal basso.
+- **Loader**: il titolo si rimescola (ScrambleText) mentre una barra nera avanza con il caricamento reale di font e foto. Alla fine il titolo vola al suo posto e le foto salgono dal basso. In Home parte solo al primo ingresso della sessione.
+- **Navigazione dal menu**: la voce scelta va al centro, le altre escono a sinistra e i recapiti a destra; la pagina di arrivo parte dal loader con la stessa parola, che poi va al posto del titolo.
 - **Scroll orizzontale infinito**: rotella, trascinamento e frecce su desktop (con inerzia), scroll nativo su telefono. La sequenza è ripetuta tre volte e la posizione resta sempre nella copia centrale.
 - **Parallasse**: ogni foto è larga il 140% della sua scheda e scorre al suo interno.
 - **Scheda Portfolio**: col mouse la scritta cade con un rimbalzo e compare il pulsante per scaricare il PDF; su touch basta il primo tocco.

@@ -1,11 +1,13 @@
 // Pagine interne (Servizi, Manifesto, Contatti): titolo fermo a tutta
 // larghezza, righe che compaiono scorrendo, stesso menu della home.
+// Arrivando dal menu la pagina parte dal loader (lib/loader.ts).
 import { gsap } from 'gsap';
 import { reduced } from './env';
 import { initMenu } from './menu';
 import { fillContacts } from './contacts';
 import { fitWidth, fontsFor } from './fit';
 import { initServicePreview } from './service-preview';
+import { initLoader, isLoading } from './loader';
 
 const headline = document.getElementById('headline')!;
 const points = [...document.querySelectorAll<HTMLElement>('.rows > li')];
@@ -16,9 +18,15 @@ const svcList = document.querySelector<HTMLElement>('.svc-list');
 const svcBox = document.querySelector<HTMLElement>('.svc-preview');
 if (svcList && svcBox) initServicePreview(svcList, svcBox);
 
-fontsFor([headline]).then(() => {
+const ready = fontsFor([headline]).then(() => {
   fitWidth(headline);
   document.body.classList.add('is-ready');
+});
+
+if (isLoading()) initLoader({ waitFor: [ready], reveal: revealRows });
+else ready.then(revealRows);
+
+function revealRows() {
   if (reduced) return;
 
   // I punti compaiono quando entrano nello schermo: la riga si allunga e
@@ -38,4 +46,4 @@ fontsFor([headline]).then(() => {
     { threshold: 0.25 },
   );
   points.forEach((li) => io.observe(li));
-});
+}
