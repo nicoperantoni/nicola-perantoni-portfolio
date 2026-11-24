@@ -53,7 +53,7 @@ export function fitTitles(track) {
 
 // Recapiti ricomposti lato client (stesso schema del sito attuale).
 export function fillContacts(root) {
-  const email = 'inotnarep.alocin'.split('').reverse().join('') + '@' + 'moc.liamg'.split('').reverse().join('');
+  const email = 'alocin'.split('').reverse().join('') + '@' + 'oiduts.etnatsaved'.split('').reverse().join('');
   const ph = '4562717643 93'.replace(/\s/g, '').split('').reverse().join('');
   root.querySelectorAll('[data-email]').forEach((e) => { e.href = 'mailto:' + email; e.textContent = email; });
   root.querySelectorAll('[data-wa]').forEach((w) => {
