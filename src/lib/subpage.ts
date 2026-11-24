@@ -1,32 +1,32 @@
 // Pagine interne (Servizi, Manifesto, Contatti): titolo fermo a tutta
 // larghezza, righe che compaiono scorrendo, stesso menu della home.
-// Arrivando dal menu la pagina parte dal loader (lib/loader.ts).
+// Arrivando dal menu la pagina sale insieme al titolo (lib/transition.ts).
 import { gsap } from 'gsap';
 import { reduced } from './env';
-import { initMenu } from './menu';
+import { initMenu, showMenuButton } from './menu';
 import { fillContacts } from './contacts';
 import { fitWidth, fontsFor } from './fit';
-import { initServicePreview } from './service-preview';
-import { initLoader, isLoading } from './loader';
+import { initArrival, isArriving } from './transition';
 
 const headline = document.getElementById('headline')!;
 const points = [...document.querySelectorAll<HTMLElement>('.rows > li')];
 
 initMenu();
 fillContacts();
-const svcList = document.querySelector<HTMLElement>('.svc-list');
-const svcBox = document.querySelector<HTMLElement>('.svc-preview');
-if (svcList && svcBox) initServicePreview(svcList, svcBox);
 
 const ready = fontsFor([headline]).then(() => {
   fitWidth(headline);
   document.body.classList.add('is-ready');
 });
 
-if (isLoading()) initLoader({ waitFor: [ready], reveal: revealRows });
-else ready.then(() => revealRows());
+// Ingresso nella pagina; alla fine, sotto il titolo già comparso, scende il
+// tasto Menu.
+const entered = isArriving()
+  ? initArrival({ ready, reveal: () => revealRows(true) })
+  : ready.then(() => revealRows(false));
+entered.then(() => showMenuButton());
 
-function revealRows(mode?: 'intro' | 'arrive') {
+function revealRows(arriving: boolean) {
   if (reduced) return;
   // Dal menu la pagina sale insieme al titolo: le righe che sono già a
   // schermo arrivano con lei, le altre compaiono scorrendo come sempre.
@@ -36,7 +36,7 @@ function revealRows(mode?: 'intro' | 'arrive') {
     for (let n: HTMLElement | null = el; n; n = n.offsetParent as HTMLElement | null) y += n.offsetTop;
     return y;
   };
-  const later = mode === 'arrive' ? points.filter((li) => docTop(li) - window.scrollY > window.innerHeight * 0.9) : points;
+  const later = arriving ? points.filter((li) => docTop(li) - window.scrollY > window.innerHeight * 0.9) : points;
   if (!later.length) return;
 
   // I punti compaiono quando entrano nello schermo: la riga si allunga e

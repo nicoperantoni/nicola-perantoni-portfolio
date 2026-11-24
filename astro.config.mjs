@@ -48,8 +48,6 @@ export default defineConfig({
     // perché quelli tradotti (/servizi/ ↔ /en/services/) non seguono lo
     // schema che l'opzione i18n dell'integrazione presume.
     sitemap({
-      // I prototipi (/prototipo/…) non fanno parte del sito.
-      filter: (page) => !page.includes('/prototipo/'),
       lastmod: new Date(),
       serialize(item) {
         const path = new URL(item.url).pathname;

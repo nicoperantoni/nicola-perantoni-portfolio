@@ -1,11 +1,13 @@
 ---
-// Home, condivisa tra "/" e "/en/": titolo e scroll orizzontale infinito che
-// si apre con il Profilo, poi le foto con in mezzo la scheda Portfolio.
+// Home, condivisa tra "/" e "/en/": titolo a tutta larghezza e scala di foto
+// (lib/scale.ts). Al primo ingresso nella sessione parte il loader
+// (lib/intro.ts); arrivando dal menu la pagina sale insieme al titolo
+// (lib/transition.ts); altrimenti compare subito.
 import { Picture } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { useTranslations } from '../i18n/utils';
 import type { Locale } from '../i18n/ui';
-import { HOME_PHOTOS, PORTFOLIO_AFTER, COPIES, TRACK_WIDTHS, TRACK_SIZES, photo } from '../data/photos';
+import { HOME_PHOTOS, SCALE_WIDTHS, SCALE_SIZES, photo } from '../data/photos';
 
 interface Props {
   lang: Locale;
@@ -15,122 +17,82 @@ const { lang } = Astro.props;
 const t = useTranslations(lang);
 const h = t.home;
 const n = HOME_PHOTOS.length;
-// Solo la copia centrale è letta dagli screen reader e raggiungibile da
-// tastiera; le altre sono ripetizioni per lo scroll infinito.
-const copies = Array.from({ length: COPIES }, (_, c) => c);
+const [word1, word2] = t.site.name.split(' ');
 ---
 
-<BaseLayout lang={lang} page="home">
-
-  <main class="stage" id="stage" tabindex="0" aria-label={h.stageAria}>
-    <div class="track" id="track" data-copies={COPIES}>
-      {
-        copies.map((c) => {
-          const hidden = c !== 1 ? 'true' : undefined;
-          const tab = c !== 1 ? -1 : undefined;
-          return [
-            // Profilo: prima scheda; la larghezza la calcola lo script, così
-            // la prima foto parte sotto la "D" di "Devastante".
-            <section class="panel text profile" aria-hidden={hidden} aria-label={h.profileTitle}>
-              <div class="content">
-                {h.profile.map((p) => <p>{p}</p>)}
-              </div>
-            </section>,
-            ...HOME_PHOTOS.map((name, i) => (
-            <>
-              <figure class="panel photo" aria-hidden={hidden} data-copy={c}>
-                <Picture
-                  src={photo(name)}
-                  alt={c === 1 ? h.photoAlt(i + 1, n) : ''}
-                  widths={TRACK_WIDTHS}
-                  sizes={TRACK_SIZES}
-                  formats={['avif']}
-                  fallbackFormat="webp"
-                  loading="eager"
-                  decoding="async"
-                  draggable="false"
-                />
-              </figure>
-              {i === PORTFOLIO_AFTER && (
-                <section class="panel cta" aria-hidden={hidden}>
-                  <div class="cta-inner">
-                    <h2 class="cta-title">{h.portfolioTitle}</h2>
-                    <a class="cta-btn" href={h.portfolioPdf} download tabindex={tab}>
-                      {h.portfolioButton} <span aria-hidden="true">↓</span>
-                    </a>
-                  </div>
-                </section>
-              )}
-            </>
-          )),
-          ];
-        })
-      }
-    </div>
+<BaseLayout lang={lang} page="home" bodyClass="page-home">
+  <main class="scale" id="scale" aria-label={h.stageAria}>
+    {
+      HOME_PHOTOS.map((name, i) => (
+        <figure class="scale-item">
+          <Picture
+            src={photo(name)}
+            alt={h.photoAlt(i + 1, n)}
+            widths={SCALE_WIDTHS}
+            sizes={SCALE_SIZES}
+            formats={['avif']}
+            fallbackFormat="webp"
+            loading="eager"
+            decoding="async"
+            draggable="false"
+          />
+        </figure>
+      ))
+    }
   </main>
 
-  <div class="cursor" id="cursor" aria-hidden="true" slot="after">{h.cursor}</div>
+  <nav class="scale-arrows" aria-label={h.arrowsAria}>
+    <button class="scale-arrow" id="scale-prev" type="button" aria-label={h.prev}>
+      <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3 5 8l5 5" /></svg>
+    </button>
+    <button class="scale-arrow" id="scale-next" type="button" aria-label={h.next}>
+      <svg viewBox="0 0 16 16" aria-hidden="true"><path d="m6 3 5 5-5 5" /></svg>
+    </button>
+  </nav>
+
+  <!-- Loader del primo ingresso (lib/intro.ts): visibile solo con html.is-intro. -->
+  <div class="intro" id="intro" aria-hidden="true" slot="after">
+    <div class="intro-title">
+      <div class="intro-word" id="intro-start">{[...word1].map((c) => <span class="intro-letter">{c}</span>)}</div>
+      <div class="intro-box" id="intro-box">
+        <div class="intro-box-inner">
+          <div class="intro-grow" id="intro-grow"><div class="intro-wrap" id="intro-wrap"></div></div>
+        </div>
+      </div>
+      <div class="intro-word" id="intro-end">{[...word2].map((c) => <span class="intro-letter">{c}</span>)}</div>
+    </div>
+  </div>
 </BaseLayout>
 
 <script>
-  import { gsap } from 'gsap';
-  import { initScroll } from '../lib/scroll';
-  import { initCursor } from '../lib/cursor';
-  import { initLoader, isLoading, imagesLoaded } from '../lib/loader';
-  import { initMenu } from '../lib/menu';
-  import { initPortfolioCards } from '../lib/portfolio';
+  import { initScale } from '../lib/scale';
+  import { isIntro, runIntro } from '../lib/intro';
+  import { initArrival, isArriving } from '../lib/transition';
+  import { initMenu, showMenuButton } from '../lib/menu';
   import { fillContacts } from '../lib/contacts';
   import { fitWidth, fontsFor } from '../lib/fit';
-  import { reduced } from '../lib/env';
-  import { fitProfile } from '../lib/profile';
-
-  const stage = document.getElementById('stage')!;
-  const track = document.getElementById('track')!;
-  const panels = [...track.children] as HTMLElement[];
-  const imgs = [...track.querySelectorAll<HTMLImageElement>('.panel.photo img')];
-  const perCopy = panels.length / Number(track.dataset.copies);
 
   const headline = document.getElementById('headline')!;
-
-  // A font caricato: titolo e "Portfolio" a tutta larghezza, Profilo
-  // largo fino alla "D" di "Devastante" e testo grande quanto ci sta.
-  const titles = [...track.querySelectorAll<HTMLElement>('.cta-title')];
-  const fonts = fontsFor([headline, ...titles, document.querySelector('.panel.text p')!]).then(() => {
-    // Il titolo misurato sulla parola vera: riempie la riga con qualsiasi
-    // font (anche quello di riserva) senza uscire dai bordi.
-    fitWidth(headline);
-    titles.forEach(fitWidth);
-    fitProfile(track, stage, headline);
-  });
-  fillContacts();
-  // Registrato prima dello scroll, così a ogni ridimensionamento il Profilo
-  // ha già la nuova larghezza quando lo scroll si rimisura.
-  window.addEventListener('resize', () => fitProfile(track, stage, headline));
-
-  const { layout } = initScroll({ stage, track, panels, imgs, perCopy });
-  initPortfolioCards(track);
+  const head = document.querySelector<HTMLElement>('.site-head')!;
+  const scale = initScale(document.getElementById('scale')!, head);
   initMenu();
-  initCursor(stage, document.getElementById('cursor')!);
+  fillContacts();
 
-  if (isLoading()) {
-    initLoader({
-      // Font e foto della copia centrale dello scroll.
-      waitFor: [fonts, imagesLoaded(imgs.filter((img) => img.closest<HTMLElement>('.panel')!.dataset.copy === '1'))],
-      layout,
-      // Lo scroll gigante sale dal basso.
-      reveal: (mode) => {
-        // Dal menu lo scroll sale già insieme alla parola (lib/loader.ts).
-        if (reduced || mode === 'arrive') return;
-        const inView = panels.filter((p) => {
-          const r = p.getBoundingClientRect();
-          return r.right > 0 && r.left < innerWidth;
-        });
-        gsap.from(inView, { yPercent: 110, duration: 1.2, ease: 'expo.out', stagger: 0.07, clearProps: 'transform' });
-      },
-    });
-  } else {
-    // Home già vista in questa sessione: niente loader.
-    layout();
-    fonts.then(layout);
-  }
+  // A font caricato: titolo a tutta larghezza misurato sulla parola, poi la
+  // scala (la sua altezza dipende dalla testata).
+  const place = () => { scale.measure(); scale.render(); };
+  place();
+  const fonts = fontsFor([headline, document.querySelector('.intro-letter') ?? headline]).then(() => {
+    fitWidth(headline);
+    place();
+  });
+
+  // Ingresso nella pagina; alla fine, sotto il titolo già comparso, scende il
+  // tasto Menu.
+  const entered = isIntro()
+    ? runIntro(scale, fonts)
+    : isArriving()
+      ? initArrival({ ready: fonts, layout: place }).then(scale.enable)
+      : fonts.then(scale.enable);
+  entered.then(() => showMenuButton());
 </script>

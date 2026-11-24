@@ -1,6 +1,7 @@
 ---
 // Recapiti (email, WhatsApp, Instagram, sede). variant "menu": lista
-// compatta nel menu; "rows": righe grandi nella pagina Contatti.
+// compatta nel menu, con in più il Portfolio (PDF); "rows": righe grandi
+// nella pagina Contatti.
 import ContactValue from './ContactValue.astro';
 import { useTranslations } from '../i18n/utils';
 import type { Locale } from '../i18n/ui';
@@ -18,12 +19,13 @@ const items = [
   { label: t.instagram, kind: 'ig' },
   { label: t.location, kind: 'loc' },
 ] as const;
+const menuItems = [...items, { label: t.portfolio, kind: 'pdf' } as const];
 ---
 
 {
   variant === 'menu' ? (
     <dl class="menu-contacts">
-      {items.map(({ label, kind }) => (
+      {menuItems.map(({ label, kind }) => (
         <div>
           <dt>{label}</dt>
           <dd>

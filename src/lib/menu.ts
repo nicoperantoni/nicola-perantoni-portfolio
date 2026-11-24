@@ -1,11 +1,25 @@
 // Tasto "Menu" in alto a sinistra: apre un menu a tutto schermo con le
 // voci (link alle altre pagine); il tasto resta visibile e diventa "Chiudi".
-// Scegliendo una voce: la voce va al centro dello schermo, le altre escono a
-// sinistra, i recapiti a destra; poi si apre la pagina, che parte dal loader
-// con la stessa parola (lib/loader.ts).
+// Scegliendo una voce: la voce scorre al centro sulla sua riga, le altre
+// escono a sinistra, i recapiti a destra; poi si apre la pagina, dove la
+// parola sale al posto del titolo (lib/transition.ts).
 import { gsap } from 'gsap';
 import { reduced } from './env';
-import { TRANSITION_KEY } from './loader';
+import { TRANSITION_KEY } from './transition';
+
+/**
+ * Il tasto Menu compare dopo il titolo: scende dall'alto. Fino ad allora è
+ * nascosto (classe "menu-pending" messa in <head> da BaseLayout), così
+ * all'apertura della pagina non distrae.
+ */
+export function showMenuButton(delay = 0) {
+  const html = document.documentElement;
+  if (!html.classList.contains('menu-pending')) return;
+  const btn = document.getElementById('menu-btn')!;
+  html.classList.remove('menu-pending');
+  if (reduced) return;
+  gsap.fromTo(btn, { yPercent: -160, autoAlpha: 0 }, { yPercent: 0, autoAlpha: 1, duration: 0.9, ease: 'expo.out', delay, clearProps: 'transform,opacity,visibility' });
+}
 
 export function initMenu() {
   const btn = document.getElementById('menu-btn') as HTMLButtonElement;
@@ -107,7 +121,7 @@ export function initMenu() {
   };
 
   // Aprendo il menu si scaricano in anticipo le altre pagine, così dopo il
-  // clic il loader della pagina nuova parte senza attese.
+  // clic la pagina nuova si apre senza attese.
   let prefetched = false;
   const prefetch = () => {
     if (prefetched) return;
