@@ -7,9 +7,13 @@
 // non si reindirizza: Google e gli altri continuano a vedere entrambe le
 // versioni, collegate dagli hreflang nell'<head> di ogni pagina.
 import { next } from '@vercel/functions/middleware';
-import { routes, type Locale } from './src/i18n/ui';
+// Estensione .js esplicita: Vercel compila il middleware con la risoluzione
+// dei moduli di Node (nodenext), che la richiede; punta comunque a ui.ts.
+import { routes, type Locale } from './src/i18n/ui.js';
 
 export const config = {
+  // Runtime Node.js (quello "edge" è deprecato su Vercel).
+  runtime: 'nodejs',
   // Solo pagine: niente file statici (/_astro, PDF, immagini, sitemap…).
   matcher: ['/', '/((?!_astro|_vercel)[^.]*)'],
 };
