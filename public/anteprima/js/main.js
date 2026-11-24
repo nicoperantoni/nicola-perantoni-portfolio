@@ -5,6 +5,7 @@ import { initScroll } from './scroll.js';
 import { initCursor } from './cursore.js';
 import { initLoader } from './loader.js';
 import { initMenu } from './menu.js';
+import { initPortfolioCards } from './portfolio.js';
 
 const TITLE = 'Studio Devastante';
 const stage = document.getElementById('stage');
@@ -16,6 +17,7 @@ document.fonts.ready.then(() => fitTitles(track));
 fillContacts(document);
 
 const { layout } = initScroll({ stage, track, panels, imgs, perCopy });
+initPortfolioCards(track);
 initMenu();
 initCursor(stage, document.getElementById('cursor'));
 initLoader({ title: TITLE, photos: PHOTOS, panels, layout });

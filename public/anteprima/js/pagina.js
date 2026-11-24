@@ -2,7 +2,7 @@
 // righe che compaiono scorrendo, stesso menu della home.
 import { reduced } from './env.js';
 import { initMenu } from './menu.js';
-import { fillContacts } from './contenuto.js';
+import { fillContacts, fitWidth } from './contenuto.js';
 import { initServicePreview } from './anteprima-foto.js';
 
 const headline = document.getElementById('headline');
@@ -13,15 +13,8 @@ fillContacts(document);
 const svcList = document.querySelector('.svc-list');
 if (svcList) initServicePreview(svcList, document.querySelector('.svc-preview'));
 
-// Titolo a tutta larghezza: si misura a 100px e si imposta in cqi.
-const fit = () => {
-  headline.style.fontSize = '100px';
-  const r = document.createRange(); r.selectNodeContents(headline);
-  headline.style.fontSize = `calc(100cqi / ${(r.getBoundingClientRect().width / 100).toFixed(4)})`;
-};
-
 document.fonts.ready.then(() => {
-  fit();
+  fitWidth(headline);
   document.body.classList.add('is-ready');
   if (reduced) return;
 

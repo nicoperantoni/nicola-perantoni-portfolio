@@ -1,5 +1,5 @@
 // Cursore personalizzato "← Scorri →" (nascosto sui pannelli di testo,
-// dove si seleziona). Solo con mouse e senza riduzione del movimento.
+// dove si seleziona, e sulla scheda Portfolio, dove si clicca). Solo con mouse e senza riduzione del movimento.
 import { reduced, fine } from './env.js';
 
 export function initCursor(stage, cursor) {
@@ -10,7 +10,7 @@ export function initCursor(stage, cursor) {
   gsap.set(cursor, { xPercent: -50, yPercent: -50 });
   stage.addEventListener('pointermove', (ev) => {
     qx(ev.clientX); qy(ev.clientY);
-    const onText = !!ev.target.closest('.panel.text');
+    const onText = !!ev.target.closest('.panel.text, .panel.cta');
     stage.style.cursor = onText ? 'auto' : '';
     gsap.to(cursor, { opacity: onText ? 0 : 1, duration: 0.2, overwrite: 'auto' });
   });

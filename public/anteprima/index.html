@@ -8,7 +8,7 @@
 <title>Studio Devastante</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&family=Sora:wght@600&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrambleTextPlugin.min.js"></script>
 <link rel="stylesheet" href="style.css">
@@ -27,6 +27,8 @@
         <span class="menu-icon" aria-hidden="true"><i></i><i></i></span>
         <span class="menu-label" id="menu-label">Menu</span>
       </button>
+      <!-- Lingua, in alto a destra (dall'altro lato rispetto al Menu). -->
+      <p class="lang" aria-label="Lingua"><span class="on" aria-current="true">IT</span><a class="u" href="#" hreflang="en" lang="en">EN</a></p>
     </div>
     <h1 class="headline" id="headline">Studio Devastante</h1>
   </header>
@@ -68,11 +70,12 @@
   </section>
 </template>
 <template id="t-fine">
-  <section class="panel text centered">
-    <h2>Portfolio</h2>
-    <div class="content">
-      <p><a class="u" href="#">Scarica il mio Portfolio (PDF) ↓</a></p>
-      <p class="lang"><span class="on">IT</span><a class="u" href="#">EN</a></p>
+  <!-- Scheda Portfolio: grande come una foto, nera. Col mouse sopra la
+       scritta cade e compare il pulsante per scaricare il PDF (js/portfolio.js). -->
+  <section class="panel cta">
+    <div class="cta-inner">
+      <h2 class="cta-title">Portfolio</h2>
+      <a class="cta-btn" href="../portfolio-it.pdf" download>Scarica il Portfolio (PDF) <span aria-hidden="true">↓</span></a>
     </div>
   </section>
 </template>

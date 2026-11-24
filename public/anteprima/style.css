@@ -1,13 +1,14 @@
 :root {
   --ink: #111112;
   --mute: #8a8a8a;
-  --rule: rgba(17, 17, 18, 0.22);
   --bg: #ffffff;
   --pad: 14px;
   /* Spazio verticale tra titolo e foto, ripetuto sotto le foto. */
   --pad-v: clamp(16px, 2.6vh, 32px);
   --gap: clamp(32px, 3.4vw, 56px);
   --radius: clamp(8px, 1vw, 14px);
+  /* Sora per i titoli, Archivo per il corpo del testo. */
+  --display: 'Sora', Helvetica, Arial, sans-serif;
 }
 * { box-sizing: border-box; }
 body { margin: 0; background: var(--bg); color: var(--ink); font-family: 'Archivo', Helvetica, Arial, sans-serif; font-size: 12.5px; line-height: 1.32; -webkit-font-smoothing: antialiased; }
@@ -25,7 +26,7 @@ p { margin: 0; }
 .site-head { padding: var(--pad) var(--pad) var(--pad-v); container-type: inline-size; text-align: center; }
 /* Riga sopra al titolo con il tasto Menu a sinistra. Il tasto resta sopra
    al menu aperto (z-index) e diventa "Chiudi". */
-.topbar { display: flex; justify-content: flex-start; margin-bottom: 8px; }
+.topbar { display: flex; align-items: center; margin-bottom: 8px; }
 .menu-btn { position: relative; z-index: 60; display: inline-flex; align-items: center; gap: 10px; margin: 0; padding: 4px 0; border: 0; background: none; color: var(--ink); font: inherit; font-size: 18px; font-weight: 500; line-height: 1; cursor: pointer; }
 .menu-icon { position: relative; width: 22px; height: 12px; }
 .menu-icon i { position: absolute; left: 0; width: 100%; height: 2px; background: currentColor; border-radius: 1px; }
@@ -45,14 +46,14 @@ p { margin: 0; }
 .menu[hidden] { display: none; }
 .menu-list { margin: 0; padding: 0; list-style: none; }
 .menu-list li { overflow: clip; overflow-clip-margin: 0.04em; }
-.menu-list button, .menu-list a { display: block; margin: 0; padding: 0; border: 0; background: none; color: var(--ink); font: inherit; font-weight: 600; font-size: clamp(56px, min(12cqi, 15vh), 190px); line-height: 0.92; letter-spacing: -0.035em; text-align: left; cursor: pointer; transition: color 0.25s; }
-.menu-list:hover :is(button, a):not(:hover), .menu-list:has(:focus-visible) :is(button, a):not(:focus-visible) { color: var(--mute); }
-.menu-list :is(button, a):focus-visible { outline: none; }
+.menu-list a { display: block; color: var(--ink); font-family: var(--display); font-weight: 600; font-size: clamp(56px, min(12cqi, 15vh), 190px); line-height: 0.92; letter-spacing: -0.035em; transition: color 0.25s; }
+.menu-list:hover a:not(:hover), .menu-list:has(:focus-visible) a:not(:focus-visible) { color: var(--mute); }
+.menu-list a:focus-visible { outline: none; }
 /* Pagina corrente: in grigio, come "sei qui". */
 .menu-list a[aria-current="page"] { color: var(--mute); cursor: default; }
 
 /* Titolo a tutta larghezza: la grandezza segue la larghezza della testata. */
-.headline { margin: 0; white-space: nowrap; font-weight: 600; font-size: 12.7cqi; line-height: 0.98; letter-spacing: -0.035em; }
+.headline { margin: 0; white-space: nowrap; font-family: var(--display); font-weight: 600; font-size: 11.2cqi; line-height: 0.98; letter-spacing: -0.035em; }
 
 /* ---------- scroll orizzontale gigante ---------- */
 .stage { position: relative; min-height: 0; margin: 0 var(--pad) var(--pad-v); overflow: hidden; outline: none; touch-action: pan-y; user-select: none; }
@@ -64,44 +65,56 @@ p { margin: 0; }
 .panel.photo img { position: absolute; top: 0; left: -20%; width: 140%; height: 100%; object-fit: cover; will-change: transform; -webkit-user-drag: none; pointer-events: none; }
 
 /* Pannelli di testo tra una foto e l'altra (ex colonna destra). */
-.panel.text { width: clamp(300px, 30vw, 500px); display: flex; flex-direction: column; gap: 0; font-size: clamp(15px, 1.25vw, 19px); line-height: 1.34; user-select: text; }
 /* Titolo di sezione nero, a tutta larghezza del pannello: la grandezza è
    in cqi (rispetto al pannello) e il rapporto larghezza/grandezza di ogni
-   parola è misurato via JS, così ogni titolo riempie esattamente la riga. */
-.panel.text { container-type: inline-size; }
-.panel.text h2 { margin: 0; white-space: nowrap; font-size: 20cqi; font-weight: 600; line-height: 0.82; letter-spacing: -0.035em; color: var(--ink); }
+   parola è misurato via JS, così ogni titolo riempie esattamente la riga.
+   Spaziatura più aperta del titolo grande e niente legature, così f-i e
+   r-t non si toccano (vale anche per "Portfolio" in .cta-title). */
+.panel.text { width: clamp(300px, 30vw, 500px); display: flex; flex-direction: column; font-size: clamp(15px, 1.25vw, 19px); line-height: 1.34; user-select: text; container-type: inline-size; }
+.panel.text h2 { margin: 0; white-space: nowrap; font-family: var(--display); font-size: 20cqi; font-weight: 600; line-height: 0.82; letter-spacing: -0.01em; font-variant-ligatures: no-common-ligatures; }
 .panel.text .content { display: flex; flex-direction: column; gap: 16px; }
 /* Profilo e Portfolio: titolo e testo centrati nella scheda. */
 .panel.text.centered { text-align: center; }
-.panel.text.centered .lang { justify-content: center; }
-.panel.text .mute { color: var(--mute); }
-.lang { display: flex; gap: 10px; }
+.lang { display: flex; gap: 12px; margin: 0 0 0 auto; font-size: 18px; font-weight: 500; line-height: 1; }
 .lang .on { text-decoration: underline; text-underline-offset: 2px; }
+/* L'altra lingua in grigio e senza sottolineatura, così si capisce quale è attiva. */
+.lang a.u { color: var(--mute); text-decoration: none; transition: color 0.2s; }
+.lang a.u:hover { color: var(--ink); }
 /* Titolo in fondo al pannello: il fondo delle lettere tonde (o, S, C, che
-   scendono di 0,012em sotto la linea di base) tocca la base delle foto senza
+   in Sora scendono di 0,019em sotto la linea di base) tocca la base delle foto senza
    essere tagliato. Corpo del testo centrato nello spazio sopra al titolo. */
-.panel.text > h2 { order: 2; margin-bottom: -0.066em; }
+.panel.text > h2 { order: 2; margin-bottom: -0.054em; }
 .panel.text > h2 + * { margin-block: auto; }
 
 /* Cursore personalizzato sul palco. */
 .cursor { position: fixed; left: 0; top: 0; z-index: 50; pointer-events: none; padding: 7px 12px; border-radius: 999px; background: var(--ink); color: #fff; font-size: 12px; white-space: nowrap; opacity: 0; }
+
+/* Scheda Portfolio: stesse proporzioni di una foto, fondo nero, "Portfolio"
+   bianco al centro. Il pulsante sta al centro, nascosto finché la scritta
+   non cade (animazione in js/portfolio.js). */
+.panel.cta { aspect-ratio: 2 / 3; background: var(--ink); color: #fff; border-radius: var(--radius); cursor: pointer; }
+/* Contenuto in un livello assoluto: la larghezza della scheda dipende solo
+   dall'altezza (2:3), non dal titolo, che a sua volta si adatta alla scheda. */
+.cta-inner { position: absolute; inset: 0; display: grid; place-items: center; padding: 0 8%; container-type: inline-size; }
+.cta-title { grid-area: 1 / 1; margin: 0; width: 100%; white-space: nowrap; text-align: center; font-family: var(--display); font-weight: 600; font-size: 20cqi; line-height: 0.9; letter-spacing: -0.01em; font-variant-ligatures: no-common-ligatures; color: #fff; will-change: transform; }
+.cta-btn { grid-area: 1 / 1; display: inline-flex; align-items: center; gap: 0.5em; padding: 0.9em 1.4em; border-radius: 999px; background: #fff; color: var(--ink); font-size: clamp(15px, 1.25vw, 19px); font-weight: 500; white-space: nowrap; opacity: 0; visibility: hidden; transform: scale(0.3); }
+.cta-btn:focus-visible { outline: 2px solid #fff; outline-offset: 4px; }
 
 /* ---------- loader ---------- */
 /* Due copie del titolo sovrapposte: nera sullo sfondo bianco, bianca
    ritagliata (clip-path) esattamente sulla porzione coperta dalla barra. */
 .loader { position: fixed; inset: 0; z-index: 100; padding: 0 var(--pad); background: var(--bg); pointer-events: none; container-type: inline-size; }
 .loader-bar { position: absolute; inset: 0; background: var(--ink); clip-path: inset(0 100% 0 0); }
-.loader-word { position: absolute; left: 50%; top: 50%; margin: 0; white-space: nowrap; font-weight: 600; font-size: 10.4cqi; line-height: 0.98; letter-spacing: -0.035em; transform: translate(-50%, -50%); }
+/* Nel loader il titolo è più piccolo: le lettere casuali dello scramble
+   sono più larghe e a piena grandezza uscirebbero dallo schermo. A fine
+   caricamento cresce fino a tutta larghezza mentre sale. */
+.loader-word { position: absolute; left: 50%; top: 50%; margin: 0; white-space: nowrap; font-family: var(--display); font-weight: 600; font-size: 9cqi; line-height: 0.98; letter-spacing: -0.035em; transform: translate(-50%, -50%); }
 .loader-word.on-bar { color: #fff; clip-path: inset(0 100% 0 0); }
-/* Nel loader il titolo è ~18% più piccolo: le lettere casuali dello
-   scramble sono più larghe e a piena grandezza uscirebbero dallo schermo.
-   A fine caricamento cresce fino a tutta larghezza mentre sale. */
 .is-loading .site-head, .is-loading .stage { visibility: hidden; }
 
 /* ---------- pagine interne (Servizi, Manifesto, Contatti) ---------- */
 /* Titolo nascosto finché il font è pronto e la grandezza è calcolata. */
 .page-sub:not(.is-ready) .headline { visibility: hidden; }
-.topbar { align-items: center; }
 .sub-body { padding: 0 var(--pad) clamp(80px, 14vh, 160px); }
 .rows { margin: 0; padding: 0; list-style: none; }
 /* Ogni riga: etichetta o numero a sinistra, testo grande a destra, riga sopra che si
@@ -143,11 +156,11 @@ p { margin: 0; }
   .panel { scroll-snap-align: start; }
   .panel.text { width: 78vw; }
   .track { gap: 16px; }
-  .menu-list button, .menu-list a { font-size: 20cqi; }
+  .menu-list a { font-size: 20cqi; }
   /* Su telefono il copyright va sotto alle voci, a sinistra. */
   .menu { flex-direction: column; align-items: flex-start; justify-content: flex-end; }
   .menu-aside { margin-top: 32px; }
-  .menu-contacts { grid-template-columns: minmax(0, 1fr); gap: 12px; }
+  .menu-contacts { gap: 12px; }
   /* Una sola riga anche sul telefono: il corpo si riduce quanto basta. */
   .menu-legal { font-size: min(13px, calc((100vw - 2 * var(--pad)) / 31.5)); }
   .rows > li { grid-template-columns: minmax(0, 1fr); gap: 12px; }

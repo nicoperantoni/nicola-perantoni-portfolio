@@ -8,8 +8,8 @@ import { reduced } from './env.js';
 gsap.registerPlugin(ScrambleTextPlugin);
 
 // title: testo del titolo; photos: foto da precaricare; panels: pannelli
-// dello scroll; layout(): misura lo scroll; onDone() (facoltativo): a pagina pronta.
-export function initLoader({ title, photos, panels, layout, onDone }) {
+// dello scroll; layout(): misura lo scroll.
+export function initLoader({ title, photos, panels, layout }) {
   const loader = document.getElementById('loader');
   const bar = document.getElementById('loader-bar');
   const wordDark = document.getElementById('word-dark');
@@ -109,6 +109,5 @@ export function initLoader({ title, photos, panels, layout, onDone }) {
     stage.style.visibility = '';
     loader.remove();
     layout();
-    onDone?.();
   }
 }

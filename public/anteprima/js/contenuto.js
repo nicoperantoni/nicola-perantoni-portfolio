@@ -1,13 +1,14 @@
 // ---------------------------------------------------------------------
 // Contenuto dello scroll: foto con i pannelli di testo in mezzo.
 // ---------------------------------------------------------------------
+// Gare (DSC/PRN) alternate a shooting e dettagli (PH, studio).
 export const PHOTOS = [
-  'ph-x-cervelo-4', 'ph-training-camp-12', 'ristora-6', 'ph-x-cervelo-1',
-  'ph-training-camp-14', 'ristora-2', 'ph-x-cervelo-3', 'ph-training-camp-9',
-  'ristora-4', 'ph-x-cervelo-2', 'ph-training-camp-3', 'ristora-1',
+  'DSC08227', 'PRN04059', '260304-PH-Divise_PHCC-34', 'DSC00026', 'ph-x-cervelo-4',
+  'PRN04158', 'DSC02021', 'DSC00553', '260304-PH-Divise_PHCC-35', 'PRN04242',
+  'DSC08237', 'DSC00422', 'ph-training-camp-3', 'PRN04091', 'PRN09662',
 ];
-// A metà sequenza il Profilo; il Portfolio chiude lo scroll.
-const TEXT_AFTER = { 5: 't-profilo', 11: 't-fine' };
+// Profilo subito dopo la prima foto (seconda scheda); Portfolio dopo la quarta.
+const TEXT_AFTER = { 0: 't-profilo', 3: 't-fine' };
 
 // Scroll infinito: la sequenza (foto + testi) è ripetuta COPIES volte di
 // fila; la posizione si riporta sempre dentro la copia centrale, così
@@ -37,15 +38,17 @@ export function buildTrack(track) {
   return { panels, imgs, perCopy: panels.length / COPIES };
 }
 
-// Titoli delle sezioni a tutta larghezza del pannello: si misura la parola
-// a 100px e si imposta la grandezza come frazione della larghezza (cqi).
+// Titolo a tutta larghezza del suo contenitore: si misura la parola a 100px
+// e si imposta la grandezza come frazione della larghezza (cqi).
+export function fitWidth(h) {
+  h.style.fontSize = '100px';
+  const r = document.createRange(); r.selectNodeContents(h);
+  h.style.fontSize = `calc(100cqi / ${(r.getBoundingClientRect().width / 100).toFixed(4)})`;
+}
+
+// Titoli delle sezioni nello scroll, ognuno a tutta larghezza del pannello.
 export function fitTitles(track) {
-  track.querySelectorAll('.panel.text h2').forEach((h) => {
-    h.style.fontSize = '100px';
-    const r = document.createRange(); r.selectNodeContents(h);
-    const ratio = r.getBoundingClientRect().width / 100;
-    h.style.fontSize = `calc(100cqi / ${ratio.toFixed(4)})`;
-  });
+  track.querySelectorAll('.panel.text h2, .cta-title').forEach(fitWidth);
 }
 
 // Recapiti ricomposti lato client (stesso schema del sito attuale).
