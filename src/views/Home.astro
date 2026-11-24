@@ -92,10 +92,13 @@ const copies = Array.from({ length: COPIES }, (_, c) => c);
 
   const headline = document.getElementById('headline')!;
 
-  // A font caricato: "Portfolio" a tutta larghezza della sua scheda, Profilo
+  // A font caricato: titolo e "Portfolio" a tutta larghezza, Profilo
   // largo fino alla "D" di "Devastante" e testo grande quanto ci sta.
   const titles = [...track.querySelectorAll<HTMLElement>('.cta-title')];
   const fonts = fontsFor([headline, ...titles, document.querySelector('.panel.text p')!]).then(() => {
+    // Il titolo misurato sulla parola vera: riempie la riga con qualsiasi
+    // font (anche quello di riserva) senza uscire dai bordi.
+    fitWidth(headline);
     titles.forEach(fitWidth);
     fitProfile(track, stage, headline);
   });

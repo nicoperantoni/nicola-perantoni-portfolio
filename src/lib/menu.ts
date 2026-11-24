@@ -19,6 +19,27 @@ export function initMenu() {
   let leaving = false;
   let tl: gsap.core.Timeline | null = null;
 
+  // A menu aperto la pagina sotto non scorre: blocco dello scroll, con lo
+  // spazio della barra di scorrimento compensato (niente salto laterale). Il
+  // tasto, che fa parte della testata, viene fissato al suo posto in alto a
+  // sinistra (dove sta a pagina non scorsa), così "Chiudi" è sempre visibile
+  // anche se la pagina era scorsa in giù.
+  const html = document.documentElement;
+  const topbar = btn.parentElement!;
+  const lockPage = () => {
+    const r = btn.getBoundingClientRect();
+    html.style.setProperty('--scrollbar', `${window.innerWidth - html.clientWidth}px`);
+    topbar.style.height = `${topbar.offsetHeight}px`;
+    Object.assign(btn.style, { position: 'fixed', top: `${r.top + window.scrollY}px`, left: `${r.left + window.scrollX}px` });
+    html.classList.add('scroll-locked');
+  };
+  const unlockPage = () => {
+    html.classList.remove('scroll-locked');
+    html.style.removeProperty('--scrollbar');
+    topbar.style.height = '';
+    Object.assign(btn.style, { position: '', top: '', left: '' });
+  };
+
   const setOpen = (value: boolean) => {
     if (value === open || leaving) return;
     open = value;
@@ -28,6 +49,7 @@ export function initMenu() {
     tl?.kill();
     const d = reduced ? 0 : 1;
     if (open) {
+      lockPage();
       menu.hidden = false;
       prefetch();
       tl = gsap
@@ -42,7 +64,7 @@ export function initMenu() {
       items[0]?.focus({ preventScroll: true });
     } else {
       tl = gsap
-        .timeline({ onComplete: () => { menu.hidden = true; } })
+        .timeline({ onComplete: () => { menu.hidden = true; unlockPage(); } })
         .to([lineA, lineB], { y: 0, rotate: 0, duration: 0.35 * d, ease: 'power3.inOut' }, 0)
         .to(items, { yPercent: -105, duration: 0.45 * d, ease: 'expo.in', stagger: 0.03 * d }, 0)
         .to(aside, { autoAlpha: 0, duration: 0.25 * d }, 0)
@@ -125,5 +147,6 @@ export function initMenu() {
     btn.setAttribute('aria-expanded', 'false');
     label.textContent = btn.dataset.open ?? '';
     document.body.classList.remove('menu-open');
+    unlockPage();
   });
 }

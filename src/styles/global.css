@@ -48,6 +48,10 @@ p { margin: 0; }
 .menu-contacts dd { margin: 2px 0 0; font-size: clamp(17px, 1.4vw, 22px); font-weight: 500; letter-spacing: -0.01em; }
 .menu-legal { margin: 0; color: var(--mute); font-size: clamp(13px, 1vw, 15px); line-height: 1.34; white-space: nowrap; }
 .menu[hidden] { display: none; }
+/* Menu aperto: la pagina sotto non scorre (lib/menu.ts); il padding prende
+   il posto della barra di scorrimento, così il contenuto non si sposta. */
+html.scroll-locked { overflow: hidden; padding-right: var(--scrollbar, 0px); }
+html.scroll-locked .menu { overscroll-behavior: contain; }
 .menu-list { margin: 0; padding: 0; list-style: none; }
 .menu-list li { overflow: clip; overflow-clip-margin: 0.04em; }
 .menu-list a { display: block; color: var(--ink); font-family: var(--display); font-weight: 600; font-size: clamp(56px, min(12cqi, 15vh), 190px); line-height: 0.92; transition: color 0.25s; }
@@ -61,7 +65,9 @@ p { margin: 0; }
    come in Illustrator. */
 .headline, .cta-title, .loader-word, .menu-list a { font-variant-ligatures: common-ligatures; font-feature-settings: "salt" 1; }
 
-/* Titolo a tutta larghezza: la grandezza segue la larghezza della testata. */
+/* Titolo a tutta larghezza: la grandezza segue la larghezza della testata.
+   Questo è il valore di partenza; a font caricato lo script lo misura sulla
+   parola (lib/fit.ts), così non esce dai bordi con nessun font. */
 .headline { margin: 0; white-space: nowrap; font-family: var(--display); font-weight: 600; font-size: 10.9cqi; line-height: 0.98; }
 
 /* ---------- scroll orizzontale gigante ---------- */
