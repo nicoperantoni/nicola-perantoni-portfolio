@@ -73,13 +73,12 @@ const [word1, word2] = t.site.name.split(' ');
   import { fitWidth, fontsFor } from '../lib/fit';
 
   const headline = document.getElementById('headline')!;
-  const head = document.querySelector<HTMLElement>('.site-head')!;
-  const scale = initScale(document.getElementById('scale')!, head);
+  const scale = initScale(document.getElementById('scale')!);
   initMenu();
   fillContacts();
 
-  // A font caricato: titolo a tutta larghezza misurato sulla parola, poi la
-  // scala (la sua altezza dipende dalla testata).
+  // A font caricato: titolo a tutta larghezza misurato sulla parola; la scala
+  // si rimisura insieme.
   const place = () => { scale.measure(); scale.render(); };
   place();
   const fonts = fontsFor([headline, document.querySelector('.intro-letter') ?? headline]).then(() => {
