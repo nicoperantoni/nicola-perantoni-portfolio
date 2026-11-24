@@ -1,0 +1,29 @@
+---
+// Contatti in due colonne: a sinistra l'invito, a destra i recapiti.
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ContactList from '../components/ContactList.astro';
+import { useTranslations } from '../i18n/utils';
+import type { Locale } from '../i18n/ui';
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang).contact;
+---
+
+<BaseLayout lang={lang} page="contact" bodyClass="page-sub">
+  <main class="sub-body">
+    <div class="split">
+      <ul class="rows">
+        <li><p>{t.intro}</p></li>
+      </ul>
+      <ContactList lang={lang} variant="rows" />
+    </div>
+  </main>
+</BaseLayout>
+
+<script>
+  import '../lib/subpage';
+</script>

@@ -1,35 +1,43 @@
 ---
+// <head> con meta SEO per pagina e lingua, testata (tasto Menu, lingua,
+// titolo) e menu a tutto schermo condivisi da tutte le pagine.
 import '../styles/global.css';
 import Analytics from '@vercel/analytics/astro';
 import { Font } from 'astro:assets';
-import { useTranslations } from '../i18n/utils';
-import type { Locale } from '../i18n/ui';
+import TopBar from '../components/TopBar.astro';
+import Menu from '../components/Menu.astro';
+import { useTranslations, pagePath, otherLocale } from '../i18n/utils';
+import { locales, type Locale, type Page } from '../i18n/ui';
 
 interface Props {
   lang: Locale;
+  page: Page;
+  /** Classe del <body> (es. "is-loading" in home, "page-sub" nelle pagine interne). */
+  bodyClass?: string;
 }
 
-const { lang } = Astro.props;
+const { lang, page, bodyClass } = Astro.props;
 const t = useTranslations(lang);
+const seo = t.seo.pages[page];
 
-const siteUrl = 'https://www.nicolaperantoni.com';
-const path = lang === 'it' ? '/' : '/en/';
-const canonical = siteUrl + path;
-
-const ogImage = `${siteUrl}/og-image.jpg`;
+const site = Astro.site!;
+const abs = (p: string) => new URL(p, site).href;
+const canonical = abs(pagePath(page, lang));
+const ogImage = abs('/og-image.jpg');
 
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'ProfessionalService',
-  name: 'Nicola Perantoni',
-  description: t.seo.jsonLdDescription,
+  name: t.site.name,
+  description: t.seo.pages.home.description,
   image: ogImage,
-  url: siteUrl,
+  url: abs('/'),
+  email: 'nicola@devastante.studio',
   areaServed: 'IT',
   address: { '@type': 'PostalAddress', addressLocality: 'Verona', addressCountry: 'IT' },
   sameAs: ['https://instagram.com/nicolaperantoni'],
-  founder: { '@type': 'Person', name: 'Nicola Perantoni', jobTitle: t.seo.jsonLdJobTitle },
-  makesOffer: t.seo.jsonLdOffers.map((name) => ({ '@type': 'Offer', itemOffered: { '@type': 'Service', name } })),
+  founder: { '@type': 'Person', name: 'Nicola Perantoni', jobTitle: t.seo.jobTitle },
+  makesOffer: t.seo.offers.map((name) => ({ '@type': 'Offer', itemOffered: { '@type': 'Service', name } })),
 };
 ---
 
@@ -38,48 +46,50 @@ const jsonLd = {
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{t.seo.title}</title>
-    <meta name="description" content={t.seo.description} />
+    <title>{seo.title}</title>
+    <meta name="description" content={seo.description} />
     <meta name="author" content="Nicola Perantoni" />
-    <meta name="robots" content="index, follow" />
-    <meta name="theme-color" content="#afafaf" />
+    <meta name="theme-color" content="#ffffff" />
     <link rel="canonical" href={canonical} />
-    <link rel="alternate" hreflang="it" href={siteUrl + '/'} />
-    <link rel="alternate" hreflang="en" href={siteUrl + '/en/'} />
-    <link rel="alternate" hreflang="x-default" href={siteUrl + '/'} />
+    {locales.map((l) => <link rel="alternate" hreflang={l} href={abs(pagePath(page, l))} />)}
+    <link rel="alternate" hreflang="x-default" href={abs(pagePath(page, 'it'))} />
 
     <meta property="og:type" content="website" />
     <meta property="og:locale" content={t.seo.ogLocale} />
-    <meta property="og:site_name" content="Nicola Perantoni" />
+    <meta property="og:locale:alternate" content={useTranslations(otherLocale(lang)).seo.ogLocale} />
+    <meta property="og:site_name" content={t.site.name} />
     <meta property="og:url" content={canonical} />
-    <meta property="og:title" content={t.seo.title} />
-    <meta property="og:description" content={t.seo.ogDescription} />
+    <meta property="og:title" content={seo.title} />
+    <meta property="og:description" content={seo.description} />
     <meta property="og:image" content={ogImage} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta property="og:image:type" content="image/jpeg" />
     <meta property="og:image:alt" content={t.seo.ogImageAlt} />
-
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content={t.seo.title} />
-    <meta name="twitter:description" content={t.seo.twitterDescription} />
-    <meta name="twitter:image" content={ogImage} />
-    <meta name="twitter:image:alt" content={t.seo.ogImageAlt} />
 
-    <script type="application/ld+json" is:inline set:html={JSON.stringify(jsonLd)} />
+    {page === 'home' && <script type="application/ld+json" is:inline set:html={JSON.stringify(jsonLd)} />}
 
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="icon" href="/favicon.ico" sizes="any" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 
-    <!-- Precaricati solo i font visibili subito nell'hero: Archivo 300
-         (titolo e testo) e Instrument Serif corsivo ("quindi"). -->
-    <Font cssVariable="--font-archivo" preload={[{ weight: 300 }]} />
-    <Font cssVariable="--font-serif-italic" preload />
-    <Font cssVariable="--font-mono" />
+    <!-- Font serviti dal sito: Sora (titoli) e Archivo (testo). -->
+    <Font cssVariable="--font-display" preload />
+    <Font cssVariable="--font-text" preload={[{ weight: 400 }, { weight: 500 }]} />
+    <slot name="head" />
   </head>
-  <body>
-    <slot />
+  <body class={bodyClass}>
+    <slot name="before" />
+    <div class:list={[page === 'home' && 'shell']}>
+      <header class="site-head">
+        <TopBar lang={lang} page={page} />
+        <h1 class="headline" id="headline">{page === 'home' ? t.site.name : t[page].title}</h1>
+      </header>
+      <slot />
+    </div>
+    <Menu lang={lang} page={page} />
+    <slot name="after" />
     <Analytics />
   </body>
 </html>

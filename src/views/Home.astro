@@ -1,0 +1,112 @@
+---
+// Home, condivisa tra "/" e "/en/": loader, titolo e scroll orizzontale
+// infinito con le foto e, in mezzo, le schede Profilo e Portfolio.
+import { Picture } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { useTranslations } from '../i18n/utils';
+import type { Locale } from '../i18n/ui';
+import { HOME_PHOTOS, TEXT_AFTER, COPIES, TRACK_WIDTHS, TRACK_SIZES, photo } from '../data/photos';
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const h = t.home;
+const n = HOME_PHOTOS.length;
+// Solo la copia centrale è letta dagli screen reader e raggiungibile da
+// tastiera; le altre sono ripetizioni per lo scroll infinito.
+const copies = Array.from({ length: COPIES }, (_, c) => c);
+---
+
+<BaseLayout lang={lang} page="home" bodyClass="is-loading">
+  <div class="loader" id="loader" aria-hidden="true" slot="before">
+    <div class="loader-bar" id="loader-bar"></div>
+    <p class="loader-word" id="word-dark">{t.site.name}</p>
+    <p class="loader-word on-bar" id="word-light">{t.site.name}</p>
+  </div>
+
+  <main class="stage" id="stage" tabindex="0" aria-label={h.stageAria}>
+    <div class="track" id="track" data-copies={COPIES}>
+      {
+        copies.map((c) => {
+          const hidden = c !== 1 ? 'true' : undefined;
+          const tab = c !== 1 ? -1 : undefined;
+          return HOME_PHOTOS.map((name, i) => (
+            <>
+              <figure class="panel photo" aria-hidden={hidden} data-copy={c}>
+                <Picture
+                  src={photo(name)}
+                  alt={c === 1 ? h.photoAlt(i + 1, n) : ''}
+                  widths={TRACK_WIDTHS}
+                  sizes={TRACK_SIZES}
+                  formats={['avif']}
+                  fallbackFormat="webp"
+                  loading="eager"
+                  decoding="async"
+                  draggable="false"
+                />
+              </figure>
+              {TEXT_AFTER[i] === 'profile' && (
+                <section class="panel text centered" aria-hidden={hidden}>
+                  <h2>{h.profileTitle}</h2>
+                  <div class="content">
+                    {h.profile.map((p) => <p>{p}</p>)}
+                  </div>
+                </section>
+              )}
+              {TEXT_AFTER[i] === 'portfolio' && (
+                <section class="panel cta" aria-hidden={hidden}>
+                  <div class="cta-inner">
+                    <h2 class="cta-title">{h.portfolioTitle}</h2>
+                    <a class="cta-btn" href={h.portfolioPdf} download tabindex={tab}>
+                      {h.portfolioButton} <span aria-hidden="true">↓</span>
+                    </a>
+                  </div>
+                </section>
+              )}
+            </>
+          ));
+        })
+      }
+    </div>
+  </main>
+
+  <div class="cursor" id="cursor" aria-hidden="true" slot="after">{h.cursor}</div>
+</BaseLayout>
+
+<script>
+  import { initScroll } from '../lib/scroll';
+  import { initCursor } from '../lib/cursor';
+  import { initLoader } from '../lib/loader';
+  import { initMenu } from '../lib/menu';
+  import { initPortfolioCards } from '../lib/portfolio';
+  import { fillContacts } from '../lib/contacts';
+  import { fitWidth, fontsFor } from '../lib/fit';
+
+  const stage = document.getElementById('stage')!;
+  const track = document.getElementById('track')!;
+  const panels = [...track.children] as HTMLElement[];
+  const imgs = [...track.querySelectorAll<HTMLImageElement>('.panel.photo img')];
+  const perCopy = panels.length / Number(track.dataset.copies);
+
+  // Titoli delle schede a tutta larghezza, a font caricato.
+  const titles = [...track.querySelectorAll<HTMLElement>('.panel.text h2, .cta-title')];
+  const fonts = fontsFor([document.getElementById('headline')!, ...titles, document.querySelector('.panel.text p')!]).then(
+    () => titles.forEach(fitWidth),
+  );
+  fillContacts();
+
+  const { layout } = initScroll({ stage, track, panels, imgs, perCopy });
+  initPortfolioCards(track);
+  initMenu();
+  initCursor(stage, document.getElementById('cursor')!);
+  initLoader({
+    title: document.getElementById('word-dark')!.textContent ?? '',
+    images: imgs.filter((img) => img.closest<HTMLElement>('.panel')!.dataset.copy === '1'),
+    fonts,
+    panels,
+    layout,
+  });
+</script>

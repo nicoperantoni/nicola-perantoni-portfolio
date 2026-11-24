@@ -1,0 +1,33 @@
+---
+// Menu a tutto schermo: voci grandi in basso a sinistra, in basso a destra
+// recapiti e, su una riga, copyright e P.IVA. Animazioni in lib/menu.ts.
+import ContactList from './ContactList.astro';
+import { useTranslations, pagePath } from '../i18n/utils';
+import { pages, type Locale, type Page } from '../i18n/ui';
+
+interface Props {
+  lang: Locale;
+  page: Page;
+}
+
+const { lang, page } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<nav class="menu" id="menu" aria-label={t.menu.aria} hidden>
+  <ul class="menu-list">
+    {
+      pages.map((p) => (
+        <li>
+          <a href={pagePath(p, lang)} aria-current={p === page ? 'page' : undefined}>
+            {t.menu.items[p]}
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+  <div class="menu-aside">
+    <ContactList lang={lang} variant="menu" />
+    <p class="menu-legal">{t.site.legal}</p>
+  </div>
+</nav>

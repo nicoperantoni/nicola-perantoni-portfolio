@@ -1,0 +1,25 @@
+---
+// Valore di un recapito. Email e WhatsApp sono vuoti nell'HTML e ricomposti
+// lato client (lib/contacts.ts), così non sono leggibili dai raccoglitori
+// di indirizzi.
+import type { Locale } from '../i18n/ui';
+import { useTranslations } from '../i18n/utils';
+
+interface Props {
+  kind: 'email' | 'wa' | 'ig' | 'loc';
+  lang: Locale;
+}
+
+const { kind, lang } = Astro.props;
+---
+
+{kind === 'email' && <a class="u" href="#" data-email rel="nofollow" />}
+{kind === 'wa' && <a class="u" href="#" data-wa target="_blank" rel="noopener nofollow" />}
+{
+  kind === 'ig' && (
+    <a class="u" href="https://instagram.com/nicolaperantoni" target="_blank" rel="noopener">
+      @nicolaperantoni ↗
+    </a>
+  )
+}
+{kind === 'loc' && useTranslations(lang).contacts.locationValue}

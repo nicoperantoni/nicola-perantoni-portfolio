@@ -1,36 +1,49 @@
-# Nicola Perantoni — Portfolio
+# Studio Devastante
 
 [![Live](https://img.shields.io/badge/live-www.nicolaperantoni.com-black?style=flat-square)](https://www.nicolaperantoni.com)
 [![Astro](https://img.shields.io/badge/Astro-7-black?style=flat-square&logo=astro)](https://astro.build)
 [![TypeScript](https://img.shields.io/badge/TypeScript-strict-black?style=flat-square&logo=typescript)](https://www.typescriptlang.org)
 
-Sito portfolio one-page per **Nicola Perantoni**, fotografo sportivo con base a Verona. La metafora visiva è la cartografia topografica: curve di livello generate proceduralmente su canvas, quote in metri, marker GPS che si muovono lungo le curve e si collegano tra loro con linee di telemetria — un flusso masonry di fotografie verticali interrotto da frasi del manifesto personale.
+Sito di **Studio Devastante**, lo studio fotografico di Nicola Perantoni, con base a Verona. In home c'è uno scroll orizzontale infinito di fotografie, con parallasse dentro ogni foto e le schede Profilo e Portfolio in mezzo. Le pagine interne (Servizi, Manifesto, Contatti) hanno un titolo a tutta larghezza e righe che compaiono scorrendo.
 
 ![Preview](public/og-image.jpg)
-
-**→ [www.nicolaperantoni.com](https://www.nicolaperantoni.com)**
 
 ---
 
 ## Stack
 
-Sito statico, zero backend, zero framework UI — solo quanto serve:
+Sito statico, zero backend, nessun framework UI:
 
-- **[Astro](https://astro.build)** (output statico) + **TypeScript** per markup e componenti
-- Nessun React/Vue/Svelte: gli interattivi (canvas, reveal, lightbox, masonry) sono moduli **TypeScript vanilla**, ognuno isolato e senza dipendenze dal framework
-- **`astro:assets`** (`<Picture>`) per varianti responsive AVIF/WebP con `srcset`
-- **`@astrojs/sitemap`** per la sitemap generata a build
-- CSS puro con custom properties per i design token — niente Tailwind
-- Deploy su **Vercel**, dominio custom su Tophost
+- **[Astro](https://astro.build)** (output statico) + **TypeScript** strict
+- **[GSAP](https://gsap.com)** con ScrambleTextPlugin per le animazioni (loader, menu, scheda Portfolio, foto dei servizi)
+- **`astro:assets`** (`<Picture>`): foto in AVIF con fallback WebP, a più larghezze con `srcset`
+- **Fonts API di Astro**: Sora e Archivo scaricati in build e serviti dal sito
+- **`@astrojs/sitemap`** per la sitemap
+- CSS puro con custom properties, niente Tailwind
+- Deploy su **Vercel**, con Vercel Analytics
+
+## Pagine
+
+| Pagina | Italiano | Inglese |
+|---|---|---|
+| Home | `/` | `/en/` |
+| Servizi | `/servizi/` | `/en/services/` |
+| Manifesto | `/manifesto/` | `/en/manifesto/` |
+| Contatti | `/contatti/` | `/en/contact/` |
+
+Ogni pagina ha il proprio canonical, gli hreflang verso l'altra lingua, Open Graph e (in home) JSON-LD `ProfessionalService`.
 
 ## Funzionalità
 
-- **Mappa topografica animata** — value noise deterministico, marching squares per le curve di livello, marker GPS che percorrono le curve, etichette con coordinate/attività in scramble, linee di telemetria tra marker
-- **Flusso fotografico masonry** — 3/2/1 colonne responsive, note del manifesto interlacciate, reveal allo scroll con "contour wipe" sulle foto e righe di testo che salgono riga per riga
-- **Lightbox** con navigazione da tastiera e contatore
-- **`prefers-reduced-motion`** rispettato ovunque: mappa a singolo frame, niente wipe/scramble/parallasse
-- **Italiano / Inglese** — routing i18n nativo di Astro (`/` italiano, `/en/` inglese), hreflang e sitemap multilingua, switcher fisso in alto a destra
-- **SEO completa**: meta assoluti, Open Graph, Twitter card, JSON-LD `ProfessionalService`, sitemap con hreflang, robots.txt, favicon, preview social dedicata
+- **Loader**: il titolo si rimescola (ScrambleText) mentre una barra nera avanza con il caricamento reale di font e foto. Alla fine il titolo vola al suo posto e le foto salgono dal basso.
+- **Scroll orizzontale infinito**: rotella, trascinamento e frecce su desktop (con inerzia), scroll nativo su telefono. La sequenza è ripetuta tre volte e la posizione resta sempre nella copia centrale.
+- **Parallasse**: ogni foto è larga il 140% della sua scheda e scorre al suo interno.
+- **Scheda Portfolio**: col mouse la scritta cade con un rimbalzo e compare il pulsante per scaricare il PDF; su touch basta il primo tocco.
+- **Servizi**: col mouse compare la foto del servizio, che segue il puntatore; su telefono la foto è nella riga.
+- **Menu a tutto schermo** con voci grandi, recapiti, copyright e P.IVA.
+- **Cursore "← Scorri →"** sullo scroll della home (solo mouse).
+- **`prefers-reduced-motion`** rispettato ovunque.
+- Email e numero WhatsApp ricomposti lato client, per non esporli ai raccoglitori di indirizzi.
 
 ## Sviluppo
 
@@ -42,9 +55,7 @@ npm run preview  # serve la build di produzione
 npm run check    # type-check (astro check)
 ```
 
-Richiede Node **18.20.8 / 20.3+ / 22+**.
-
-Script accessori (rigenerano gli asset in `public/`, non servono per lo sviluppo quotidiano):
+Script accessori, che rigenerano gli asset in `public/`:
 
 ```bash
 npm run icons     # favicon.ico + apple-touch-icon.png da favicon.svg
@@ -55,87 +66,48 @@ npm run og-image  # preview social 1200×630
 
 ```
 src/
-├── components/       # un componente Astro per sezione (Hero, Work, Studio, Contacts, Footer, Veil, Lightbox, LangSwitch)
+├── pages/            # solo le rotte: ognuna monta una vista con la lingua (it / en)
+├── views/            # Home, Services, Manifesto, Contact: corpo delle pagine, condiviso tra le lingue
 ├── layouts/
-│   ├── BaseLayout.astro   # <head>, meta SEO, JSON-LD, hreflang (per lingua)
-│   └── Home.astro          # corpo della home, condiviso tra le due pagine di lingua
-├── lib/               # logica client-side, vanilla TS, framework-agnostic
-│   ├── topo-map.ts        # mappa topografica — vedi sotto
-│   ├── reveal.ts           # IntersectionObserver + split delle righe di testo
-│   ├── flow-layout.ts      # masonry responsive
-│   ├── lightbox.ts
-│   ├── word-cycle.ts       # parola rotante dell'hero (Web Animations API)
-│   └── veil.ts              # overlay di caricamento + preload foto
+│   └── BaseLayout.astro   # <head> e SEO, testata (Menu, lingua, titolo), menu
+├── components/       # TopBar, Menu, ContactList, ContactValue
+├── lib/              # logica client-side in TypeScript (GSAP)
+│   ├── loader.ts          # loader con ScrambleText e barra di avanzamento
+│   ├── scroll.ts          # scroll orizzontale infinito e parallasse
+│   ├── portfolio.ts       # scheda Portfolio
+│   ├── menu.ts            # menu a tutto schermo
+│   ├── cursor.ts          # cursore personalizzato
+│   ├── service-preview.ts # foto dei servizi che segue il puntatore
+│   ├── subpage.ts         # pagine interne: titolo e righe che compaiono
+│   ├── fit.ts             # titoli a tutta larghezza (cqi)
+│   ├── contacts.ts        # email e WhatsApp ricomposti lato client
+│   └── env.ts             # preferenze del dispositivo
 ├── i18n/
-│   ├── ui.ts           # dizionario di tutti i testi, per lingua (it/en)
-│   └── utils.ts        # useTranslations(lang), alternatePath(lang)
+│   ├── ui.ts          # tutti i testi per lingua e i percorsi delle pagine
+│   └── utils.ts
 ├── data/
-│   └── content.ts     # progetti, algoritmo del flusso (testi letti da i18n/ui.ts)
-├── styles/
-│   └── global.css     # design token, keyframes, prefers-reduced-motion
-└── pages/
-    ├── index.astro     # "/" — italiano (lingua di default)
-    └── en/
-        └── index.astro # "/en/" — inglese
+│   └── photos.ts      # sequenza delle foto in home e loro dimensioni
+├── assets/photos/     # foto sorgenti (WebP), ottimizzate in build
+└── styles/
+    └── global.css     # design token e stili
 ```
 
-## Design token
+Per cambiare le foto della home basta modificare `HOME_PHOTOS` in [`src/data/photos.ts`](src/data/photos.ts) e mettere i file in `src/assets/photos/`. Tutti i testi sono in [`src/i18n/ui.ts`](src/i18n/ui.ts).
 
-### Colori
+## Design
 
-| Ruolo | Valore |
-|---|---|
-| Sfondo pagina | `rgb(175, 175, 175)` |
-| Testo principale | `#101114` |
-| Testo secondario | `rgba(16, 17, 20, 0.68)` |
-| Testo tenue | `rgba(16, 17, 20, 0.55)` |
-| Testo tenue (min) | `rgba(16, 17, 20, 0.45)` |
-| Card servizi | `rgba(16, 17, 20, 0.07)` |
-| Pannello hero | `#000000` |
-| Lightbox | `rgba(12, 12, 14, 0.95)` |
-| Testo su nero | `#ffffff` |
-| Testo su nero (secondario) | `rgba(255, 255, 255, 0.66)` |
-| **Accento** (mappa, marker, link) | `#c8b892` |
-
-Alternative per l'accento della mappa (prop `accent` del modulo): `#5ee08a` · `#e8912f` · `#9fb8c8`.
-
-### Tipografia
-
-- **[Archivo](https://fonts.google.com/specimen/Archivo)** 300/400/500/600 — corpo del sito, peso base **300**
-- **[IBM Plex Mono](https://fonts.google.com/specimen/IBM+Plex+Mono)** 400/500 — dati, etichette, contatti
-- **[Instrument Serif](https://fonts.google.com/specimen/Instrument+Serif)** italic — accenti editoriali nei titoli
-
-### Motion
-
-Easing firma `cubic-bezier(.2,.7,.2,1)` su reveal, wipe e righe di testo. Durate ricorrenti: 320ms (lightbox), 550ms (veil), 820ms (righe), 850ms (revealUp), 1150ms (contour wipe), 1900ms (parola rotante).
-
-## Il modulo mappa topografica
-
-La logica del canvas vive isolata in [`src/lib/topo-map.ts`](src/lib/topo-map.ts) — nessun import da Astro o da altro codice del sito, riusabile così com'è in qualsiasi progetto:
-
-```ts
-import { createTopoMap } from './lib/topo-map';
-
-const controller = createTopoMap(staticCanvas, markerCanvas, {
-  accent: '#c8b892',   // colore marker, etichette e linee
-  markers: 10,         // int 0–16, numero di marker GPS
-  showElevation: true, // mostra/nasconde le quote sulle curve
-});
-
-controller.setOptions({ accent: '#5ee08a' }); // ridisegna con i nuovi parametri
-controller.destroy();                          // ferma il loop e rimuove i listener
-```
-
-Rispetta `prefers-reduced-motion` internamente: disegna un solo frame, senza marker in movimento né linee/etichette animate.
+- **Colori**: testo `#111112` su bianco, grigio `#8a8a8a` per le parti secondarie.
+- **Tipografia**: [Sora](https://fonts.google.com/specimen/Sora) 600 per i titoli; [Archivo](https://fonts.google.com/specimen/Archivo) 400/500/600 per il testo.
+- **Titoli a tutta larghezza**: la grandezza è calcolata in `cqi` misurando la parola, così riempie esattamente la riga a ogni schermo.
 
 ## Deploy
 
-Push su `main` → build e deploy automatico su **Vercel**. Dominio `nicolaperantoni.com` gestito su Tophost, con redirect 308 dall'apex a `www.nicolaperantoni.com` (host canonico usato in tutti gli URL assoluti/SEO).
+Push su `main` → build e deploy automatico su **Vercel**. Il dominio canonico è impostato in `site` di [`astro.config.mjs`](astro.config.mjs) (e nella riga `Sitemap:` di `public/robots.txt`).
 
 ## Crediti fotografici
 
-Fotografie di Nicola Perantoni per **PH Apparel × Cérvelo**, **Zullo Bike**, **Ristora**, **PH Apparel Spring Camp** — tutti i diritti riservati.
+Fotografie di Nicola Perantoni, tutti i diritti riservati.
 
 ---
 
-© 2026 Nicola Perantoni
+© 2026 Studio Devastante di Nicola Perantoni

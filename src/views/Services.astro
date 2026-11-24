@@ -1,0 +1,56 @@
+---
+// Servizi: nome grande e descrizione. Col mouse compare la foto del
+// servizio che segue il puntatore; sul telefono la foto è nella riga.
+import { Picture, getImage } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { useTranslations } from '../i18n/utils';
+import type { Locale } from '../i18n/ui';
+import { photo } from '../data/photos';
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang).services;
+// Foto che segue il puntatore: una sola variante, larga quanto basta
+// (fino a 340px a schermo, x2 per gli schermi ad alta densità).
+const items = await Promise.all(
+  t.items.map(async (s) => ({
+    ...s,
+    preview: (await getImage({ src: photo(s.photo), width: 720, format: 'webp' })).src,
+  })),
+);
+---
+
+<BaseLayout lang={lang} page="services" bodyClass="page-sub">
+  <main class="sub-body">
+    <ol class="rows svc-list">
+      {
+        items.map((s, i) => (
+          <li class="svc" data-img={s.preview}>
+            <span class="num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+            <div>
+              <p>{s.title}</p>
+              <p class="svc-desc">{s.desc}</p>
+              <Picture
+                class="svc-thumb"
+                src={photo(s.photo)}
+                alt=""
+                widths={[360, 520, 720]}
+                sizes="min(60vw, 260px)"
+                formats={['avif']}
+                fallbackFormat="webp"
+              />
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+  </main>
+  <div class="svc-preview" aria-hidden="true" slot="after"></div>
+</BaseLayout>
+
+<script>
+  import '../lib/subpage';
+</script>

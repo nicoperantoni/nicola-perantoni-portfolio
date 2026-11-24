@@ -1,186 +1,171 @@
-/* Design tokens — vedi README "Design Tokens" per i valori di riferimento. */
+/* Stili di tutto il sito: design token, testata, menu, scroll della home,
+   loader e pagine interne. */
 :root {
-  --color-bg: #faf8f5;
-  --color-text: #101114;
-  --color-text-secondary: rgba(16, 17, 20, 0.68);
-  --color-text-tertiary: rgba(16, 17, 20, 0.72);
-  --color-text-quaternary: rgba(16, 17, 20, 0.45);
-  --color-card: rgba(16, 17, 20, 0.07);
+  --ink: #111112;
+  --mute: #8a8a8a;
+  --bg: #ffffff;
+  --pad: 14px;
+  /* Spazio verticale tra titolo e foto, ripetuto sotto le foto. */
+  --pad-v: clamp(16px, 2.6vh, 32px);
+  --gap: clamp(32px, 3.4vw, 56px);
+  --radius: clamp(8px, 1vw, 14px);
+  /* Sora per i titoli, Archivo per il corpo del testo (font serviti dal
+     sito, definiti in astro.config.mjs). */
+  --display: var(--font-display);
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font-text); font-size: 12.5px; line-height: 1.32; -webkit-font-smoothing: antialiased; }
+a { color: inherit; text-decoration: none; }
+a.u { text-decoration: underline; text-underline-offset: 2px; }
+a.u:hover { text-decoration-thickness: 2px; }
+p { margin: 0; }
 
-  --color-panel: #000000;
-  --color-lightbox-bg: rgba(12, 12, 14, 0.95);
-  --color-on-dark: #ffffff;
-  --color-on-dark-secondary: rgba(255, 255, 255, 0.66);
-  --color-on-dark-tertiary: rgba(255, 255, 255, 0.62);
+/* Desktop: tutto in una schermata. Testata in alto, sotto lo scroll
+   orizzontale a tutta larghezza con foto e testi. */
+.shell { display: grid; grid-template-rows: auto minmax(0, 1fr); height: 100dvh; }
 
-  --color-accent: #c8b892;
+/* Testata: solo il titolo, in alto; poco spazio sotto così foto e testi
+   hanno più altezza. */
+.site-head { padding: var(--pad) var(--pad) var(--pad-v); container-type: inline-size; text-align: center; }
+/* Riga sopra al titolo con il tasto Menu a sinistra. Il tasto resta sopra
+   al menu aperto (z-index) e diventa "Chiudi". */
+.topbar { display: flex; align-items: center; margin-bottom: 8px; }
+.menu-btn { position: relative; z-index: 60; display: inline-flex; align-items: center; gap: 10px; margin: 0; padding: 4px 0; border: 0; background: none; color: var(--ink); font: inherit; font-size: 18px; font-weight: 500; line-height: 1; cursor: pointer; }
+.menu-icon { position: relative; width: 22px; height: 12px; }
+.menu-icon i { position: absolute; left: 0; width: 100%; height: 2px; background: currentColor; border-radius: 1px; }
+.menu-icon i:first-child { top: 0; }
+.menu-icon i:last-child { bottom: 0; }
+.menu-btn:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; border-radius: 2px; }
 
-  /* --font-archivo, --font-mono, --font-serif-italic: definiti dal
-     componente <Font /> (BaseLayout.astro) a partire da astro.config.mjs. */
+/* Menu a tutto schermo: voci grandi in basso a sinistra. */
+.menu { position: fixed; inset: 0; z-index: 40; display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; padding: var(--pad) var(--pad) var(--pad-v); background: var(--bg); container-type: inline-size; }
+/* In basso a destra: recapiti su una colonna e, sotto, copyright e P.IVA
+   su una sola riga; il blocco è allineato al fondo delle voci. */
+.menu-aside { display: flex; flex-direction: column; gap: clamp(20px, 3vh, 32px); }
+.menu-contacts { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; margin: 0; }
+.menu-contacts dt { color: var(--mute); font-size: clamp(13px, 1vw, 15px); }
+.menu-contacts dd { margin: 2px 0 0; font-size: clamp(17px, 1.4vw, 22px); font-weight: 500; letter-spacing: -0.01em; }
+.menu-legal { margin: 0; color: var(--mute); font-size: clamp(13px, 1vw, 15px); line-height: 1.34; white-space: nowrap; }
+.menu[hidden] { display: none; }
+.menu-list { margin: 0; padding: 0; list-style: none; }
+.menu-list li { overflow: clip; overflow-clip-margin: 0.04em; }
+.menu-list a { display: block; color: var(--ink); font-family: var(--display); font-weight: 600; font-size: clamp(56px, min(12cqi, 15vh), 190px); line-height: 0.92; letter-spacing: -0.035em; transition: color 0.25s; }
+.menu-list:hover a:not(:hover), .menu-list:has(:focus-visible) a:not(:focus-visible) { color: var(--mute); }
+.menu-list a:focus-visible { outline: none; }
+/* Pagina corrente: in grigio, come "sei qui". */
+.menu-list a[aria-current="page"] { color: var(--mute); cursor: default; }
 
-  --ease-signature: cubic-bezier(0.2, 0.7, 0.2, 1);
+/* Titolo a tutta larghezza: la grandezza segue la larghezza della testata. */
+.headline { margin: 0; white-space: nowrap; font-family: var(--display); font-weight: 600; font-size: 11.2cqi; line-height: 0.98; letter-spacing: -0.035em; }
 
-  --space-section-y: clamp(56px, 9vh, 120px);
-  --space-section-x: calc(clamp(18px, 5vw, 64px) + 44px);
+/* ---------- scroll orizzontale gigante ---------- */
+.stage { position: relative; min-height: 0; margin: 0 var(--pad) var(--pad-v); overflow: hidden; outline: none; touch-action: pan-y; user-select: none; }
+.stage.fine { cursor: none; }
+.track { display: flex; gap: var(--gap); height: 100%; width: max-content; will-change: transform; }
+.panel { position: relative; flex: none; height: 100%; margin: 0; overflow: hidden; }
+.panel.photo { aspect-ratio: 2 / 3; background: #f0f0f0; border-radius: var(--radius); }
+/* Foto più larga della cornice: lo spazio in più serve alla parallasse. */
+.panel.photo img { position: absolute; top: 0; left: -20%; width: 140%; height: 100%; object-fit: cover; will-change: transform; -webkit-user-drag: none; pointer-events: none; }
+
+/* Pannelli di testo tra una foto e l'altra (ex colonna destra). */
+/* Titolo di sezione nero, a tutta larghezza del pannello: la grandezza è
+   in cqi (rispetto al pannello) e il rapporto larghezza/grandezza di ogni
+   parola è misurato via JS, così ogni titolo riempie esattamente la riga.
+   Spaziatura più aperta del titolo grande e niente legature, così f-i e
+   r-t non si toccano (vale anche per "Portfolio" in .cta-title). */
+.panel.text { width: clamp(300px, 30vw, 500px); display: flex; flex-direction: column; font-size: clamp(15px, 1.25vw, 19px); line-height: 1.34; user-select: text; container-type: inline-size; }
+.panel.text h2 { margin: 0; white-space: nowrap; font-family: var(--display); font-size: 20cqi; font-weight: 600; line-height: 0.82; letter-spacing: -0.01em; font-variant-ligatures: no-common-ligatures; }
+.panel.text .content { display: flex; flex-direction: column; gap: 16px; }
+/* Profilo e Portfolio: titolo e testo centrati nella scheda. */
+.panel.text.centered { text-align: center; }
+.lang { display: flex; gap: 12px; margin: 0 0 0 auto; font-size: 18px; font-weight: 500; line-height: 1; }
+.lang .on { text-decoration: underline; text-underline-offset: 2px; }
+/* L'altra lingua in grigio e senza sottolineatura, così si capisce quale è attiva. */
+.lang a.u { color: var(--mute); text-decoration: none; transition: color 0.2s; }
+.lang a.u:hover { color: var(--ink); }
+/* Titolo in fondo al pannello: il fondo delle lettere tonde (o, S, C, che
+   in Sora scendono di 0,019em sotto la linea di base) tocca la base delle foto senza
+   essere tagliato. Corpo del testo centrato nello spazio sopra al titolo. */
+.panel.text > h2 { order: 2; margin-bottom: -0.054em; }
+.panel.text > h2 + * { margin-block: auto; }
+
+/* Cursore personalizzato sul palco. */
+.cursor { position: fixed; left: 0; top: 0; z-index: 50; pointer-events: none; padding: 7px 12px; border-radius: 999px; background: var(--ink); color: #fff; font-size: 12px; white-space: nowrap; opacity: 0; }
+
+/* Scheda Portfolio: stesse proporzioni di una foto, fondo nero, "Portfolio"
+   bianco al centro. Il pulsante sta al centro, nascosto finché la scritta
+   non cade (animazione in js/portfolio.js). */
+.panel.cta { aspect-ratio: 2 / 3; background: var(--ink); color: #fff; border-radius: var(--radius); cursor: pointer; }
+/* Contenuto in un livello assoluto: la larghezza della scheda dipende solo
+   dall'altezza (2:3), non dal titolo, che a sua volta si adatta alla scheda. */
+.cta-inner { position: absolute; inset: 0; display: grid; place-items: center; padding: 0 8%; container-type: inline-size; }
+.cta-title { grid-area: 1 / 1; margin: 0; width: 100%; white-space: nowrap; text-align: center; font-family: var(--display); font-weight: 600; font-size: 20cqi; line-height: 0.9; letter-spacing: -0.01em; font-variant-ligatures: no-common-ligatures; color: #fff; will-change: transform; }
+.cta-btn { grid-area: 1 / 1; display: inline-flex; align-items: center; gap: 0.5em; padding: 0.9em 1.4em; border-radius: 999px; background: #fff; color: var(--ink); font-size: clamp(15px, 1.25vw, 19px); font-weight: 500; white-space: nowrap; opacity: 0; visibility: hidden; transform: scale(0.3); }
+.cta-btn:focus-visible { outline: 2px solid #fff; outline-offset: 4px; }
+
+/* ---------- loader ---------- */
+/* Due copie del titolo sovrapposte: nera sullo sfondo bianco, bianca
+   ritagliata (clip-path) esattamente sulla porzione coperta dalla barra. */
+.loader { position: fixed; inset: 0; z-index: 100; padding: 0 var(--pad); background: var(--bg); pointer-events: none; container-type: inline-size; }
+.loader-bar { position: absolute; inset: 0; background: var(--ink); clip-path: inset(0 100% 0 0); }
+/* Nel loader il titolo è più piccolo: le lettere casuali dello scramble
+   sono più larghe e a piena grandezza uscirebbero dallo schermo. A fine
+   caricamento cresce fino a tutta larghezza mentre sale. */
+.loader-word { position: absolute; left: 50%; top: 50%; margin: 0; white-space: nowrap; font-family: var(--display); font-weight: 600; font-size: 9cqi; line-height: 0.98; letter-spacing: -0.035em; transform: translate(-50%, -50%); }
+.loader-word.on-bar { color: #fff; clip-path: inset(0 100% 0 0); }
+.is-loading .site-head, .is-loading .stage { visibility: hidden; }
+
+/* ---------- pagine interne (Servizi, Manifesto, Contatti) ---------- */
+/* Titolo nascosto finché il font è pronto e la grandezza è calcolata. */
+.page-sub:not(.is-ready) .headline { visibility: hidden; }
+.sub-body { padding: 0 var(--pad) clamp(80px, 14vh, 160px); }
+.rows { margin: 0; padding: 0; list-style: none; }
+/* Ogni riga: etichetta o numero a sinistra, testo grande a destra, riga sopra che si
+   allunga quando il punto entra nello schermo (--line da 0 a 1). */
+.rows > li { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 3fr); gap: var(--gap); padding: clamp(18px, 2.4vh, 28px) 0 clamp(48px, 9vh, 110px); }
+.rows > li::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 1px; background: var(--ink); transform: scaleX(var(--line, 1)); transform-origin: left; }
+.rows .num { font-size: clamp(15px, 1.25vw, 19px); font-weight: 500; color: var(--mute); }
+.rows p { font-size: clamp(28px, 3.6vw, 60px); font-weight: 600; line-height: 1.04; letter-spacing: -0.03em; text-wrap: pretty; overflow-wrap: anywhere; }
+
+/* Contatti divisi in due colonne: invito a sinistra, recapiti a destra.
+   Nelle colonne l'etichetta va sopra al valore e i recapiti sono più piccoli. */
+.split { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--gap); align-items: start; }
+.split .rows > li { grid-template-columns: minmax(0, 1fr); gap: 8px; }
+.rows-info > li { padding-bottom: clamp(28px, 4vh, 48px); }
+.rows-info p { font-size: clamp(24px, 2.4vw, 40px); }
+
+/* Servizi: nome grande, descrizione piccola in grigio. Col mouse, passando
+   su un servizio gli altri si attenuano e compare una foto che segue il
+   puntatore; sui dispositivi touch la foto è dentro la riga. */
+.svc-list > li { padding-bottom: clamp(28px, 5vh, 56px); }
+.rows .svc-desc { margin-top: 10px; font-size: clamp(15px, 1.25vw, 19px); font-weight: 400; line-height: 1.34; letter-spacing: 0; color: var(--mute); }
+.svc-list .svc > div > p:first-child { transition: color 0.3s; }
+.svc-thumb { display: none; }
+.svc-preview { position: fixed; left: 0; top: 0; z-index: 30; width: clamp(220px, 20vw, 340px); aspect-ratio: 2 / 3; overflow: hidden; border-radius: var(--radius); pointer-events: none; visibility: hidden; }
+.svc-preview img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+@media (hover: hover) and (pointer: fine) {
+  .svc-list:hover .svc:not(:hover) > div > p:first-child { color: var(--mute); }
+}
+@media not ((hover: hover) and (pointer: fine)) {
+  .svc-preview { display: none; }
+  .svc-thumb { display: block; width: min(60%, 260px); height: auto; aspect-ratio: 2 / 3; margin-top: 16px; object-fit: cover; border-radius: var(--radius); }
 }
 
-html {
-  height: auto;
-  scroll-behavior: smooth;
-}
-
-body {
-  margin: 0;
-  padding: 0;
-  background: var(--color-bg);
-  color: var(--color-text);
-  font-family: var(--font-archivo);
-  font-weight: 300;
-}
-
-body::-webkit-scrollbar {
-  width: 0;
-  height: 0;
-}
-
-* {
-  box-sizing: border-box;
-}
-
-a {
-  color: inherit;
-  text-decoration: none;
-}
-
-img {
-  max-width: 100%;
-}
-
-/* ---------- keyframes ---------- */
-
-/* Parte da 0.01, non da 0: Chrome ignora per l'LCP il testo dipinto a
-   opacità 0 e non lo riconsidera a fine dissolvenza. Con i font self-hosted
-   (pronti prima della dissolvenza) l'LCP finiva sul primo cambio della
-   parola dell'hero, ~2 s dopo. A occhio 0.01 e 0 sono identici. */
-@keyframes riseIn {
-  from { opacity: 0.01; transform: translateY(18px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes glyphSpin {
-  to { transform: rotate(360deg); }
-}
-
-@keyframes revealUp {
-  from { opacity: 0; transform: translateY(24px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes veilOut {
-  to { opacity: 0; visibility: hidden; }
-}
-
-@keyframes contourWipe {
-  0% {
-    opacity: 0;
-    mask-size: 100% 9px;
-    -webkit-mask-size: 100% 9px;
-    transform: rotateX(10deg) rotateY(-5deg) translateZ(-120px) scale(1.05);
-  }
-  30% { opacity: 1; }
-  100% {
-    opacity: 1;
-    mask-size: 100% 320%;
-    -webkit-mask-size: 100% 320%;
-    transform: rotateX(0deg) rotateY(0deg) translateZ(0) scale(1);
-  }
-}
-
-@keyframes textTilt {
-  from { transform: rotateX(9deg) translateZ(-90px); }
-  to { transform: rotateX(0deg) translateZ(0); }
-}
-
-/* ---------- reveal allo scroll ---------- */
-
-[data-seen='1'] {
-  animation: revealUp 0.85s var(--ease-signature) both;
-}
-
-.shot {
-  transform: none;
-}
-
-.shot:has([data-lines-src]) {
-  transform-style: preserve-3d;
-}
-
-.shot[data-seen='1']:has([data-lines-src]) {
-  animation: textTilt 1s var(--ease-signature) both;
-}
-
-.shot[data-seen='1'] {
-  animation: none;
-}
-
-.shot[data-reveal] img {
-  mask-image: linear-gradient(to bottom, #000 0 46%, transparent 46%);
-  -webkit-mask-image: linear-gradient(to bottom, #000 0 46%, transparent 46%);
-  mask-repeat: repeat;
-  -webkit-mask-repeat: repeat;
-  mask-size: 100% 320%;
-  -webkit-mask-size: 100% 320%;
-}
-
-.shot[data-reveal]:not([data-seen]) img {
-  opacity: 0;
-}
-
-.shot[data-seen='1'] img {
-  animation: contourWipe 1.15s var(--ease-signature) both;
-  transform-origin: 50% 60%;
-}
-
-/* ---------- prefers-reduced-motion ---------- */
-
-@media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
-
-  *, *::before, *::after {
-    animation-duration: 0.001ms !important;
-    animation-delay: 0ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.001ms !important;
-  }
-
-  .shot[data-reveal] img,
-  .shot[data-seen='1'] img {
-    mask-image: none !important;
-    -webkit-mask-image: none !important;
-    animation: none !important;
-    opacity: 1 !important;
-    transform: none !important;
-  }
-
-  .shot[data-reveal]:not([data-seen]) img {
-    opacity: 1 !important;
-  }
-
-  .shot,
-  .shot[data-seen='1']:has([data-lines-src]) {
-    transform: none !important;
-    transition: none !important;
-    animation: none !important;
-  }
-
-  [data-seen='1'] {
-    animation: none !important;
-  }
-
-  [data-lines-src] > span > span {
-    transform: translateY(0) !important;
-    transition: none !important;
-  }
+@media (max-width: 900px) {
+  .shell { height: 100svh; }
+  /* Scroll nativo col dito, con la stessa parallasse. */
+  .stage { overflow-x: auto; overflow-y: hidden; scrollbar-width: none; touch-action: pan-x pan-y; scroll-snap-type: x mandatory; }
+  .stage::-webkit-scrollbar { display: none; }
+  .panel { scroll-snap-align: start; }
+  .panel.text { width: 78vw; }
+  .track { gap: 16px; }
+  .menu-list a { font-size: 20cqi; }
+  /* Su telefono il copyright va sotto alle voci, a sinistra. */
+  .menu { flex-direction: column; align-items: flex-start; justify-content: flex-end; }
+  .menu-aside { margin-top: 32px; }
+  .menu-contacts { gap: 12px; }
+  /* Una sola riga anche sul telefono: il corpo si riduce quanto basta. */
+  .menu-legal { font-size: min(13px, calc((100vw - 2 * var(--pad)) / 31.5)); }
+  .rows > li { grid-template-columns: minmax(0, 1fr); gap: 12px; }
+  .split { grid-template-columns: minmax(0, 1fr); gap: 0; }
 }

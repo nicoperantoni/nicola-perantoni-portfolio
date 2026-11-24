@@ -1,0 +1,32 @@
+---
+// Manifesto: cinque punti numerati che compaiono scorrendo.
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { useTranslations } from '../i18n/utils';
+import type { Locale } from '../i18n/ui';
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang).manifesto;
+---
+
+<BaseLayout lang={lang} page="manifesto" bodyClass="page-sub">
+  <main class="sub-body">
+    <ol class="rows">
+      {
+        t.points.map((p, i) => (
+          <li>
+            <span class="num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+            <p>{p}</p>
+          </li>
+        ))
+      }
+    </ol>
+  </main>
+</BaseLayout>
+
+<script>
+  import '../lib/subpage';
+</script>
