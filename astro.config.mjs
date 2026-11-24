@@ -1,20 +1,27 @@
 import { defineConfig, fontProviders } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
+import { routes } from './src/i18n/ui';
+
+// Dominio canonico: da qui derivano URL assoluti, hreflang, Open Graph e sitemap.
+const SITE = 'https://devastante.studio';
 
 export default defineConfig({
-  // Dominio canonico: da qui derivano URL assoluti, hreflang, Open Graph e sitemap.
-  site: 'https://devastante.studio',
+  site: SITE,
   // Font scaricati da Google in fase di build e serviti dal sito stesso, con
-  // fallback dalle metriche allineate. Solo i pesi usati.
+  // fallback dalle metriche allineate. Solo i pesi usati: Space Grotesk per i
+  // titoli, Archivo per il testo.
   fonts: [
     {
-      provider: fontProviders.google(),
-      name: 'Sora',
+      // Space Grotesk dal progetto originale (OFL, licenza accanto al file):
+      // la versione di Google Fonts non ha le alternative stilistiche (salt).
+      // Peso 600 e caratteri latini, con tutte le funzioni OpenType.
+      provider: fontProviders.local(),
+      name: 'Space Grotesk',
       cssVariable: '--font-display',
-      // Solo titoli: titolo grande, Profilo/Portfolio, loader, voci del menu.
-      weights: [600],
-      styles: ['normal'],
-      subsets: ['latin'],
+      // Solo titoli: titolo grande, Portfolio, loader, voci del menu.
+      options: {
+        variants: [{ src: ['./src/assets/fonts/SpaceGrotesk-SemiBold.woff2'], weight: 600, style: 'normal' }],
+      },
       fallbacks: ['Helvetica', 'Arial', 'sans-serif'],
     },
     {
@@ -34,8 +41,27 @@ export default defineConfig({
       prefixDefaultLocale: false,
     },
   },
-  // Le alternative di lingua stanno nell'<head> di ogni pagina (hreflang): la
-  // sitemap non le ripete, perché i percorsi tradotti (/servizi/ ↔
-  // /en/services/) non seguono lo schema che l'integrazione presume.
-  integrations: [sitemap()],
+  integrations: [
+    // Sitemap (sitemap-index.xml + sitemap-0.xml, indicata in robots.txt e
+    // nell'<head>). Per ogni pagina: data della build e versioni nelle due
+    // lingue. Le alternative si aggiungono qui dalla tabella dei percorsi,
+    // perché quelli tradotti (/servizi/ ↔ /en/services/) non seguono lo
+    // schema che l'opzione i18n dell'integrazione presume.
+    sitemap({
+      lastmod: new Date(),
+      serialize(item) {
+        const path = new URL(item.url).pathname;
+        const page = Object.values(routes).find((r) => r.it === path || r.en === path);
+        if (page) {
+          const abs = (p) => new URL(p, SITE).href;
+          item.links = [
+            { lang: 'it', url: abs(page.it) },
+            { lang: 'en', url: abs(page.en) },
+            { lang: 'x-default', url: abs(page.it) },
+          ];
+        }
+        return item;
+      },
+    }),
+  ],
 });

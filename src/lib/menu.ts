@@ -29,6 +29,7 @@ export function initMenu() {
     const d = reduced ? 0 : 1;
     if (open) {
       menu.hidden = false;
+      prefetch();
       tl = gsap
         .timeline()
         // Le due linee dell'icona si incrociano in una X.
@@ -54,29 +55,48 @@ export function initMenu() {
   const leave = (link: HTMLAnchorElement) => {
     leaving = true;
     tl?.kill();
+    // Altezza (centro della riga) da cui la parola ripartirà nella pagina
+    // nuova: la voce resta alla sua altezza e da lì sale direttamente al titolo.
+    const box = link.getBoundingClientRect();
+    const y = box.top + box.height / 2;
     try {
-      sessionStorage.setItem(TRANSITION_KEY, JSON.stringify({ label: link.textContent?.trim() ?? '', ts: Date.now() }));
-    } catch { /* senza sessione la pagina si apre senza loader */ }
+      sessionStorage.setItem(TRANSITION_KEY, JSON.stringify({ label: link.textContent?.trim() ?? '', y, ts: Date.now() }));
+    } catch { /* senza sessione la pagina si apre senza transizione */ }
     const go = () => { window.location.href = link.href; };
     if (reduced) { go(); return; }
 
-    // La voce scelta va al centro dello schermo: in orizzontale conta la
-    // parola, in verticale la riga (come la parola centrata del loader).
+    // La voce scorre in orizzontale fino al centro, sulla sua riga, mentre
+    // le altre escono a sinistra e i recapiti a destra: non passa mai sopra
+    // alle altre voci. Poi si apre la pagina nuova (già scaricata, vedi
+    // prefetch), dove la parola sale dritta al posto del titolo.
     const range = document.createRange();
     range.selectNodeContents(link);
     const word = range.getBoundingClientRect();
-    const box = link.getBoundingClientRect();
     const dx = window.innerWidth / 2 - (word.left + word.width / 2);
-    const dy = window.innerHeight / 2 - (box.top + box.height / 2);
     rows.forEach((li) => { li.style.overflow = 'visible'; });
     const others = items.filter((a) => a !== link);
 
     gsap
       .timeline({ onComplete: go })
-      .to(btn, { autoAlpha: 0, duration: 0.3, ease: 'power2.out' }, 0)
-      .to(others, { x: () => -window.innerWidth, duration: 0.8, ease: 'expo.in', stagger: 0.05 }, 0)
-      .to(aside, { x: () => window.innerWidth, duration: 0.8, ease: 'expo.in' }, 0)
-      .to(link, { x: dx, y: dy, color: getComputedStyle(document.body).color, duration: 1, ease: 'expo.inOut' }, 0.1);
+      .to(btn, { autoAlpha: 0, duration: 0.25, ease: 'power2.out' }, 0)
+      .to(others, { x: () => -window.innerWidth, duration: 0.48, ease: 'power3.in', stagger: 0.035 }, 0)
+      .to(aside, { x: () => window.innerWidth, duration: 0.48, ease: 'power3.in' }, 0)
+      .to(link, { x: dx, color: getComputedStyle(document.body).color, duration: 0.46, ease: 'power3.inOut' }, 0);
+  };
+
+  // Aprendo il menu si scaricano in anticipo le altre pagine, così dopo il
+  // clic il loader della pagina nuova parte senza attese.
+  let prefetched = false;
+  const prefetch = () => {
+    if (prefetched) return;
+    prefetched = true;
+    items.forEach((a) => {
+      if (a.getAttribute('aria-current') === 'page') return;
+      const l = document.createElement('link');
+      l.rel = 'prefetch';
+      l.href = a.href;
+      document.head.appendChild(l);
+    });
   };
 
   btn.addEventListener('click', () => setOpen(!open));

@@ -37,7 +37,7 @@ const jsonLd = {
   email: 'nicola@devastante.studio',
   areaServed: 'IT',
   address: { '@type': 'PostalAddress', addressLocality: 'Verona', addressCountry: 'IT' },
-  sameAs: ['https://instagram.com/nicolaperantoni'],
+  sameAs: ['https://instagram.com/devastante.studio/'],
   founder: { '@type': 'Person', name: 'Nicola Perantoni', jobTitle: t.seo.jobTitle },
   makesOffer: t.seo.offers.map((name) => ({ '@type': 'Offer', itemOffered: { '@type': 'Service', name } })),
 };
@@ -51,8 +51,9 @@ const jsonLd = {
     <title>{seo.title}</title>
     <meta name="description" content={seo.description} />
     <meta name="author" content="Nicola Perantoni" />
-    <meta name="theme-color" content="#ffffff" />
+    <meta name="theme-color" content="#f4f4f4" />
     <link rel="canonical" href={canonical} />
+    <link rel="sitemap" type="application/xml" href="/sitemap-index.xml" />
     {locales.map((l) => <link rel="alternate" hreflang={l} href={abs(pagePath(page, l))} />)}
     <link rel="alternate" hreflang="x-default" href={abs(pagePath(page, 'it'))} />
 
@@ -76,7 +77,7 @@ const jsonLd = {
     <link rel="icon" href="/favicon.ico" sizes="any" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 
-    <!-- Font serviti dal sito: Sora (titoli) e Archivo (testo). -->
+    <!-- Font serviti dal sito: Space Grotesk (titoli) e Archivo (testo). -->
     <Font cssVariable="--font-display" preload />
     <Font cssVariable="--font-text" preload={[{ weight: 400 }, { weight: 500 }]} />
     <slot name="head" />
@@ -93,6 +94,7 @@ const jsonLd = {
           if (t && Date.now() - t.ts < 15000) {
             c.add('is-loading', 'via-menu');
             window.__sdLabel = String(t.label || '');
+            if (typeof t.y === 'number') window.__sdY = t.y;
           } else if (isHome && !sessionStorage.getItem('sd-intro')) {
             c.add('is-loading');
           }
@@ -109,10 +111,15 @@ const jsonLd = {
       <p class="loader-word on-bar" id="word-light">{headline}</p>
     </div>
     <script is:inline>
-      // Arrivando dal menu il loader parte dalla voce scelta.
+      // Arrivando dal menu la parola riparte dalla voce scelta, alla stessa
+      // altezza a cui era nel menu.
       if (window.__sdLabel) {
         document.getElementById('word-dark').textContent = window.__sdLabel;
         document.getElementById('word-light').textContent = window.__sdLabel;
+        if (typeof window.__sdY === 'number') {
+          document.getElementById('word-dark').style.top = window.__sdY + 'px';
+          document.getElementById('word-light').style.top = window.__sdY + 'px';
+        }
       }
     </script>
     <div class:list={[isHome && 'shell']}>

@@ -24,15 +24,25 @@ const ready = fontsFor([headline]).then(() => {
 });
 
 if (isLoading()) initLoader({ waitFor: [ready], reveal: revealRows });
-else ready.then(revealRows);
+else ready.then(() => revealRows());
 
-function revealRows() {
+function revealRows(mode?: 'intro' | 'arrive') {
   if (reduced) return;
+  // Dal menu la pagina sale insieme al titolo: le righe che sono già a
+  // schermo arrivano con lei, le altre compaiono scorrendo come sempre.
+  // Posizione nel documento (offsetTop ignora lo spostamento della salita).
+  const docTop = (el: HTMLElement) => {
+    let y = 0;
+    for (let n: HTMLElement | null = el; n; n = n.offsetParent as HTMLElement | null) y += n.offsetTop;
+    return y;
+  };
+  const later = mode === 'arrive' ? points.filter((li) => docTop(li) - window.scrollY > window.innerHeight * 0.9) : points;
+  if (!later.length) return;
 
   // I punti compaiono quando entrano nello schermo: la riga si allunga e
   // il testo sale.
-  gsap.set(points, { '--line': 0 });
-  gsap.set(points.map((li) => [...li.children]), { yPercent: 30, autoAlpha: 0 });
+  gsap.set(later, { '--line': 0 });
+  gsap.set(later.map((li) => [...li.children]), { yPercent: 30, autoAlpha: 0 });
   const io = new IntersectionObserver(
     (entries) =>
       entries.forEach((e) => {
@@ -45,5 +55,5 @@ function revealRows() {
       }),
     { threshold: 0.25 },
   );
-  points.forEach((li) => io.observe(li));
+  later.forEach((li) => io.observe(li));
 }

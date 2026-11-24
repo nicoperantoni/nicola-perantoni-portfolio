@@ -17,7 +17,7 @@ Sito statico, zero backend, nessun framework UI:
 - **[Astro](https://astro.build)** (output statico) + **TypeScript** strict
 - **[GSAP](https://gsap.com)** con ScrambleTextPlugin per le animazioni (loader, menu, scheda Portfolio, foto dei servizi)
 - **`astro:assets`** (`<Picture>`): foto in AVIF con fallback WebP, a più larghezze con `srcset`
-- **Fonts API di Astro**: Sora e Archivo scaricati in build e serviti dal sito
+- **Fonts API di Astro**: Space Grotesk e Archivo scaricati in build e serviti dal sito
 - **`@astrojs/sitemap`** per la sitemap
 - CSS puro con custom properties, niente Tailwind
 - Deploy su **Vercel**, con Vercel Analytics
@@ -100,7 +100,7 @@ Per cambiare le foto della home basta modificare `HOME_PHOTOS` in [`src/data/pho
 ## Design
 
 - **Colori**: testo `#111112` su bianco, grigio `#8a8a8a` per le parti secondarie.
-- **Tipografia**: [Sora](https://fonts.google.com/specimen/Sora) 600 per i titoli; [Archivo](https://fonts.google.com/specimen/Archivo) 400/500/600 per il testo.
+- **Tipografia**: [Space Grotesk](https://fonts.google.com/specimen/Space+Grotesk) 600 per i titoli, con legature standard e alternative stilistiche; [Archivo](https://fonts.google.com/specimen/Archivo) 400/500/600 per il testo.
 - **Titoli a tutta larghezza**: la grandezza è calcolata in `cqi` misurando la parola, così riempie esattamente la riga a ogni schermo.
 
 ## Deploy

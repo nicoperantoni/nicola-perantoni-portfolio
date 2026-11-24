@@ -3,13 +3,14 @@
 :root {
   --ink: #111112;
   --mute: #8a8a8a;
-  --bg: #ffffff;
+  /* Grigio chiarissimo: le foto con il fondo bianco si staccano dalla pagina. */
+  --bg: #f4f4f4;
   --pad: 14px;
   /* Spazio verticale tra titolo e foto, ripetuto sotto le foto. */
   --pad-v: clamp(16px, 2.6vh, 32px);
   --gap: clamp(32px, 3.4vw, 56px);
   --radius: clamp(8px, 1vw, 14px);
-  /* Sora per i titoli, Archivo per il corpo del testo (font serviti dal
+  /* Space Grotesk per i titoli, Archivo per il corpo del testo (font serviti dal
      sito, definiti in astro.config.mjs). */
   --display: var(--font-display);
 }
@@ -49,21 +50,26 @@ p { margin: 0; }
 .menu[hidden] { display: none; }
 .menu-list { margin: 0; padding: 0; list-style: none; }
 .menu-list li { overflow: clip; overflow-clip-margin: 0.04em; }
-.menu-list a { display: block; color: var(--ink); font-family: var(--display); font-weight: 600; font-size: clamp(56px, min(12cqi, 15vh), 190px); line-height: 0.92; letter-spacing: -0.035em; transition: color 0.25s; }
+.menu-list a { display: block; color: var(--ink); font-family: var(--display); font-weight: 600; font-size: clamp(56px, min(12cqi, 15vh), 190px); line-height: 0.92; transition: color 0.25s; }
 .menu-list:hover a:not(:hover), .menu-list:has(:focus-visible) a:not(:focus-visible) { color: var(--mute); }
 .menu-list a:focus-visible { outline: none; }
 /* Pagina corrente: in grigio, come "sei qui". */
 .menu-list a[aria-current="page"] { color: var(--mute); cursor: default; }
 
+/* Titoli in Space Grotesk con spaziatura del font (crenatura di default),
+   legature standard (liga, attive di norma) e alternative stilistiche (salt),
+   come in Illustrator. */
+.headline, .cta-title, .loader-word, .menu-list a { font-variant-ligatures: common-ligatures; font-feature-settings: "salt" 1; }
+
 /* Titolo a tutta larghezza: la grandezza segue la larghezza della testata. */
-.headline { margin: 0; white-space: nowrap; font-family: var(--display); font-weight: 600; font-size: 11.2cqi; line-height: 0.98; letter-spacing: -0.035em; }
+.headline { margin: 0; white-space: nowrap; font-family: var(--display); font-weight: 600; font-size: 10.9cqi; line-height: 0.98; }
 
 /* ---------- scroll orizzontale gigante ---------- */
 .stage { position: relative; min-height: 0; margin: 0 var(--pad) var(--pad-v); overflow: hidden; outline: none; touch-action: pan-y; user-select: none; }
 .stage.fine { cursor: none; }
 .track { display: flex; gap: var(--gap); height: 100%; width: max-content; will-change: transform; }
 .panel { position: relative; flex: none; height: 100%; margin: 0; overflow: hidden; }
-.panel.photo { aspect-ratio: 2 / 3; background: #f0f0f0; border-radius: var(--radius); }
+.panel.photo { aspect-ratio: 2 / 3; background: #e9e9e9; border-radius: var(--radius); }
 /* Foto più larga della cornice: lo spazio in più serve alla parallasse. */
 .panel.photo img { position: absolute; top: 0; left: -20%; width: 140%; height: 100%; object-fit: cover; will-change: transform; -webkit-user-drag: none; pointer-events: none; }
 
@@ -71,6 +77,11 @@ p { margin: 0; }
    sinistra, centrato in verticale nella scheda. */
 .panel.text { width: clamp(300px, 30vw, 500px); display: flex; flex-direction: column; justify-content: center; font-size: clamp(15px, 1.25vw, 19px); line-height: 1.34; user-select: text; }
 .panel.text .content { display: flex; flex-direction: column; gap: 16px; }
+/* Profilo: prima scheda dello scroll. Larghezza (fino alla "D" del titolo) e
+   grandezza del testo le calcola lib/profile.ts; questi sono i valori di
+   partenza. */
+.panel.profile { font-size: clamp(17px, 1.7vw, 28px); line-height: 1.3; }
+.panel.profile .content { gap: 0.75em; }
 
 /* Cursore personalizzato sul palco. */
 .cursor { position: fixed; left: 0; top: 0; z-index: 50; pointer-events: none; padding: 7px 12px; border-radius: 999px; background: var(--ink); color: #fff; font-size: 12px; white-space: nowrap; opacity: 0; }
@@ -82,7 +93,7 @@ p { margin: 0; }
 /* Contenuto in un livello assoluto: la larghezza della scheda dipende solo
    dall'altezza (2:3), non dal titolo, che a sua volta si adatta alla scheda. */
 .cta-inner { position: absolute; inset: 0; display: grid; place-items: center; padding: 0 8%; container-type: inline-size; }
-.cta-title { grid-area: 1 / 1; margin: 0; width: 100%; white-space: nowrap; text-align: center; font-family: var(--display); font-weight: 600; font-size: 20cqi; line-height: 0.9; letter-spacing: -0.01em; font-variant-ligatures: no-common-ligatures; color: #fff; will-change: transform; }
+.cta-title { grid-area: 1 / 1; margin: 0; width: 100%; white-space: nowrap; text-align: center; font-family: var(--display); font-weight: 600; font-size: 20cqi; line-height: 0.9; color: #fff; will-change: transform; }
 .cta-btn { grid-area: 1 / 1; display: inline-flex; align-items: center; gap: 0.5em; padding: 0.9em 1.4em; border-radius: 999px; background: #fff; color: var(--ink); font-size: clamp(15px, 1.25vw, 19px); font-weight: 500; white-space: nowrap; opacity: 0; visibility: hidden; transform: scale(0.3); }
 .cta-btn:focus-visible { outline: 2px solid #fff; outline-offset: 4px; }
 
@@ -94,13 +105,19 @@ p { margin: 0; }
 /* Nel loader il titolo è più piccolo: le lettere casuali dello scramble
    sono più larghe e a piena grandezza uscirebbero dallo schermo. A fine
    caricamento cresce fino a tutta larghezza mentre sale. */
-.loader-word { position: absolute; left: 50%; top: 50%; margin: 0; white-space: nowrap; font-family: var(--display); font-weight: 600; font-size: 9cqi; line-height: 0.98; letter-spacing: -0.035em; transform: translate(-50%, -50%); }
+.loader-word { position: absolute; left: 50%; top: 50%; margin: 0; white-space: nowrap; font-family: var(--display); font-weight: 600; font-size: 8.4cqi; line-height: 0.98; transform: translate(-50%, -50%); }
 .loader-word.on-bar { color: #fff; clip-path: inset(0 100% 0 0); }
 .is-loading .site-head, .is-loading .stage, .is-loading .sub-body { visibility: hidden; }
 html:not(.is-loading) .loader { display: none; }
-/* Arrivando dal menu il loader parte dalla voce scelta, già al centro e
-   grande quanto nel menu, così il passaggio tra le due pagine non si vede. */
+/* Arrivando dal menu la parola è la voce scelta, centrata in orizzontale,
+   all'altezza e alla grandezza che aveva nel menu: il passaggio tra le due
+   pagine non si vede. */
 .via-menu .loader-word { font-size: clamp(56px, min(12cqi, 15vh), 190px); line-height: 0.92; }
+/* Arrivando dal menu non c'è la barra nera: lo stesso elemento fa da fondo
+   (colore della pagina) e si dissolve mentre la parola sale al titolo. */
+.via-menu .loader { background: transparent; }
+.via-menu .loader-bar { background: var(--bg); clip-path: none; }
+.via-menu .loader-word.on-bar { display: none; }
 
 /* ---------- pagine interne (Servizi, Manifesto, Contatti) ---------- */
 /* Titolo nascosto finché il font è pronto e la grandezza è calcolata. */
@@ -146,7 +163,7 @@ html:not(.is-loading) .loader { display: none; }
   .panel { scroll-snap-align: start; }
   .panel.text { width: 78vw; }
   .track { gap: 16px; }
-  .menu-list a, .via-menu .loader-word { font-size: 20cqi; }
+  .menu-list a, .via-menu .loader-word { font-size: 19cqi; }
   /* Su telefono il copyright va sotto alle voci, a sinistra. */
   .menu { flex-direction: column; align-items: flex-start; justify-content: flex-end; }
   .menu-aside { margin-top: 32px; }

@@ -1,11 +1,11 @@
 ---
-// Home, condivisa tra "/" e "/en/": loader, titolo e scroll orizzontale
-// infinito con le foto e, in mezzo, le schede Profilo e Portfolio.
+// Home, condivisa tra "/" e "/en/": titolo e scroll orizzontale infinito che
+// si apre con il Profilo, poi le foto con in mezzo la scheda Portfolio.
 import { Picture } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { useTranslations } from '../i18n/utils';
 import type { Locale } from '../i18n/ui';
-import { HOME_PHOTOS, TEXT_AFTER, COPIES, TRACK_WIDTHS, TRACK_SIZES, photo } from '../data/photos';
+import { HOME_PHOTOS, PORTFOLIO_AFTER, COPIES, TRACK_WIDTHS, TRACK_SIZES, photo } from '../data/photos';
 
 interface Props {
   lang: Locale;
@@ -28,7 +28,15 @@ const copies = Array.from({ length: COPIES }, (_, c) => c);
         copies.map((c) => {
           const hidden = c !== 1 ? 'true' : undefined;
           const tab = c !== 1 ? -1 : undefined;
-          return HOME_PHOTOS.map((name, i) => (
+          return [
+            // Profilo: prima scheda; la larghezza la calcola lo script, così
+            // la prima foto parte sotto la "D" di "Devastante".
+            <section class="panel text profile" aria-hidden={hidden} aria-label={h.profileTitle}>
+              <div class="content">
+                {h.profile.map((p) => <p>{p}</p>)}
+              </div>
+            </section>,
+            ...HOME_PHOTOS.map((name, i) => (
             <>
               <figure class="panel photo" aria-hidden={hidden} data-copy={c}>
                 <Picture
@@ -43,14 +51,7 @@ const copies = Array.from({ length: COPIES }, (_, c) => c);
                   draggable="false"
                 />
               </figure>
-              {TEXT_AFTER[i] === 'profile' && (
-                <section class="panel text" aria-hidden={hidden} aria-label={h.profileTitle}>
-                  <div class="content">
-                    {h.profile.map((p) => <p>{p}</p>)}
-                  </div>
-                </section>
-              )}
-              {TEXT_AFTER[i] === 'portfolio' && (
+              {i === PORTFOLIO_AFTER && (
                 <section class="panel cta" aria-hidden={hidden}>
                   <div class="cta-inner">
                     <h2 class="cta-title">{h.portfolioTitle}</h2>
@@ -61,7 +62,8 @@ const copies = Array.from({ length: COPIES }, (_, c) => c);
                 </section>
               )}
             </>
-          ));
+          )),
+          ];
         })
       }
     </div>
@@ -80,6 +82,7 @@ const copies = Array.from({ length: COPIES }, (_, c) => c);
   import { fillContacts } from '../lib/contacts';
   import { fitWidth, fontsFor } from '../lib/fit';
   import { reduced } from '../lib/env';
+  import { fitProfile } from '../lib/profile';
 
   const stage = document.getElementById('stage')!;
   const track = document.getElementById('track')!;
@@ -87,12 +90,19 @@ const copies = Array.from({ length: COPIES }, (_, c) => c);
   const imgs = [...track.querySelectorAll<HTMLImageElement>('.panel.photo img')];
   const perCopy = panels.length / Number(track.dataset.copies);
 
-  // "Portfolio" a tutta larghezza della sua scheda, a font caricato.
+  const headline = document.getElementById('headline')!;
+
+  // A font caricato: "Portfolio" a tutta larghezza della sua scheda, Profilo
+  // largo fino alla "D" di "Devastante" e testo grande quanto ci sta.
   const titles = [...track.querySelectorAll<HTMLElement>('.cta-title')];
-  const fonts = fontsFor([document.getElementById('headline')!, ...titles, document.querySelector('.panel.text p')!]).then(
-    () => titles.forEach(fitWidth),
-  );
+  const fonts = fontsFor([headline, ...titles, document.querySelector('.panel.text p')!]).then(() => {
+    titles.forEach(fitWidth);
+    fitProfile(track, stage, headline);
+  });
   fillContacts();
+  // Registrato prima dello scroll, così a ogni ridimensionamento il Profilo
+  // ha già la nuova larghezza quando lo scroll si rimisura.
+  window.addEventListener('resize', () => fitProfile(track, stage, headline));
 
   const { layout } = initScroll({ stage, track, panels, imgs, perCopy });
   initPortfolioCards(track);
@@ -105,8 +115,9 @@ const copies = Array.from({ length: COPIES }, (_, c) => c);
       waitFor: [fonts, imagesLoaded(imgs.filter((img) => img.closest<HTMLElement>('.panel')!.dataset.copy === '1'))],
       layout,
       // Lo scroll gigante sale dal basso.
-      reveal: () => {
-        if (reduced) return;
+      reveal: (mode) => {
+        // Dal menu lo scroll sale già insieme alla parola (lib/loader.ts).
+        if (reduced || mode === 'arrive') return;
         const inView = panels.filter((p) => {
           const r = p.getBoundingClientRect();
           return r.right > 0 && r.left < innerWidth;

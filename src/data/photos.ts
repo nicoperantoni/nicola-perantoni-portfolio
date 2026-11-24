@@ -21,9 +21,9 @@ export const HOME_PHOTOS = [
   'DSC08237', 'DSC00422', 'ph-training-camp-3', 'PRN04091', 'PRN09662',
 ];
 
-// Pannelli di testo nello scroll: Profilo subito dopo la prima foto
-// (seconda scheda), Portfolio dopo la quarta.
-export const TEXT_AFTER: Record<number, 'profile' | 'portfolio'> = { 0: 'profile', 3: 'portfolio' };
+// Schede nello scroll oltre alle foto: il Profilo apre ogni copia della
+// sequenza (vedi views/Home.astro), Portfolio viene dopo la quarta foto.
+export const PORTFOLIO_AFTER = 3;
 
 // Scroll infinito: la sequenza (foto + testi) è ripetuta COPIES volte di
 // fila; la posizione si riporta sempre dentro la copia centrale.
