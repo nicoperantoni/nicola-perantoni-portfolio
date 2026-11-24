@@ -1,6 +1,6 @@
 # Studio Devastante
 
-[![Live](https://img.shields.io/badge/live-www.nicolaperantoni.com-black?style=flat-square)](https://www.nicolaperantoni.com)
+[![Live](https://img.shields.io/badge/live-devastante.studio-black?style=flat-square)](https://devastante.studio)
 [![Astro](https://img.shields.io/badge/Astro-7-black?style=flat-square&logo=astro)](https://astro.build)
 [![TypeScript](https://img.shields.io/badge/TypeScript-strict-black?style=flat-square&logo=typescript)](https://www.typescriptlang.org)
 
@@ -102,7 +102,7 @@ Per cambiare le foto della home basta modificare `HOME_PHOTOS` in [`src/data/pho
 
 ## Deploy
 
-Push su `main` → build e deploy automatico su **Vercel**. Il dominio canonico è impostato in `site` di [`astro.config.mjs`](astro.config.mjs) (e nella riga `Sitemap:` di `public/robots.txt`).
+Push su `main` → build e deploy automatico su **Vercel**. Dominio canonico **`devastante.studio`** (DNS su Aruba, record A e CNAME verso Vercel; la posta resta su Aruba). `www.devastante.studio` e il vecchio dominio `nicolaperantoni.com` (con e senza www) rimandano lì con un redirect 308 che mantiene il percorso. Il dominio è impostato in `site` di [`astro.config.mjs`](astro.config.mjs) e nella riga `Sitemap:` di `public/robots.txt`.
 
 ## Crediti fotografici
 

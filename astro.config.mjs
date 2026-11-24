@@ -3,7 +3,7 @@ import sitemap from '@astrojs/sitemap';
 
 export default defineConfig({
   // Dominio canonico: da qui derivano URL assoluti, hreflang, Open Graph e sitemap.
-  site: 'https://www.nicolaperantoni.com',
+  site: 'https://devastante.studio',
   // Font scaricati da Google in fase di build e serviti dal sito stesso, con
   // fallback dalle metriche allineate. Solo i pesi usati.
   fonts: [

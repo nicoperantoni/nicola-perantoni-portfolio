@@ -20,7 +20,7 @@ console.log('✓ public/favicon.ico');
 
 await sharp(svg, { density: 384 })
   .resize(180, 180)
-  .flatten({ background: '#000000' })
+  .flatten({ background: '#111112' })
   .png()
   .toFile(path.join(root, 'public/apple-touch-icon.png'));
 console.log('✓ public/apple-touch-icon.png');
