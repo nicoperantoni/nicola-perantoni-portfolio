@@ -1,13 +1,14 @@
 // ---------------------------------------------------------------------
 // Scala della Home: foto attaccate l'una all'altra che crescono gradino
 // dopo gradino, con una foto al centro della pagina.
-// - Orizzontale (computer, telefono girato): foto appoggiate al fondo della
-//   pagina, crescono da sinistra a destra. Da ferme se ne vedono quattro
-//   (tre sul telefono); verso destra crescono ed escono dallo schermo.
-// - Verticale (telefono tenuto dritto): la stessa scala girata, con le foto
-//   in colonna contro il bordo destro (l'angolo del tasto Menu resta
-//   libero), che crescono dall'alto verso il basso e riempiono tutta
-//   l'altezza.
+// - Orizzontale (pagina larga: computer, telefono o tablet girati): foto
+//   appoggiate al fondo della pagina, crescono da sinistra a destra. Da
+//   ferme se ne vedono quattro (tre sul telefono); verso destra crescono ed
+//   escono dallo schermo.
+// - Verticale (pagina alta: telefono o tablet tenuti dritti): la stessa
+//   scala girata, con le foto in colonna contro il bordo destro (l'angolo
+//   del tasto Menu resta libero), che crescono dall'alto verso il basso e
+//   riempiono tutta l'altezza.
 // Scorrimento infinito con inerzia: rotella, trascinamento, tocco, frecce
 // (tastiera e pulsanti) e click su una foto, che la porta al centro.
 // ---------------------------------------------------------------------
@@ -25,8 +26,11 @@ const R = 1.32;
 const MAX_U = 2.6;
 /** Margine laterale della pagina (--pad in global.css). */
 const PAD = 14;
-/** Scala verticale: larghezza della foto al centro, in frazione di pagina. */
+/** Scala verticale: larghezza della foto al centro, in frazione di pagina,
+ * ma alta al massimo CENTER_H della pagina (sul tablet, più largo, così si
+ * vedono anche la precedente e la successiva). */
 const CENTER_W = 0.6;
+const CENTER_H = 0.6;
 
 interface Rect { left: number; top: number; width: number; height: number }
 
@@ -45,7 +49,7 @@ export function initScale(stage: HTMLElement) {
   // U0 è l'inizio della fila, tre gradini prima della foto centrale: lì le
   // foto sono già fuori dallo schermo.
   let W = 0, H = 0, HS = 0, UC = 0, U0 = 0, PHASE = 0, hDraw = 0;
-  /** Scala verticale (telefono tenuto dritto). */
+  /** Scala verticale (pagina alta: telefono o tablet tenuti dritti). */
   let vertical = false;
   /** Lunghezza della pagina lungo la scala. */
   let L = 0;
@@ -60,13 +64,15 @@ export function initScale(stage: HTMLElement) {
   function measure() {
     W = window.innerWidth;
     H = window.innerHeight;
-    vertical = W < H && W <= 900;
+    // Pagina chiaramente più alta che larga (il margine evita che una
+    // finestra quasi quadrata sul computer cambi scala).
+    vertical = H > W * 1.1;
     L = vertical ? H : W;
     if (vertical) {
       // Foto al centro larga CENTER_W della pagina: sopra si vede la
       // precedente sotto al titolo, sotto la successiva, più larga, che esce
       // dal fondo.
-      HS = (CENTER_W * W) / ASPECT;
+      HS = Math.min((CENTER_W * W) / ASPECT, CENTER_H * H);
     } else {
       // Grandezza della foto al centro, in larghezze di foto centrale da metà
       // pagina al bordo: a sinistra metà centrale più le LEFT precedenti
