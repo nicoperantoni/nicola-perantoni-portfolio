@@ -147,9 +147,13 @@ const jsonLd = {
       <TopBar lang={lang} />
       <!-- In Home il titolo è diviso in lettere: entra lettera per lettera
            alla fine del loader. -->
-      <h1 class="headline" id="headline" aria-label={isHome ? headline : undefined}>
-        {isHome ? [...headline].map((c) => <span class="hl" aria-hidden="true">{c === ' ' ? '\u00a0' : c}</span>) : headline}
-      </h1>
+      <!-- Contenitore del solo titolo: la sua larghezza misura il titolo a
+           tutta larghezza (unità cqi, lib/fit.ts). -->
+      <div class="headline-box">
+        <h1 class="headline" id="headline" aria-label={isHome ? headline : undefined}>
+          {isHome ? [...headline].map((c) => <span class="hl" aria-hidden="true">{c === ' ' ? '\u00a0' : c}</span>) : headline}
+        </h1>
+      </div>
     </header>
     <slot />
     <Menu lang={lang} page={page} />

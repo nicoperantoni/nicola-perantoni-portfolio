@@ -12,6 +12,8 @@ interface Props {
 
 const { kind, lang } = Astro.props;
 const t = useTranslations(lang).contacts;
+// Freccia come carattere di testo (U+FE0E): senza, iPhone la mostra come emoji.
+const ARROW = '↗\uFE0E';
 ---
 
 {kind === 'email' && <a class="u" href="#" data-email rel="nofollow" />}
@@ -19,7 +21,7 @@ const t = useTranslations(lang).contacts;
 {
   kind === 'ig' && (
     <a class="u" href="https://instagram.com/devastante.studio/" target="_blank" rel="noopener">
-      @devastante.studio ↗
+      @devastante.studio {ARROW}
     </a>
   )
 }

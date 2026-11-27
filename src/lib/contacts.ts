@@ -9,6 +9,6 @@ export function fillContacts() {
   });
   document.querySelectorAll<HTMLAnchorElement>('[data-wa]').forEach((w) => {
     w.href = 'https://wa.me/' + ph;
-    w.textContent = `+${ph.slice(0, 2)} ${ph.slice(2, 5)} ${ph.slice(5, 8)} ${ph.slice(8)} ↗`;
+    w.textContent = `+${ph.slice(0, 2)} ${ph.slice(2, 5)} ${ph.slice(5, 8)} ${ph.slice(8)} ↗\uFE0E`; // \uFE0E: freccia come testo, non emoji (iPhone)
   });
 }

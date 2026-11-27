@@ -1,11 +1,8 @@
 ---
-// Servizi: nome grande e descrizione. Sui dispositivi touch la foto del
-// servizio è nella riga; col mouse no.
-import { Picture } from 'astro:assets';
+// Servizi: nome grande e descrizione.
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { useTranslations } from '../i18n/utils';
 import type { Locale } from '../i18n/ui';
-import { photo } from '../data/photos';
 
 interface Props {
   lang: Locale;
@@ -25,15 +22,6 @@ const t = useTranslations(lang).services;
             <div>
               <p>{s.title}</p>
               <p class="svc-desc">{s.desc}</p>
-              <Picture
-                class="svc-thumb"
-                src={photo(s.photo)}
-                alt=""
-                widths={[360, 520, 720]}
-                sizes="min(60vw, 260px)"
-                formats={['avif']}
-                fallbackFormat="webp"
-              />
             </div>
           </li>
         ))

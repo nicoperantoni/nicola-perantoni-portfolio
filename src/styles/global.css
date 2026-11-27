@@ -11,7 +11,6 @@
   /* Spazio verticale sotto il titolo, ripetuto sotto le foto. */
   --pad-v: clamp(16px, 2.6vh, 32px);
   --gap: clamp(32px, 3.4vw, 56px);
-  --radius: clamp(8px, 1vw, 14px);
   /* Space Grotesk per i titoli, Archivo per il testo (font serviti dal sito,
      definiti in astro.config.mjs). */
   --display: var(--font-display);
@@ -28,7 +27,11 @@ p { margin: 0; }
 .headline, .arrival-word, .intro-title, .menu-list a { font-family: var(--display); font-weight: 600; font-variant-ligatures: common-ligatures; font-feature-settings: "salt" 1; }
 
 /* ---------- testata ---------- */
-.site-head { padding: var(--pad) var(--pad) var(--pad-v); container-type: inline-size; text-align: center; }
+.site-head { padding: var(--pad) var(--pad) var(--pad-v); text-align: center; }
+/* Il contenitore è il solo titolo, non tutta la testata: Safari fa di ogni
+   contenitore un livello a sé, e il tasto Menu deve restarne fuori (sopra al
+   menu aperto). */
+.headline-box { container-type: inline-size; }
 /* Riga sopra al titolo con il tasto Menu, che resta sopra al menu aperto e
    alle foto della Home (z-index) e diventa "Chiudi". */
 .topbar { display: flex; align-items: center; margin-bottom: 8px; }
@@ -56,7 +59,7 @@ p { margin: 0; }
 .menu-legal { margin: 0; color: var(--mute); font-size: clamp(13px, 1vw, 15px); line-height: 1.34; white-space: nowrap; }
 .menu-list { margin: 0; padding: 0; list-style: none; }
 .menu-list li { overflow: clip; overflow-clip-margin: 0.04em; }
-.menu-list a { display: block; color: var(--ink); font-size: clamp(56px, min(12cqi, 15vh), 190px); line-height: 0.92; transition: color 0.25s; }
+.menu-list a { display: block; color: var(--ink); font-size: clamp(56px, min(12cqi, 15vh), 190px); line-height: 1.04; transition: color 0.25s; }
 .menu-list:hover a:not(:hover), .menu-list:has(:focus-visible) a:not(:focus-visible) { color: var(--mute); }
 .menu-list a:focus-visible { outline: none; }
 /* Pagina corrente: in grigio, come "sei qui". */
@@ -69,9 +72,10 @@ html.scroll-locked .menu { overscroll-behavior: contain; }
 /* ---------- Home: scala di foto (lib/scale.ts) ---------- */
 .page-home { height: 100dvh; overflow: hidden; }
 /* Il titolo sta sopra le foto, che gli scorrono sotto, e lascia passare i
-   comandi (trascinamento, rotella, click sulle foto). Il livello va al solo
-   titolo, non alla testata: il tasto Menu deve restare sopra al menu aperto. */
-.page-home .headline { position: relative; z-index: 4; pointer-events: none; }
+   comandi (trascinamento, rotella, click sulle foto). Il livello va al
+   contenitore del titolo, non alla testata: il tasto Menu deve restare sopra
+   al menu aperto. */
+.page-home .headline-box { position: relative; z-index: 4; pointer-events: none; }
 /* Il titolo entra lettera per lettera (padding compensato: spazio per le
    lettere più alte della riga). */
 .page-home .headline { overflow: hidden; padding-block: 0.06em; margin-block: -0.06em; }
@@ -96,6 +100,8 @@ html.scroll-locked .menu { overscroll-behavior: contain; }
 .scale-arrow:hover { transform: scale(1.08); background: rgba(17, 17, 18, 0.75); }
 .scale-arrow:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
 .scale-arrow svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+/* Scala verticale (telefono dritto): le frecce puntano in alto e in basso. */
+.scale[data-axis="y"] ~ .scale-arrows svg { transform: rotate(90deg); }
 
 /* ---------- Home: loader del primo ingresso (lib/intro.ts, da Osmo) ---------- */
 .intro { position: fixed; inset: 0; z-index: 10; display: none; justify-content: center; align-items: center; overflow: hidden; pointer-events: none; }
@@ -122,7 +128,7 @@ html.scroll-locked .menu { overscroll-behavior: contain; }
 .arrival { position: fixed; inset: 0; z-index: 100; display: none; padding: 0 var(--pad); pointer-events: none; container-type: inline-size; }
 .is-arriving .arrival { display: block; }
 .arrival-bg { position: absolute; inset: 0; background: var(--bg); }
-.arrival-word { position: absolute; left: 50%; top: 50%; margin: 0; white-space: nowrap; font-size: clamp(56px, min(12cqi, 15vh), 190px); line-height: 0.92; transform: translate(-50%, -50%); }
+.arrival-word { position: absolute; left: 50%; top: 50%; margin: 0; white-space: nowrap; font-size: clamp(56px, min(12cqi, 15vh), 190px); line-height: 1.04; transform: translate(-50%, -50%); }
 .is-arriving .site-head, .is-arriving .scale, .is-arriving .scale-arrows, .is-arriving .sub-body { visibility: hidden; }
 
 /* ---------- pagine interne (Servizi, Manifesto, Contatti) ---------- */
@@ -145,26 +151,41 @@ html.scroll-locked .menu { overscroll-behavior: contain; }
 .rows-info p { font-size: clamp(24px, 2.4vw, 40px); }
 
 /* Servizi: nome grande, descrizione piccola in grigio. Col mouse, passando su
-   un servizio gli altri si attenuano; sui dispositivi touch la foto del
-   servizio è dentro la riga. */
+   un servizio gli altri si attenuano. */
 .svc-list > li { padding-bottom: clamp(28px, 5vh, 56px); }
 .rows .svc-desc { margin-top: 10px; font-size: clamp(15px, 1.25vw, 19px); font-weight: 400; line-height: 1.34; letter-spacing: 0; color: var(--mute); }
 .svc-list .svc > div > p:first-child { transition: color 0.3s; }
-.svc-thumb { display: none; }
 @media (hover: hover) and (pointer: fine) {
   .svc-list:hover .svc:not(:hover) > div > p:first-child { color: var(--mute); }
-}
-@media not ((hover: hover) and (pointer: fine)) {
-  .svc-thumb { display: block; width: min(60%, 260px); height: auto; aspect-ratio: 2 / 3; margin-top: 16px; object-fit: cover; border-radius: var(--radius); }
 }
 
 /* ---------- telefono ---------- */
 @media (max-width: 900px) {
-  .menu-list a, .arrival-word { font-size: 19cqi; }
-  /* Il copyright va sotto alle voci, a sinistra. */
-  .menu { flex-direction: column; align-items: flex-start; justify-content: flex-end; }
-  .menu-aside { margin-top: 32px; }
-  .menu-contacts { gap: 12px; }
   .rows > li { grid-template-columns: minmax(0, 1fr); gap: 12px; }
   .split { grid-template-columns: minmax(0, 1fr); gap: 0; }
+}
+/* Telefono in verticale: voci del menu in alto a sinistra, misurate sulla
+   larghezza ma anche sull'altezza visibile (svh: senza le barre di Safari),
+   con spazio fisso sotto al tasto Chiudi; recapiti sotto, in proporzione. Se
+   non basta, il menu scorre. */
+@media (max-width: 900px) and (orientation: portrait) {
+  .menu-list a, .arrival-word { font-size: min(14cqi, 8.5vh); font-size: min(14cqi, 8.5svh); }
+  .menu { flex-direction: column; align-items: flex-start; justify-content: flex-start; padding-top: 84px; overflow-y: auto; }
+  .menu-list { margin-top: auto; }
+  .menu-aside { margin-top: clamp(28px, 6svh, 48px); gap: 18px; }
+  .menu-contacts { gap: 10px; }
+  .menu-contacts dt, .menu-legal { font-size: 12px; }
+  .menu-contacts dd { font-size: 16px; }
+}
+/* Telefono in orizzontale: la pagina è bassa, quindi voci e recapiti restano
+   affiancati come sul computer, con le voci misurate sull'altezza (quattro
+   righe sotto al tasto Chiudi) e i recapiti più compatti. Se non basta, il
+   menu scorre. */
+@media (max-height: 500px) and (orientation: landscape) {
+  .menu { overflow-y: auto; }
+  .menu-list a, .arrival-word { font-size: min(11cqi, 19vh); }
+  .menu-aside { gap: 12px; }
+  .menu-contacts { gap: 6px; }
+  .menu-contacts dt, .menu-legal { font-size: 11px; }
+  .menu-contacts dd { margin-top: 0; font-size: 14px; }
 }

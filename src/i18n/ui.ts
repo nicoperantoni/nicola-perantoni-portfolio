@@ -80,10 +80,10 @@ export const ui = {
     services: {
       title: 'Servizi',
       items: [
-        { title: 'Reportage di gare ed eventi', desc: 'Dalla partenza al traguardo.', photo: 'DSC00026' },
-        { title: 'Campagne ed editoriali', desc: 'Shooting per brand e magazine, in studio oppure on site.', photo: 'DSC08227' },
-        { title: 'Fotografia still-life', desc: 'Prodotti, materiali, texture e componenti tecnici.', photo: 'DSC08237' },
-        { title: 'Ritratti', desc: 'Dinamici, primi piani e contestualizzati.', photo: 'DSC02021' },
+        { title: 'Reportage di gare ed eventi', desc: 'Dalla partenza al traguardo.' },
+        { title: 'Campagne ed editoriali', desc: 'Shooting per brand e magazine, in studio oppure on site.' },
+        { title: 'Fotografia still-life', desc: 'Prodotti, materiali, texture e componenti tecnici.' },
+        { title: 'Ritratti', desc: 'Dinamici, primi piani e contestualizzati.' },
       ],
     },
     manifesto: {
@@ -162,10 +162,10 @@ export const ui = {
     services: {
       title: 'Services',
       items: [
-        { title: 'Race and event coverage', desc: 'From start to finish.', photo: 'DSC00026' },
-        { title: 'Campaigns and editorials', desc: 'Shoots for brands and magazines, in studio or on site.', photo: 'DSC08227' },
-        { title: 'Still-life photography', desc: 'Products, materials, textures and technical components.', photo: 'DSC08237' },
-        { title: 'Portraits', desc: 'Dynamic, close-up and in context.', photo: 'DSC02021' },
+        { title: 'Race and event coverage', desc: 'From start to finish.' },
+        { title: 'Campaigns and editorials', desc: 'Shoots for brands and magazines, in studio or on site.' },
+        { title: 'Still-life photography', desc: 'Products, materials, textures and technical components.' },
+        { title: 'Portraits', desc: 'Dynamic, close-up and in context.' },
       ],
     },
     manifesto: {
