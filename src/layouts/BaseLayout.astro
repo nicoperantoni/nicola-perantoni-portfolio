@@ -102,6 +102,24 @@ const jsonLd = {
             c.add('is-arriving');
             window.__sdLabel = String(t.label || '');
             if (typeof t.y === 'number') window.__sdY = t.y;
+            // Niente scorrimento finché la parola non è arrivata al titolo,
+            // altrimenti la pagina si vede prima della fine. Lo sblocca
+            // lib/transition.ts con window.__sdUnlock().
+            var stop = function (e) { e.preventDefault(); };
+            var KEYS = { ' ': 1, PageUp: 1, PageDown: 1, Home: 1, End: 1, ArrowUp: 1, ArrowDown: 1 };
+            var key = function (e) { if (KEYS[e.key]) e.preventDefault(); };
+            var back = function () { if (window.scrollY) window.scrollTo(0, 0); };
+            var opt = { passive: false, capture: true };
+            addEventListener('wheel', stop, opt);
+            addEventListener('touchmove', stop, opt);
+            addEventListener('keydown', key, true);
+            addEventListener('scroll', back, true);
+            window.__sdUnlock = function () {
+              removeEventListener('wheel', stop, opt);
+              removeEventListener('touchmove', stop, opt);
+              removeEventListener('keydown', key, true);
+              removeEventListener('scroll', back, true);
+            };
           } else if (isHome && !sessionStorage.getItem('sd-intro')) {
             c.add('is-intro');
           }

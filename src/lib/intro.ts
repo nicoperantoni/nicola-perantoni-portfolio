@@ -7,7 +7,7 @@
 //
 // 1. Le lettere di "Studio" e "Devastante" salgono una per una.
 // 2. Tra le due parole si apre un rettangolo e la foto si allarga dal centro.
-// 3. Durante il caricamento le foto cambiano di colpo ogni mezzo secondo.
+// 3. Durante il caricamento le foto cambiano di colpo ogni quarto di secondo.
 // 4. A caricamento finito il rettangolo si allarga e spinge fuori le parole;
 //    la foto diventa la foto centrale della scala e il titolo entra
 //    dall'alto lettera per lettera.
@@ -62,30 +62,31 @@ export async function runIntro(scale: Scale, fonts: Promise<unknown>): Promise<v
   const extras = pick.map((i, k) => addImg(i, pick.length - k + 1));
   const cover = addImg(ci, 1);
 
-  // 1–2. Tempi e curve di Osmo.
+  // 1–2. Curve di Osmo, tempi accorciati.
+  const D = 0.8;
   const opening = gsap.timeline({ defaults: { ease: 'expo.inOut' } })
-    .from('.intro-letter', { yPercent: 100, stagger: 0.025, duration: 1.25 })
-    .fromTo(box, { width: '0em' }, { width: '1em', duration: 1.25 }, '<1.25')
-    .fromTo(grow, { width: '0%' }, { width: '100%', duration: 1.25 }, '<')
-    .fromTo(start, { x: '0em' }, { x: '-0.05em', duration: 1.25 }, '<')
-    .fromTo(end, { x: '0em' }, { x: '0.05em', duration: 1.25 }, '<');
+    .from('.intro-letter', { yPercent: 100, stagger: 0.018, duration: D })
+    .fromTo(box, { width: '0em' }, { width: '1em', duration: D }, `<${D}`)
+    .fromTo(grow, { width: '0%' }, { width: '100%', duration: D }, '<')
+    .fromTo(start, { x: '0em' }, { x: '-0.05em', duration: D }, '<')
+    .fromTo(end, { x: '0em' }, { x: '0.05em', duration: D }, '<');
 
   // Caricamento reale: foto del rettangolo e foto visibili della scala.
   let isLoaded = false;
   const visible = scale.items.map((_, i) => i).filter(scale.isVisible);
   Promise.all([...extras, cover].map(loaded).concat(visible.map((i) => loaded(scale.imgs[i])))).then(() => { isLoaded = true; });
 
-  // 3. A rettangolo aperto le foto cambiano di colpo ogni mezzo secondo
+  // 3. A rettangolo aperto le foto cambiano di colpo ogni quarto di secondo
   // (quella sopra sparisce); se il caricamento non è finito il giro
   // ricomincia. Alla fine resta la foto centrale.
   await opening.then();
   for (;;) {
-    for (const im of extras) { await wait(500); gsap.to(im, { opacity: 0, duration: 0.05, ease: 'none' }); }
+    for (const im of extras) { await wait(250); gsap.to(im, { opacity: 0, duration: 0.05, ease: 'none' }); }
     if (isLoaded) break;
-    await wait(500);
+    await wait(250);
     gsap.set(extras, { opacity: 1 });
   }
-  await wait(450);
+  await wait(250);
 
   // 4. La foto passa in un livello a sé, con lo stesso ritaglio delle foto
   // della scala, e va al posto della foto centrale. Il rettangolo si allarga
@@ -106,14 +107,14 @@ export async function runIntro(scale: Scale, fonts: Promise<unknown>): Promise<v
 
   // Finisce quando anche l'ultima lettera del titolo è arrivata.
   await new Promise<void>((resolve) => gsap.timeline({ defaults: { ease: 'expo.inOut' }, onComplete: () => { fly.remove(); done(); resolve(); } })
-    .to(box, { width: pushOut, duration: 1.6 }, 0)
-    .to(fly, { ...scale.centerRect(), duration: 1.6 }, 0)
+    .to(box, { width: pushOut, duration: 1.1 }, 0)
+    .to(fly, { ...scale.centerRect(), duration: 1.1 }, 0)
     // Titolo dall'alto, lettera per lettera.
-    .add(() => { headline.style.visibility = 'visible'; }, 1.0)
-    .from('.hl', { yPercent: -100, duration: 1.25, ease: 'expo.out', stagger: 0.025 }, 1.0)
+    .add(() => { headline.style.visibility = 'visible'; }, 0.65)
+    .from('.hl', { yPercent: -100, duration: 0.9, ease: 'expo.out', stagger: 0.018 }, 0.65)
     // La foto centrale prende il posto del livello volante.
-    .add(() => { gsap.set(scale.imgs[ci], { clipPath: 'inset(0% 0% 0% 0%)' }); fly.style.visibility = 'hidden'; }, 1.6)
+    .add(() => { gsap.set(scale.imgs[ci], { clipPath: 'inset(0% 0% 0% 0%)' }); fly.style.visibility = 'hidden'; }, 1.1)
     // 5. Le altre foto si scoprono dal basso, dal centro verso i lati.
-    .to(others.map((i) => scale.imgs[i]), { clipPath: 'inset(0% 0% 0% 0%)', duration: 0.9, ease: 'expo.out', stagger: 0.07 }, 1.5)
-    .fromTo('.scale-arrows', { autoAlpha: 0, y: 12 }, { autoAlpha: 1, y: 0, duration: 0.6, ease: 'power2.out' }, 1.9));
+    .to(others.map((i) => scale.imgs[i]), { clipPath: 'inset(0% 0% 0% 0%)', duration: 0.7, ease: 'expo.out', stagger: 0.05 }, 1.0)
+    .fromTo('.scale-arrows', { autoAlpha: 0, y: 12 }, { autoAlpha: 1, y: 0, duration: 0.5, ease: 'power2.out' }, 1.3));
 }

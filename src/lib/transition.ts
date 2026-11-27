@@ -62,6 +62,8 @@ export async function initArrival({ ready, layout, reveal }: ArrivalOptions): Pr
     overlay.remove();
     [head, ...body].forEach((el) => { el.style.visibility = ''; });
     layout?.();
+    // Da qui si può scorrere (bloccato dallo script in <head>).
+    (window as Window & { __sdUnlock?: () => void }).__sdUnlock?.();
   };
 
   // Solo i font, e al massimo un attimo: la pagina è già in cache.
